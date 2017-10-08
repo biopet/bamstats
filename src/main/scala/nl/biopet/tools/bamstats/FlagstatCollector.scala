@@ -17,7 +17,7 @@ package nl.biopet.tools.bamstats
 import java.io.{File, PrintWriter}
 
 import htsjdk.samtools.SAMRecord
-import nl.biopet.utils.config.Config
+import nl.biopet.utils.config.Conversions
 import play.api.libs.json.Json
 
 import scala.collection.mutable
@@ -208,7 +208,7 @@ class FlagstatCollector {
       "Singletons" -> crossCounts(names.find(_._2 == "Mapped").map(_._1).getOrElse(-1))(
         names.find(_._2 == "MateUnmapped").map(_._1).getOrElse(-1)))
 
-    Json.stringify(Config.mapToJson(map))
+    Json.stringify(Conversions.mapToJson(map))
   }
 
   def writeSummaryTofile(outputFile: File): Unit = {
