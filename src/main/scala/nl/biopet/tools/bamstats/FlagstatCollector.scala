@@ -28,10 +28,13 @@ import scala.collection.mutable
 class FlagstatCollector {
   protected[FlagstatCollector] var functionCount = 0
   var readsCount = 0
-  protected[FlagstatCollector] val names: mutable.Map[Int, String] = mutable.Map()
-  protected[FlagstatCollector] var functions: Array[SAMRecord => Boolean] = Array()
+  protected[FlagstatCollector] val names: mutable.Map[Int, String] =
+    mutable.Map()
+  protected[FlagstatCollector] var functions: Array[SAMRecord => Boolean] =
+    Array()
   protected[FlagstatCollector] var totalCounts: Array[Long] = Array()
-  protected[FlagstatCollector] var crossCounts: Array[Array[Long]] = Array.ofDim[Long](1, 1)
+  protected[FlagstatCollector] var crossCounts: Array[Array[Long]] =
+    Array.ofDim[Long](1, 1)
 
   def writeAsTsv(file: File): Unit = {
     val writer = new PrintWriter(file)
@@ -43,28 +46,43 @@ class FlagstatCollector {
     addFunction("All", _ => true)
     addFunction("Mapped", record => !record.getReadUnmappedFlag)
     addFunction("Duplicates", record => record.getDuplicateReadFlag)
-    addFunction("FirstOfPair",
-                record => if (record.getReadPairedFlag) record.getFirstOfPairFlag else false)
-    addFunction("SecondOfPair",
-                record => if (record.getReadPairedFlag) record.getSecondOfPairFlag else false)
+    addFunction(
+      "FirstOfPair",
+      record =>
+        if (record.getReadPairedFlag) record.getFirstOfPairFlag else false)
+    addFunction(
+      "SecondOfPair",
+      record =>
+        if (record.getReadPairedFlag) record.getSecondOfPairFlag else false)
 
-    addFunction("ReadNegativeStrand", record => record.getReadNegativeStrandFlag)
+    addFunction("ReadNegativeStrand",
+                record => record.getReadNegativeStrandFlag)
 
-    addFunction("NotPrimaryAlignment", record => record.getNotPrimaryAlignmentFlag)
+    addFunction("NotPrimaryAlignment",
+                record => record.getNotPrimaryAlignmentFlag)
 
     addFunction("ReadPaired", record => record.getReadPairedFlag)
-    addFunction("ProperPair",
-                record => if (record.getReadPairedFlag) record.getProperPairFlag else false)
-
     addFunction(
-      "MateNegativeStrand",
-      record => if (record.getReadPairedFlag) record.getMateNegativeStrandFlag else false)
-    addFunction("MateUnmapped",
-                record => if (record.getReadPairedFlag) record.getMateUnmappedFlag else false)
+      "ProperPair",
+      record =>
+        if (record.getReadPairedFlag) record.getProperPairFlag else false)
 
-    addFunction("ReadFailsVendorQualityCheck", record => record.getReadFailsVendorQualityCheckFlag)
-    addFunction("SupplementaryAlignment", record => record.getSupplementaryAlignmentFlag)
-    addFunction("SecondaryOrSupplementary", record => record.isSecondaryOrSupplementary)
+    addFunction("MateNegativeStrand",
+                record =>
+                  if (record.getReadPairedFlag)
+                    record.getMateNegativeStrandFlag
+                  else false)
+    addFunction(
+      "MateUnmapped",
+      record =>
+        if (record.getReadPairedFlag) record.getMateUnmappedFlag else false)
+
+    addFunction("ReadFailsVendorQualityCheck",
+                record => record.getReadFailsVendorQualityCheckFlag)
+    addFunction("SupplementaryAlignment",
+                record => record.getSupplementaryAlignmentFlag)
+    addFunction("SecondaryOrSupplementary",
+                record => record.isSecondaryOrSupplementary)
   }
 
   /**
@@ -75,7 +93,8 @@ class FlagstatCollector {
     */
   def loadQualityFunctions(m: Int = 10, max: Int = 60): Unit = {
     for (t <- 0 to (max / m))
-      this.addFunction("MAPQ>" + (t * m), record => record.getMappingQuality > (t * m))
+      this.addFunction("MAPQ>" + (t * m),
+                       record => record.getMappingQuality > (t * m))
   }
 
   /**
@@ -185,7 +204,8 @@ class FlagstatCollector {
     for (t <- 0 until names.size) {
       val percentage = (totalCounts(t).toFloat / readsCount) * 100
       buffer.append(
-        "#" + (t + 1) + "\t" + totalCounts(t) + "\t" + f"$percentage%.4f" + "%\t" + names(t) + "\n")
+        "#" + (t + 1) + "\t" + totalCounts(t) + "\t" + f"$percentage%.4f" + "%\t" + names(
+          t) + "\n")
     }
     buffer.append("\n")
 
@@ -205,7 +225,8 @@ class FlagstatCollector {
     val map = (for (t <- 0 until names.size) yield {
       names(t) -> totalCounts(t)
     }).toMap ++ Map(
-      "Singletons" -> crossCounts(names.find(_._2 == "Mapped").map(_._1).getOrElse(-1))(
+      "Singletons" -> crossCounts(
+        names.find(_._2 == "Mapped").map(_._1).getOrElse(-1))(
         names.find(_._2 == "MateUnmapped").map(_._1).getOrElse(-1)))
 
     Json.stringify(Conversions.mapToJson(map))
@@ -267,7 +288,8 @@ class FlagstatCollector {
 
   override def equals(other: Any): Boolean = {
     other match {
-      case f: FlagstatCollector => f.totalCounts.toList == this.totalCounts.toList
+      case f: FlagstatCollector =>
+        f.totalCounts.toList == this.totalCounts.toList
       case _ => false
     }
   }

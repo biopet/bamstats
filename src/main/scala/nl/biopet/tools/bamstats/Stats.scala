@@ -21,14 +21,15 @@ import nl.biopet.utils.Histogram
 /**
   * Created by pjvanthof on 05/07/16.
   */
-case class Stats(flagstat: FlagstatCollector = new FlagstatCollector(),
-                 mappingQualityHistogram: Histogram[Int] = new Histogram[Int](),
-                 insertSizeHistogram: Histogram[Int] = new Histogram[Int](),
-                 clippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 leftClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 rightClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 _5_ClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 _3_ClippingHistogram: Histogram[Int] = new Histogram[Int]()) {
+case class Stats(
+    flagstat: FlagstatCollector = new FlagstatCollector(),
+    mappingQualityHistogram: Histogram[Int] = new Histogram[Int](),
+    insertSizeHistogram: Histogram[Int] = new Histogram[Int](),
+    clippingHistogram: Histogram[Int] = new Histogram[Int](),
+    leftClippingHistogram: Histogram[Int] = new Histogram[Int](),
+    rightClippingHistogram: Histogram[Int] = new Histogram[Int](),
+    _5_ClippingHistogram: Histogram[Int] = new Histogram[Int](),
+    _3_ClippingHistogram: Histogram[Int] = new Histogram[Int]()) {
 
   flagstat.loadDefaultFunctions()
   flagstat.loadQualityFunctions()
@@ -49,33 +50,46 @@ case class Stats(flagstat: FlagstatCollector = new FlagstatCollector(),
 
   def writeStatsToFiles(outputDir: File): Unit = {
     this.flagstat.writeReportToFile(new File(outputDir, "flagstats"))
-    this.flagstat.writeSummaryTofile(new File(outputDir, "flagstats.summary.json"))
-    this.mappingQualityHistogram.writeHistogramToTsv(new File(outputDir, "mapping_quality.tsv"))
-    this.insertSizeHistogram.writeHistogramToTsv(new File(outputDir, "insert_size.tsv"))
-    this.clippingHistogram.writeHistogramToTsv(new File(outputDir, "clipping.tsv"))
-    this.leftClippingHistogram.writeHistogramToTsv(new File(outputDir, "left_clipping.tsv"))
-    this.rightClippingHistogram.writeHistogramToTsv(new File(outputDir, "right_clipping.tsv"))
-    this._5_ClippingHistogram.writeHistogramToTsv(new File(outputDir, "5_prime_clipping.tsv"))
-    this._3_ClippingHistogram.writeHistogramToTsv(new File(outputDir, "3_prime_clipping.tsv"))
+    this.flagstat
+      .writeSummaryTofile(new File(outputDir, "flagstats.summary.json"))
+    this.mappingQualityHistogram
+      .writeHistogramToTsv(new File(outputDir, "mapping_quality.tsv"))
+    this.insertSizeHistogram
+      .writeHistogramToTsv(new File(outputDir, "insert_size.tsv"))
+    this.clippingHistogram
+      .writeHistogramToTsv(new File(outputDir, "clipping.tsv"))
+    this.leftClippingHistogram
+      .writeHistogramToTsv(new File(outputDir, "left_clipping.tsv"))
+    this.rightClippingHistogram
+      .writeHistogramToTsv(new File(outputDir, "right_clipping.tsv"))
+    this._5_ClippingHistogram
+      .writeHistogramToTsv(new File(outputDir, "5_prime_clipping.tsv"))
+    this._3_ClippingHistogram
+      .writeHistogramToTsv(new File(outputDir, "3_prime_clipping.tsv"))
   }
 
   def toSummaryMap: Map[String, Map[String, Any]] = {
     Map(
       "flagstats" -> flagstat.toSummaryMap,
-      "mapping_quality" -> Map("histogram" -> mappingQualityHistogram.toSummaryMap,
-                               "general" -> mappingQualityHistogram.aggregateStats),
+      "mapping_quality" -> Map(
+        "histogram" -> mappingQualityHistogram.toSummaryMap,
+        "general" -> mappingQualityHistogram.aggregateStats),
       "insert_size" -> Map("histogram" -> insertSizeHistogram.toSummaryMap,
                            "general" -> insertSizeHistogram.aggregateStats),
       "clipping" -> Map("histogram" -> clippingHistogram.toSummaryMap,
                         "general" -> clippingHistogram.aggregateStats),
-      "left_clipping" -> Map("histogram" -> leftClippingHistogram.toSummaryMap,
-                             "general" -> leftClippingHistogram.aggregateStats),
-      "right_clipping" -> Map("histogram" -> rightClippingHistogram.toSummaryMap,
-                              "general" -> rightClippingHistogram.aggregateStats),
-      "5_prime_clipping" -> Map("histogram" -> _5_ClippingHistogram.toSummaryMap,
-                                "general" -> _5_ClippingHistogram.aggregateStats),
-      "3_prime_clipping" -> Map("histogram" -> _3_ClippingHistogram.toSummaryMap,
-                                "general" -> _3_ClippingHistogram.aggregateStats)
+      "left_clipping" -> Map(
+        "histogram" -> leftClippingHistogram.toSummaryMap,
+        "general" -> leftClippingHistogram.aggregateStats),
+      "right_clipping" -> Map(
+        "histogram" -> rightClippingHistogram.toSummaryMap,
+        "general" -> rightClippingHistogram.aggregateStats),
+      "5_prime_clipping" -> Map(
+        "histogram" -> _5_ClippingHistogram.toSummaryMap,
+        "general" -> _5_ClippingHistogram.aggregateStats),
+      "3_prime_clipping" -> Map(
+        "histogram" -> _3_ClippingHistogram.toSummaryMap,
+        "general" -> _3_ClippingHistogram.aggregateStats)
     )
   }
 }

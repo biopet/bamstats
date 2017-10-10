@@ -8,8 +8,9 @@ class ArgsParser(cmdName: String) extends AbstractOptParser[Args](cmdName) {
   opt[File]('R', "reference") valueName "<file>" action { (x, c) =>
     c.copy(referenceFasta = Some(x))
   } text "Fasta file of reference"
-  opt[File]('o', "outputDir") required () valueName "<directory>" action { (x, c) =>
-    c.copy(outputDir = x)
+  opt[File]('o', "outputDir") required () valueName "<directory>" action {
+    (x, c) =>
+      c.copy(outputDir = x)
   } text "Output directory"
   opt[File]('b', "bam") required () valueName "<file>" action { (x, c) =>
     c.copy(bamFile = x)

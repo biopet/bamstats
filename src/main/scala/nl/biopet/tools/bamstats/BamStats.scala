@@ -24,17 +24,17 @@ object BamStats extends ToolCommand {
     val cmdArgs =
       parser.parse(args, Args()).getOrElse(throw new IllegalArgumentException)
 
-
     logger.info("Start")
 
-    val sequenceDict = validateReferenceInBam(cmdArgs.bamFile, cmdArgs.referenceFasta)
+    val sequenceDict =
+      validateReferenceInBam(cmdArgs.bamFile, cmdArgs.referenceFasta)
 
     init(cmdArgs.outputDir,
-      cmdArgs.bamFile,
-      sequenceDict,
-      cmdArgs.binSize,
-      cmdArgs.threadBinSize,
-      cmdArgs.tsvOutputs)
+         cmdArgs.bamFile,
+         sequenceDict,
+         cmdArgs.binSize,
+         cmdArgs.threadBinSize,
+         cmdArgs.tsvOutputs)
 
     logger.info("Done")
   }
@@ -43,13 +43,17 @@ object BamStats extends ToolCommand {
     * This will retrieve the [[SAMSequenceDictionary]] from the bam file.
     * When `referenceFasta is given he will validate this against the bam file.`
     */
-  def validateReferenceInBam(bamFile: File, referenceFasta: Option[File]): SAMSequenceDictionary = {
+  def validateReferenceInBam(
+      bamFile: File,
+      referenceFasta: Option[File]): SAMSequenceDictionary = {
     val samReader = SamReaderFactory.makeDefault().open(bamFile)
     val samHeader = samReader.getFileHeader
     samReader.close()
     referenceFasta
       .map { f =>
-        samHeader.getSequenceDictionary.assertSameDictionary(FastaUtils.getCachedDict(f), false)
+        samHeader.getSequenceDictionary.assertSameDictionary(
+          FastaUtils.getCachedDict(f),
+          false)
         FastaUtils.getCachedDict(f)
       }
       .getOrElse(samHeader.getSequenceDictionary)
@@ -71,13 +75,19 @@ object BamStats extends ToolCommand {
            threadBinSize: Int,
            tsvOutput: Boolean): Unit = {
     val contigs = referenceDict.getSequences
-      .flatMap(r => BedRecord(r.getSequenceName, 0, r.getSequenceLength).scatter(threadBinSize))
-    val groups = contigs.foldLeft((List[List[BedRecord]](), List[BedRecord](), 0L)) {
-      case ((finalList, tempList, oldSize), b) =>
-        if (oldSize < threadBinSize) (finalList, b :: tempList, oldSize + b.length)
-        else (tempList :: finalList, b :: Nil, b.length)
-    }
-    val contigsFutures = (groups._2 :: groups._1).map(x => processThread(x, bamFile))
+      .flatMap(
+        r =>
+          BedRecord(r.getSequenceName, 0, r.getSequenceLength)
+            .scatter(threadBinSize))
+    val groups =
+      contigs.foldLeft((List[List[BedRecord]](), List[BedRecord](), 0L)) {
+        case ((finalList, tempList, oldSize), b) =>
+          if (oldSize < threadBinSize)
+            (finalList, b :: tempList, oldSize + b.length)
+          else (tempList :: finalList, b :: Nil, b.length)
+      }
+    val contigsFutures =
+      (groups._2 :: groups._1).map(x => processThread(x, bamFile))
 
     val unmappedStats = processUnmappedReads(bamFile)
     val (stats, contigStats) = waitOnFutures(contigsFutures)
@@ -87,37 +97,42 @@ object BamStats extends ToolCommand {
       stats.flagstat.writeAsTsv(new File(outputDir, "flagstats.tsv"))
 
       stats.insertSizeHistogram.writeFilesAndPlot(outputDir,
-        "insertsize",
-        "Insertsize",
-        "Reads",
-        "Insertsize distribution")
-      stats.mappingQualityHistogram.writeFilesAndPlot(outputDir,
+                                                  "insertsize",
+                                                  "Insertsize",
+                                                  "Reads",
+                                                  "Insertsize distribution")
+      stats.mappingQualityHistogram.writeFilesAndPlot(
+        outputDir,
         "mappingQuality",
         "Mapping Quality",
         "Reads",
         "Mapping Quality distribution")
       stats.clippingHistogram.writeFilesAndPlot(outputDir,
-        "clipping",
-        "CLipped bases",
-        "Reads",
-        "Clipping distribution")
+                                                "clipping",
+                                                "CLipped bases",
+                                                "Reads",
+                                                "Clipping distribution")
 
-      stats.leftClippingHistogram.writeFilesAndPlot(outputDir,
+      stats.leftClippingHistogram.writeFilesAndPlot(
+        outputDir,
         "left_clipping",
         "CLipped bases",
         "Reads",
         "Left Clipping distribution")
-      stats.rightClippingHistogram.writeFilesAndPlot(outputDir,
+      stats.rightClippingHistogram.writeFilesAndPlot(
+        outputDir,
         "right_clipping",
         "CLipped bases",
         "Reads",
         "Right Clipping distribution")
-      stats._3_ClippingHistogram.writeFilesAndPlot(outputDir,
+      stats._3_ClippingHistogram.writeFilesAndPlot(
+        outputDir,
         "3prime_clipping",
         "CLipped bases",
         "Reads",
         "3 Prime Clipping distribution")
-      stats._5_ClippingHistogram.writeFilesAndPlot(outputDir,
+      stats._5_ClippingHistogram.writeFilesAndPlot(
+        outputDir,
         "5prime_clipping",
         "CLipped bases",
         "Reads",
@@ -133,7 +148,8 @@ object BamStats extends ToolCommand {
     statsWriter.println(Json.stringify(Conversions.mapToJson(statsMap)))
     statsWriter.close()
 
-    val summaryWriter = new PrintWriter(new File(outputDir, "bamstats.summary.json"))
+    val summaryWriter = new PrintWriter(
+      new File(outputDir, "bamstats.summary.json"))
     summaryWriter.println(Json.stringify(Conversions.mapToJson(totalStats)))
     summaryWriter.close()
   }
@@ -145,9 +161,11 @@ object BamStats extends ToolCommand {
     * @param msg Optional message for logging
     * @return Output stats
     */
-  def waitOnFutures(futures: List[Future[Map[BedRecord, Stats]]],
-                    msg: Option[String] = None): (Stats, Map[String, Stats]) = {
-    msg.foreach(m => logger.info(s"Start monitoring jobs for '$m', ${futures.size} jobs"))
+  def waitOnFutures(
+      futures: List[Future[Map[BedRecord, Stats]]],
+      msg: Option[String] = None): (Stats, Map[String, Stats]) = {
+    msg.foreach(m =>
+      logger.info(s"Start monitoring jobs for '$m', ${futures.size} jobs"))
     futures.foreach(_.onFailure { case t => throw new RuntimeException(t) })
     val totalSize = futures.size
     val totalStats = Stats()
@@ -161,7 +179,8 @@ object BamStats extends ToolCommand {
           Await.result(f, Duration.Inf).foreach {
             case (region, stats) =>
               totalStats += stats
-              if (contigStats.contains(region.chr)) contigStats(region.chr) += stats
+              if (contigStats.contains(region.chr))
+                contigStats(region.chr) += stats
               else contigStats(region.chr) = stats
           }
         }
@@ -188,7 +207,8 @@ object BamStats extends ToolCommand {
     * @param bamFile Input bamfile
     * @return Output stats
     */
-  def processThread(scatters: List[BedRecord], bamFile: File): Future[Map[BedRecord, Stats]] =
+  def processThread(scatters: List[BedRecord],
+                    bamFile: File): Future[Map[BedRecord, Stats]] =
     Future {
       logger.debug(s"Start task on ${scatters.size} regions")
       val samReader: SamReader = SamReaderFactory.makeDefault().open(bamFile)
@@ -203,7 +223,8 @@ object BamStats extends ToolCommand {
   def processRegion(bedRecord: BedRecord, samReader: SamReader): Stats = {
     //logger.debug(s"Start on $bedRecord")
     val totalStats = Stats()
-    val it = samReader.query(bedRecord.chr, bedRecord.start, bedRecord.end, false)
+    val it =
+      samReader.query(bedRecord.chr, bedRecord.start, bedRecord.end, false)
     for (samRecord <- it) {
 
       // Read based stats
@@ -213,7 +234,8 @@ object BamStats extends ToolCommand {
           totalStats.mappingQualityHistogram.add(samRecord.getMappingQuality)
         }
         if (samRecord.getReadPairedFlag && samRecord.getProperPairFlag && samRecord.getFirstOfPairFlag && !samRecord.getSecondOfPairFlag)
-          totalStats.insertSizeHistogram.add(samRecord.getInferredInsertSize.abs)
+          totalStats.insertSizeHistogram.add(
+            samRecord.getInferredInsertSize.abs)
 
         val leftClipping = samRecord.getAlignmentStart - samRecord.getUnclippedStart
         val rightClipping = samRecord.getUnclippedEnd - samRecord.getAlignmentEnd
@@ -259,11 +281,12 @@ object BamStats extends ToolCommand {
     val reader = Source.fromFile(tsvFile)
     val it = reader.getLines()
     val header = it.next().split("\t")
-    val arrays = header.zipWithIndex.map(x => x._2 -> (x._1 -> ArrayBuffer[Long]()))
+    val arrays =
+      header.zipWithIndex.map(x => x._2 -> (x._1 -> ArrayBuffer[Long]()))
     for (line <- it) {
       val values = line.split("\t")
       require(values.size == header.size,
-        s"Line does not have the number of field as header: $line")
+              s"Line does not have the number of field as header: $line")
       for (array <- arrays) {
         array._2._2.append(values(array._1).toLong)
       }
