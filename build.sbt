@@ -5,11 +5,11 @@ scalaVersion := "2.11.11"
 
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-libraryDependencies += "com.github.biopet" %% "biopet-tool-utils" % "0.1-SNAPTSHOT" changing()
-libraryDependencies += "com.github.biopet" %% "biopet-ngs-utils" % "0.1-SNAPTSHOT" changing()
-libraryDependencies += "com.github.biopet" %% "biopet-config-utils" % "0.1-SNAPTSHOT" changing()
+libraryDependencies += "com.github.biopet" %% "biopet-tool-utils" % "0.1-SNAPSHOT" changing()
+libraryDependencies += "com.github.biopet" %% "biopet-ngs-utils" % "0.1-SNAPSHOT" changing()
+libraryDependencies += "com.github.biopet" %% "biopet-config-utils" % "0.1-SNAPSHOT" changing()
 
-libraryDependencies += "com.github.biopet" %% "biopet-test-utils" % "0.1-SNAPTSHOT" % Test changing()
+libraryDependencies += "com.github.biopet" %% "biopet-test-utils" % "0.1-SNAPSHOT" % Test changing()
 libraryDependencies += "com.google.guava" % "guava" % "18.0" % Test
 
 mainClass in assembly := Some("nl.biopet.tools.bamstats.BamStats")
