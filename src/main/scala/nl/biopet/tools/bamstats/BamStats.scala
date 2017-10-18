@@ -4,11 +4,11 @@ import java.io.{File, PrintWriter}
 
 import htsjdk.samtools.{SAMSequenceDictionary, SamReader, SamReaderFactory}
 import nl.biopet.utils.config.Conversions
-import nl.biopet.utils.ngs.FastaUtils
+import nl.biopet.utils.ngs.fasta
 import nl.biopet.utils.ngs.intervals.BedRecord
 import nl.biopet.utils.tool.ToolCommand
 import play.api.libs.json.Json
-import nl.biopet.utils.ngs.BamUtils.SamDictCheck
+import nl.biopet.utils.ngs.bam.SamDictCheck
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -52,9 +52,9 @@ object BamStats extends ToolCommand {
     referenceFasta
       .map { f =>
         samHeader.getSequenceDictionary.assertSameDictionary(
-          FastaUtils.getCachedDict(f),
+          fasta.getCachedDict(f),
           false)
-        FastaUtils.getCachedDict(f)
+        fasta.getCachedDict(f)
       }
       .getOrElse(samHeader.getSequenceDictionary)
   }
@@ -94,24 +94,32 @@ object BamStats extends ToolCommand {
     stats += Await.result(unmappedStats, Duration.Inf)
 
     if (tsvOutput) {
-      stats.flagstat.writeAsTsv(new File(outputDir, "flagstats.tsv"))
+      stats.flagstat.writeAsTsv(
+        new File(
+          outputDir,
+          "flagstats.tsv")
+      )
 
-      stats.insertSizeHistogram.writeFilesAndPlot(outputDir,
-                                                  "insertsize",
-                                                  "Insertsize",
-                                                  "Reads",
-                                                  "Insertsize distribution")
+      stats.insertSizeHistogram.writeFilesAndPlot(
+        outputDir,
+        "insertsize",
+        "Insertsize",
+        "Reads",
+        "Insertsize distribution")
+
       stats.mappingQualityHistogram.writeFilesAndPlot(
         outputDir,
         "mappingQuality",
         "Mapping Quality",
         "Reads",
         "Mapping Quality distribution")
-      stats.clippingHistogram.writeFilesAndPlot(outputDir,
-                                                "clipping",
-                                                "CLipped bases",
-                                                "Reads",
-                                                "Clipping distribution")
+
+      stats.clippingHistogram.writeFilesAndPlot(
+        outputDir,
+        "clipping",
+        "CLipped bases",
+        "Reads",
+        "Clipping distribution")
 
       stats.leftClippingHistogram.writeFilesAndPlot(
         outputDir,
@@ -119,18 +127,21 @@ object BamStats extends ToolCommand {
         "CLipped bases",
         "Reads",
         "Left Clipping distribution")
+
       stats.rightClippingHistogram.writeFilesAndPlot(
         outputDir,
         "right_clipping",
         "CLipped bases",
         "Reads",
         "Right Clipping distribution")
+
       stats._3_ClippingHistogram.writeFilesAndPlot(
         outputDir,
         "3prime_clipping",
         "CLipped bases",
         "Reads",
         "3 Prime Clipping distribution")
+
       stats._5_ClippingHistogram.writeFilesAndPlot(
         outputDir,
         "5prime_clipping",
