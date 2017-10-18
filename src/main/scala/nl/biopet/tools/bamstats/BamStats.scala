@@ -4,11 +4,11 @@ import java.io.{File, PrintWriter}
 
 import htsjdk.samtools.{SAMSequenceDictionary, SamReader, SamReaderFactory}
 import nl.biopet.utils.config.Conversions
-import nl.biopet.utils.ngs.FastaUtils
+import nl.biopet.utils.ngs.fasta
 import nl.biopet.utils.ngs.intervals.BedRecord
 import nl.biopet.utils.tool.ToolCommand
 import play.api.libs.json.Json
-import nl.biopet.utils.ngs.BamUtils.SamDictCheck
+import nl.biopet.utils.ngs.bam.SamDictCheck
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -52,9 +52,9 @@ object BamStats extends ToolCommand {
     referenceFasta
       .map { f =>
         samHeader.getSequenceDictionary.assertSameDictionary(
-          FastaUtils.getCachedDict(f),
+          fasta.getCachedDict(f),
           false)
-        FastaUtils.getCachedDict(f)
+        fasta.getCachedDict(f)
       }
       .getOrElse(samHeader.getSequenceDictionary)
   }
