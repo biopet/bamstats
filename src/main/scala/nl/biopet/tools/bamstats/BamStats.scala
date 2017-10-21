@@ -3,7 +3,7 @@ package nl.biopet.tools.bamstats
 import java.io.{File, PrintWriter}
 
 import htsjdk.samtools.{SAMSequenceDictionary, SamReader, SamReaderFactory}
-import nl.biopet.utils.config.Conversions
+import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.fasta
 import nl.biopet.utils.ngs.intervals.BedRecord
 import nl.biopet.utils.tool.ToolCommand
@@ -156,12 +156,12 @@ object BamStats extends ToolCommand {
       "total" -> totalStats,
       "contigs" -> contigStats
     )
-    statsWriter.println(Json.stringify(Conversions.mapToJson(statsMap)))
+    statsWriter.println(Json.stringify(conversions.mapToJson(statsMap)))
     statsWriter.close()
 
     val summaryWriter = new PrintWriter(
       new File(outputDir, "bamstats.summary.json"))
-    summaryWriter.println(Json.stringify(Conversions.mapToJson(totalStats)))
+    summaryWriter.println(Json.stringify(conversions.mapToJson(totalStats)))
     summaryWriter.close()
   }
 
