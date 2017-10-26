@@ -20,7 +20,7 @@ import scala.collection.JavaConversions._
 
 object BamStats extends ToolCommand {
   def main(args: Array[String]): Unit = {
-    val parser = new ArgsParser(BamStats)
+    val parser = new ArgsParser(toolName)
     val cmdArgs =
       parser.parse(args, Args()).getOrElse(throw new IllegalArgumentException)
 
