@@ -3,10 +3,10 @@ package nl.biopet.tools.bamstats
 import java.io.File
 
 import com.google.common.io.Files
-import nl.biopet.test.BiopetTest
+import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
-class BamStatsTest extends BiopetTest {
+class BamStatsTest extends ToolTest[Args] {
   @Test
   def testNoArgs(): Unit = {
     intercept[IllegalArgumentException] {
