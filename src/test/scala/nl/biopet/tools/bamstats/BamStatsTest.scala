@@ -7,6 +7,7 @@ import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
 class BamStatsTest extends ToolTest[Args] {
+  def toolCommand: BamStats.type = BamStats
   @Test
   def testNoArgs(): Unit = {
     intercept[IllegalArgumentException] {
