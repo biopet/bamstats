@@ -95,17 +95,14 @@ object BamStats extends ToolCommand[Args] {
 
     if (tsvOutput) {
       stats.flagstat.writeAsTsv(
-        new File(
-          outputDir,
-          "flagstats.tsv")
+        new File(outputDir, "flagstats.tsv")
       )
 
-      stats.insertSizeHistogram.writeFilesAndPlot(
-        outputDir,
-        "insertsize",
-        "Insertsize",
-        "Reads",
-        "Insertsize distribution")
+      stats.insertSizeHistogram.writeFilesAndPlot(outputDir,
+                                                  "insertsize",
+                                                  "Insertsize",
+                                                  "Reads",
+                                                  "Insertsize distribution")
 
       stats.mappingQualityHistogram.writeFilesAndPlot(
         outputDir,
@@ -114,12 +111,11 @@ object BamStats extends ToolCommand[Args] {
         "Reads",
         "Mapping Quality distribution")
 
-      stats.clippingHistogram.writeFilesAndPlot(
-        outputDir,
-        "clipping",
-        "CLipped bases",
-        "Reads",
-        "Clipping distribution")
+      stats.clippingHistogram.writeFilesAndPlot(outputDir,
+                                                "clipping",
+                                                "CLipped bases",
+                                                "Reads",
+                                                "Clipping distribution")
 
       stats.leftClippingHistogram.writeFilesAndPlot(
         outputDir,
