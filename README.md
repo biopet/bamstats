@@ -1,7 +1,7 @@
 # BamStats
 
 
-BamStats reports clipping stats, flag stats and mapping quality on a BAM file. It outputs
+BamStats reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
 a JSON file, but can optionally also output in TSV format.
      
 

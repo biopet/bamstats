@@ -325,13 +325,13 @@ object BamStats extends ToolCommand[Args] {
 
   def descriptionText: String =
     s"""
-       |$toolName reports clipping stats, flag stats and mapping quality on a BAM file. It outputs
+       |$toolName reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
        |a JSON file, but can optionally also output in TSV format.
      """.stripMargin
 
   def manualText: String =
     s"""
-       |BamStats requires a BAM file and an output directory for its stats.
+       |$toolName requires a BAM file and an output directory for its stats.
        |Optionally a reference fasta file can be added against which the BAM file will be validated.
        |There are also fllags to set the binsize of stats, the size of the region per thread, and whether
        |to also output in TSV format.
@@ -340,6 +340,9 @@ object BamStats extends ToolCommand[Args] {
 
   def exampleText: String =
     s"""
+       |To validate `file.bam`:
+       |${example("-b", "file.bam", "-o", "output_dir")}
+       |
        |To validate `file.bam` to `reference.fa` and output the result also as TSV, while setting
        |bin size and thread bin size to 200:
        |${example("-R",
