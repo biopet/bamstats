@@ -29,7 +29,7 @@ import nl.biopet.utils.ngs.fasta
 import nl.biopet.utils.ngs.intervals.BedRecord
 import nl.biopet.utils.tool.ToolCommand
 import play.api.libs.json.Json
-import nl.biopet.utils.ngs.bam.SamDictCheck
+import nl.biopet.utils.ngs.bam._
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
