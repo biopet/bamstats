@@ -189,9 +189,8 @@ object BamStats extends ToolCommand[Args] {
     * @param msg Optional message for logging
     * @return Output stats
     */
-  def waitOnFutures(
-      futures: List[Future[Map[BedRecord, Stats]]],
-      msg: Option[String] = None): (Stats, Map[String, Stats]) = {
+  def waitOnFutures(futures: List[Future[Map[BedRecord, Stats]]],
+                    msg: Option[String] = None): (Stats, Map[String, Stats]) = {
     msg.foreach(m =>
       logger.info(s"Start monitoring jobs for '$m', ${futures.size} jobs"))
     futures.foreach(_.onFailure { case t => throw new RuntimeException(t) })
