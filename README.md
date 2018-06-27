@@ -1,9 +1,17 @@
 # BamStats
 
+BamStats is a package that contains tools
+to generate stats from a BAM file,
+merge those stats for multiple samples,
+and validate the generated stats files.
 
-BamStats reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
+     
+#### Mode - Generate
+
+Generate reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
 a JSON file, but can optionally also output in TSV format.
      
+        
 
 # Documentation
 
