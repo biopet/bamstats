@@ -1,30 +1,8 @@
-/*
- * Copyright (c) 2014 Biopet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-package nl.biopet.tools.bamstats
+package nl.biopet.tools.bamstats.generate
 
 import java.io.{File, PrintWriter}
 
 import htsjdk.samtools.{SAMSequenceDictionary, SamReader, SamReaderFactory}
-import nl.biopet.tools.bamstats.generate.{Args, ArgsParser}
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.fasta
 import nl.biopet.utils.ngs.intervals.BedRecord
@@ -39,8 +17,9 @@ import scala.concurrent.{Await, Future, TimeoutException}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
 import scala.collection.JavaConversions._
+import nl.biopet.tools.bamstats.Stats
 
-object BamStats extends ToolCommand[Args] {
+object Generate extends ToolCommand[Args] {
   def emptyArgs: Args = Args()
   def argsParser = new ArgsParser(this)
   def main(args: Array[String]): Unit = {
@@ -82,7 +61,7 @@ object BamStats extends ToolCommand[Args] {
   }
 
   /**
-    * This is the main running function of [[BamStats]]. This will start the threads and collect and write the results.
+    * This is the main running function of [[Generate]]. This will start the threads and collect and write the results.
     *
     * @param outputDir All output files will be placed here
     * @param bamFile Input bam file
@@ -325,36 +304,36 @@ object BamStats extends ToolCommand[Args] {
 
   def descriptionText: String =
     s"""
-       |$toolName reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
-       |a JSON file, but can optionally also output in TSV format.
+         |$toolName reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
+         |a JSON file, but can optionally also output in TSV format.
      """.stripMargin
 
   def manualText: String =
     s"""
-       |$toolName requires a BAM file and an output directory for its stats.
-       |Optionally a reference fasta file can be added against which the BAM file will be validated.
-       |There are also fllags to set the binsize of stats, the size of the region per thread, and whether
-       |to also output in TSV format.
-       |
+         |$toolName requires a BAM file and an output directory for its stats.
+         |Optionally a reference fasta file can be added against which the BAM file will be validated.
+         |There are also fllags to set the binsize of stats, the size of the region per thread, and whether
+         |to also output in TSV format.
+         |
      """.stripMargin
 
   def exampleText: String =
     s"""
-       |To validate `file.bam`:
-       |${example("-b", "file.bam", "-o", "output_dir")}
-       |
+         |To validate `file.bam`:
+         |${example("-b", "file.bam", "-o", "output_dir")}
+         |
        |To validate `file.bam` to `reference.fa` and output the result also as TSV, while setting
-       |bin size and thread bin size to 200:
-       |${example("-R",
-                  "reference.fa",
-                  "-o",
-                  "output_dir",
-                  "-b",
-                  "file.bam",
-                  "--binSize",
-                  "200",
-                  "--threadBinSize",
-                  "200",
-                  "--tsvOutputs")}
+         |bin size and thread bin size to 200:
+         |${example("-R",
+                    "reference.fa",
+                    "-o",
+                    "output_dir",
+                    "-b",
+                    "file.bam",
+                    "--binSize",
+                    "200",
+                    "--threadBinSize",
+                    "200",
+                    "--tsvOutputs")}
      """.stripMargin
 }
