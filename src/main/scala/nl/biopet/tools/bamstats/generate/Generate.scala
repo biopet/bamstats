@@ -24,6 +24,7 @@ package nl.biopet.tools.bamstats.generate
 import java.io.{File, PrintWriter}
 
 import htsjdk.samtools.{SAMSequenceDictionary, SamReader, SamReaderFactory}
+import nl.biopet.tools.bamstats.Stats
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.fasta
 import nl.biopet.utils.ngs.intervals.BedRecord
@@ -38,7 +39,6 @@ import scala.concurrent.{Await, Future, TimeoutException}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
 import scala.collection.JavaConversions._
-import nl.biopet.tools.bamstats.Stats
 
 object Generate extends ToolCommand[Args] {
   def emptyArgs: Args = Args()

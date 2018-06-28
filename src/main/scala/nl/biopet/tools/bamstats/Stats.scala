@@ -23,6 +23,7 @@ package nl.biopet.tools.bamstats
 
 import java.io.File
 
+import nl.biopet.tools.bamstats.schema.Data
 import nl.biopet.utils.Histogram
 
 /**
@@ -97,4 +98,6 @@ case class Stats(flagstat: FlagstatCollector = new FlagstatCollector(),
         "general" -> _3_ClippingHistogram.aggregateStats)
     )
   }
+
+  def statsToData(): Data = ???
 }
