@@ -19,20 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package nl.biopet.tools.bamstats
+package nl.biopet.tools.bamstats.generate
 
 import java.io.File
 
 import com.google.common.io.Files
+import nl.biopet.tools.bamstats.generate.Generate
 import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
-class BamStatsTest extends ToolTest[Args] {
-  def toolCommand: BamStats.type = BamStats
+class GenerateTest extends ToolTest[Args] {
+  def toolCommand: Generate.type = Generate
   @Test
   def testNoArgs(): Unit = {
     intercept[IllegalArgumentException] {
-      BamStats.main(Array())
+      Generate.main(Array())
     }
   }
 
@@ -42,7 +43,7 @@ class BamStatsTest extends ToolTest[Args] {
   def testMain(): Unit = {
     val outputDir = Files.createTempDir()
     outputDir.deleteOnExit()
-    BamStats.main(
+    Generate.main(
       Array("-b", pairedBam01.getAbsolutePath, "-o", outputDir.getAbsolutePath))
 
     new File(outputDir, "bamstats.json") should exist
@@ -71,7 +72,7 @@ class BamStatsTest extends ToolTest[Args] {
   def testTsvOutputs(): Unit = {
     val outputDir = Files.createTempDir()
     outputDir.deleteOnExit()
-    BamStats.main(
+    Generate.main(
       Array("-b",
             pairedBam01.getAbsolutePath,
             "-o",
