@@ -34,7 +34,7 @@ case class Data(mappingQualityHistogram: Counts.DoubleArray[Int],
 //  }
   def validate(): Unit = ???
 
-  def asGroupStats: GroupStats = ???
+  def asGroupStats: GroupStats = GroupStats.statsFromData(this)
 
   def toJson: JsValue = {
     Json.toJson(this)
