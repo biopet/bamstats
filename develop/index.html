@@ -86,7 +86,7 @@
           
         </ul>
         <ul class="nav nav-sidebar nav-list">
-          <li><b>Project Links</b></li>
+          <li><b>Links</b></li>
 
           <li><a href="https://github.com/biopet/bamstats">Source code</a></li>
           <li><a href="https://github.com/biopet/bamstats/issues">Feedback, feature requests and bug reports</a></li>
@@ -103,7 +103,13 @@
 
         
         <h1 id="description" class="section">Description</h1>
-        <p>BamStats reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
+        <p>BamStats is a package that contains tools
+        to generate stats from a BAM file,
+        merge those stats for multiple samples,
+        and validate the generated stats files.</p>
+        
+        <h4 id="mode---generate" class="section">Mode - Generate</h4>
+        <p>Generate reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
         a JSON file, but can optionally also output in TSV format.</p>
         
         <h1 id="installation" class="section">Installation</h1>
@@ -115,19 +121,23 @@
         <pre><code>java -jar &lt;BamStats_jar&gt; --help</code></pre>
         
         <h1 id="manual" class="section">Manual</h1>
-        <p>BamStats requires a BAM file and an output directory for its stats.
+        
+        <h4 id="mode---generate-1" class="section">Mode - Generate</h4>
+        <p>Generate requires a BAM file and an output directory for its stats.
         Optionally a reference fasta file can be added against which the BAM file will be validated.
         There are also fllags to set the binsize of stats, the size of the region per thread, and whether
         to also output in TSV format.</p>
         
         <h2 id="example" class="section">Example</h2>
+        
+        <h4 id="mode---generate-2" class="section">Mode - Generate</h4>
         <p>To validate <code>file.bam</code>:</p>
-        <pre><code>java -jar &lt;BamStats_jar&gt; \
+        <pre><code>java -jar &lt;Generate_jar&gt; \
 -b file.bam \
 -o output_dir</code></pre>
         <p>To validate <code>file.bam</code> to <code>reference.fa</code> and output the result also as TSV, while setting
         bin size and thread bin size to 200:</p>
-        <pre><code>java -jar &lt;BamStats_jar&gt; \
+        <pre><code>java -jar &lt;Generate_jar&gt; \
 -R reference.fa \
 -o output_dir \
 -b file.bam \
@@ -166,40 +176,16 @@
               <td>Print version</td>
             </tr>
             <tr>
-              <td>--reference, -R</td>
+              <td>toolName</td>
               <td>no</td>
               <td>no</td>
-              <td>Fasta file of reference</td>
+              <td>Name of the tool to execute</td>
             </tr>
             <tr>
-              <td>--outputDir, -o</td>
-              <td>yes</td>
+              <td>tool args</td>
               <td>no</td>
-              <td>Output directory</td>
-            </tr>
-            <tr>
-              <td>--bam, -b</td>
-              <td>yes</td>
-              <td>no</td>
-              <td>Input bam file</td>
-            </tr>
-            <tr>
-              <td>--binSize</td>
-              <td>no</td>
-              <td>no</td>
-              <td>Bin size of stats (beta)</td>
-            </tr>
-            <tr>
-              <td>--threadBinSize</td>
-              <td>no</td>
-              <td>no</td>
-              <td>Size of region per thread</td>
-            </tr>
-            <tr>
-              <td>--tsvOutputs</td>
-              <td>no</td>
-              <td>no</td>
-              <td>Also output tsv files, default there is only a json</td>
+              <td>yes (unlimited)</td>
+              <td>Arguments for the tool</td>
             </tr>
           </tbody>
         </table>
