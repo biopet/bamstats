@@ -29,21 +29,21 @@ import nl.biopet.utils.Histogram
 /**
   * Created by pjvanthof on 05/07/16.
   */
-case class Stats(flagstat: FlagstatCollector = new FlagstatCollector(),
-                 mappingQualityHistogram: Histogram[Int] = new Histogram[Int](),
-                 insertSizeHistogram: Histogram[Int] = new Histogram[Int](),
-                 clippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 leftClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 rightClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 _5_ClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 _3_ClippingHistogram: Histogram[Int] = new Histogram[Int]()) {
+case class GroupStats(flagstat: FlagstatCollector = new FlagstatCollector(),
+                      mappingQualityHistogram: Histogram[Int] = new Histogram[Int](),
+                      insertSizeHistogram: Histogram[Int] = new Histogram[Int](),
+                      clippingHistogram: Histogram[Int] = new Histogram[Int](),
+                      leftClippingHistogram: Histogram[Int] = new Histogram[Int](),
+                      rightClippingHistogram: Histogram[Int] = new Histogram[Int](),
+                      _5_ClippingHistogram: Histogram[Int] = new Histogram[Int](),
+                      _3_ClippingHistogram: Histogram[Int] = new Histogram[Int]()) {
 
   flagstat.loadDefaultFunctions()
   flagstat.loadQualityFunctions()
   flagstat.loadOrientationFunctions()
 
-  /** This will add an other [[Stats]] inside `this` */
-  def +=(other: Stats): Stats = {
+  /** This will add an other [[GroupStats]] inside `this` */
+  def +=(other: GroupStats): GroupStats = {
     this.flagstat += other.flagstat
     this.mappingQualityHistogram += other.mappingQualityHistogram
     this.insertSizeHistogram += other.insertSizeHistogram
