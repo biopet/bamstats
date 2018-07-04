@@ -1,6 +1,10 @@
 package nl.biopet.tools.bamstats.schema
 
+import java.io.File
+import nl.biopet.utils.io
+import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.utils.Counts
+import play.api.libs.json.{JsValue, Json}
 
 case class Data(mappingQualityHistogram: Counts.DoubleArray[Int],
                 insertSizeHistogram: Counts.DoubleArray[Int],
@@ -29,6 +33,17 @@ case class Data(mappingQualityHistogram: Counts.DoubleArray[Int],
 //    )
 //  }
   def validate(): Unit = ???
+
+  def asGroupStats: GroupStats = ???
+
+  def toJson: JsValue = {
+    Json.toJson(this)
+  }
+
+  def writeFile(file: File): Unit = {
+    io.writeLinesToFile(file, Json.stringify(toJson) :: Nil)
+  }
+
   def addHistogram(map1: Map[Int, Long],
                    map2: Map[Int, Long]): Map[Int, Long] = {
     {
