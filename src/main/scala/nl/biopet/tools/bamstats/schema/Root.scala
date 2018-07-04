@@ -14,7 +14,8 @@ case class Root(samples: Map[String, Sample], bamStats: Option[Aggregation]) {
         sampleData.libraries.flatMap {
           case (libraryId, libraryData) =>
             libraryData.readgroups.map {
-              case (readgroupID, readgroupData) => GroupID(sampleId,libraryId,readgroupID) -> readgroupData
+              case (readgroupID, readgroupData) =>
+                GroupID(sampleId, libraryId, readgroupID) -> readgroupData
             }
         }
 
@@ -31,13 +32,15 @@ case class Root(samples: Map[String, Sample], bamStats: Option[Aggregation]) {
 
   def asStats: List[Stats] = {
     readgroups.map {
-      case (readgroupID, readgroupData) => Stats(readgroupID, GroupStats.statsFromData(readgroupData.data
-      ))
+      case (readgroupID, readgroupData) =>
+        Stats(readgroupID, GroupStats.statsFromData(readgroupData.data))
     }
   }.toList
 
   def validate(): Unit = {
-    readgroups.foreach { case (_, readgroupData) => readgroupData.data.validate()}
+    readgroups.foreach {
+      case (_, readgroupData) => readgroupData.data.validate()
+    }
   }
   def +(other: Root): Root = {
     ???
@@ -47,13 +50,14 @@ object Root {
   def fromJson(json: JsValue): Root = {
     Json.fromJson[Root](json) match {
       case JsSuccess(root: Root, path: JsPath) => root
-      case e: JsError => throw new IllegalStateException(e.errors.mkString("\n"))
+      case e: JsError =>
+        throw new IllegalStateException(e.errors.mkString("\n"))
     }
   }
 
   def fromFile(file: File): Root = {
-   fromJson(conversions.fileToJson(file))
- }
+    fromJson(conversions.fileToJson(file))
+  }
 
   def fromGroupStats(groups: List[Stats]): Root = ???
 

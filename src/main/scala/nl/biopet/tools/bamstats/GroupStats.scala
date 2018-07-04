@@ -100,10 +100,32 @@ case class GroupStats(
     )
   }
 
-  def statsToData(): Data = ???
-
+  def statsToData(): Data =
+    new Data(
+      mappingQualityHistogram = mappingQualityHistogram.toDoubleArray,
+      insertSizeHistogram = insertSizeHistogram.toDoubleArray,
+      clippingHistogram = clippingHistogram.toDoubleArray,
+      leftClippingHistogram = leftClippingHistogram.toDoubleArray,
+      rightClippingHistogram = rightClippingHistogram.toDoubleArray,
+      _5_ClippingHistogram = _5_ClippingHistogram.toDoubleArray,
+      _3_ClippingHistogram = _3_ClippingHistogram.toDoubleArray
+    )
 }
 
 object GroupStats {
-  def statsFromData(data: Data): GroupStats = ???
+  def statsFromData(data: Data): GroupStats =
+    new GroupStats(
+      mappingQualityHistogram =
+        Histogram.fromDoubleArray(data.mappingQualityHistogram),
+      insertSizeHistogram = Histogram.fromDoubleArray(data.insertSizeHistogram),
+      clippingHistogram = Histogram.fromDoubleArray(data.clippingHistogram),
+      leftClippingHistogram =
+        Histogram.fromDoubleArray(data.leftClippingHistogram),
+      rightClippingHistogram =
+        Histogram.fromDoubleArray(data.rightClippingHistogram),
+      _5_ClippingHistogram =
+        Histogram.fromDoubleArray(data._5_ClippingHistogram),
+      _3_ClippingHistogram =
+        Histogram.fromDoubleArray(data._3_ClippingHistogram)
+    )
 }
