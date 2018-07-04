@@ -60,15 +60,23 @@ object Root {
     Root(
       groups.groupBy(_.groupID.sample).map {
         case (sampleID, sampleGroups) =>
-          sampleID -> Sample(sampleGroups.groupBy(_.groupID.library).map {
-            case(libraryID, libraryGroups) =>
-              libraryID -> Library(
-                libraryGroups.groupBy(_.groupID.readgroup).map{       case (readgroupID, readgroups) =>
-                  readgroupID -> Readgroup(readgroups.map(_.stats.statsToData()))
-
-          }, None)
-          }, None)
-      }, None)
+          sampleID -> Sample(
+            sampleGroups.groupBy(_.groupID.library).map {
+              case (libraryID, libraryGroups) =>
+                libraryID -> Library(
+                  libraryGroups.groupBy(_.groupID.readgroup).map {
+                    case (readgroupID, readgroups) =>
+                      readgroupID -> Readgroup(
+                        readgroups.map(_.stats).reduce(_ + _).statsToData())
+                  },
+                  None
+                )
+            },
+            None
+          )
+      },
+      None
+    )
   }
 
 }

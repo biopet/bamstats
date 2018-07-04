@@ -110,6 +110,8 @@ case class GroupStats(
       _5_ClippingHistogram = _5_ClippingHistogram.toDoubleArray,
       _3_ClippingHistogram = _3_ClippingHistogram.toDoubleArray
     )
+
+  def +(other: GroupStats): GroupStats = ???
 }
 
 object GroupStats {
