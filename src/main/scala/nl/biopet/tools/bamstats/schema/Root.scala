@@ -42,9 +42,6 @@ case class Root(samples: Map[String, Sample], bamStats: Option[Aggregation]) {
       case (_, readgroupData) => readgroupData.data.validate()
     }
   }
-  def +(other: Root): Root = {
-    ???
-  }
 }
 object Root {
   def fromJson(json: JsValue): Root = {
@@ -59,6 +56,19 @@ object Root {
     fromJson(conversions.fileToJson(file))
   }
 
-  def fromGroupStats(groups: List[Stats]): Root = ???
+  def fromGroupStats(groups: List[Stats]): Root = {
+    Root(
+      groups.groupBy(_.groupID.sample).map {
+        case (sampleID, sampleGroups) =>
+          sampleID -> Sample(sampleGroups.groupBy(_.groupID.library).map {
+            case(libraryID, libraryGroups) =>
+              libraryID -> Library(
+                libraryGroups.groupBy(_.groupID.readgroup).map{       case (readgroupID, readgroups) =>
+                  readgroupID -> Readgroup(readgroups.map(_.stats.statsToData()))
+
+          }, None)
+          }, None)
+      }, None)
+  }
 
 }
