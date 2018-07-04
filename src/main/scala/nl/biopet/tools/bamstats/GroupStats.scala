@@ -29,14 +29,15 @@ import nl.biopet.utils.Histogram
 /**
   * Created by pjvanthof on 05/07/16.
   */
-case class GroupStats(flagstat: FlagstatCollector = new FlagstatCollector(),
-                      mappingQualityHistogram: Histogram[Int] = new Histogram[Int](),
-                      insertSizeHistogram: Histogram[Int] = new Histogram[Int](),
-                      clippingHistogram: Histogram[Int] = new Histogram[Int](),
-                      leftClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                      rightClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                      _5_ClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                      _3_ClippingHistogram: Histogram[Int] = new Histogram[Int]()) {
+case class GroupStats(
+    flagstat: FlagstatCollector = new FlagstatCollector(),
+    mappingQualityHistogram: Histogram[Int] = new Histogram[Int](),
+    insertSizeHistogram: Histogram[Int] = new Histogram[Int](),
+    clippingHistogram: Histogram[Int] = new Histogram[Int](),
+    leftClippingHistogram: Histogram[Int] = new Histogram[Int](),
+    rightClippingHistogram: Histogram[Int] = new Histogram[Int](),
+    _5_ClippingHistogram: Histogram[Int] = new Histogram[Int](),
+    _3_ClippingHistogram: Histogram[Int] = new Histogram[Int]()) {
 
   flagstat.loadDefaultFunctions()
   flagstat.loadQualityFunctions()
@@ -100,7 +101,6 @@ case class GroupStats(flagstat: FlagstatCollector = new FlagstatCollector(),
   }
 
   def statsToData(): Data = ???
-
 
 }
 

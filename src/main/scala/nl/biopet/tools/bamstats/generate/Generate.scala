@@ -190,8 +190,9 @@ object Generate extends ToolCommand[Args] {
     * @param msg Optional message for logging
     * @return Output stats
     */
-  def waitOnFutures(futures: List[Future[Map[BedRecord, GroupStats]]],
-                    msg: Option[String] = None): (GroupStats, Map[String, GroupStats]) = {
+  def waitOnFutures(
+      futures: List[Future[Map[BedRecord, GroupStats]]],
+      msg: Option[String] = None): (GroupStats, Map[String, GroupStats]) = {
     msg.foreach(m =>
       logger.info(s"Start monitoring jobs for '$m', ${futures.size} jobs"))
     futures.foreach(_.onFailure { case t => throw new RuntimeException(t) })

@@ -28,6 +28,7 @@ case class Data(mappingQualityHistogram: Counts.DoubleArray[Int],
 //        addHistogram(this._3_ClippingHistogram, other._3_ClippingHistogram)
 //    )
 //  }
+  def validate(): Unit = ???
   def addHistogram(map1: Map[Int, Long],
                    map2: Map[Int, Long]): Map[Int, Long] = {
     {
