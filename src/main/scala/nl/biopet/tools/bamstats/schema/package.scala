@@ -7,5 +7,5 @@ package object schema {
   case class Library(readgroups: Map[String, Readgroup],
                      seqstat: Option[Aggregation])
   case class Aggregation(bla: String)
-  case class Readgroup(bamStats: Data)
+  case class Readgroup(data: Data)
 }

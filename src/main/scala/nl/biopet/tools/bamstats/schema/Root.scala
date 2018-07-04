@@ -2,7 +2,7 @@ package nl.biopet.tools.bamstats.schema
 
 import java.io.File
 
-import nl.biopet.tools.bamstats.{GroupID, GroupStats}
+import nl.biopet.tools.bamstats.{GroupID, GroupStats, Stats}
 import nl.biopet.utils.{conversions, io}
 import play.api.libs.json._
 
@@ -30,7 +30,8 @@ case class Root(samples: Map[String, Sample], bamStats: Option[Aggregation]) {
 
   def asStats: List[GroupStats] = {
     readgroups.map {
-      case (readgroupID, readgroupData) => GroupStats()
+      case (readgroupID, readgroupData) => Stats(readgroupID, GroupStats.statsFromData(readgroupData.data
+      ))
     }
   }
   def +(other: Root): Root = {

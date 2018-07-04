@@ -100,4 +100,10 @@ case class GroupStats(flagstat: FlagstatCollector = new FlagstatCollector(),
   }
 
   def statsToData(): Data = ???
+
+
+}
+
+object GroupStats {
+  def statsFromData(data: Data): GroupStats = ???
 }
