@@ -22,7 +22,7 @@
 package nl.biopet.tools.bamstats.schema
 
 import play.api.libs.json.{Json, Reads, Writes}
-import nl.biopet.utils.Counts.Implicits._
+import nl.biopet.utils.DoubleArray.Implicits._
 
 object Implicits {
   implicit val singleFlagStatsReads: Reads[SingleFlagStats] =

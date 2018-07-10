@@ -25,17 +25,17 @@ import java.io.File
 
 import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.tools.bamstats.schema.Implicits._
-import nl.biopet.utils.{Counts, io}
+import nl.biopet.utils.{io, DoubleArray}
 import play.api.libs.json.{JsValue, Json}
 
 case class Data(flagStats: FlagStats,
-                mappingQualityHistogram: Counts.DoubleArray[Int],
-                insertSizeHistogram: Counts.DoubleArray[Int],
-                clippingHistogram: Counts.DoubleArray[Int],
-                leftClippingHistogram: Counts.DoubleArray[Int],
-                rightClippingHistogram: Counts.DoubleArray[Int],
-                _5_ClippingHistogram: Counts.DoubleArray[Int],
-                _3_ClippingHistogram: Counts.DoubleArray[Int]) {
+                mappingQualityHistogram: DoubleArray[Int],
+                insertSizeHistogram: DoubleArray[Int],
+                clippingHistogram: DoubleArray[Int],
+                leftClippingHistogram: DoubleArray[Int],
+                rightClippingHistogram: DoubleArray[Int],
+                _5_ClippingHistogram: DoubleArray[Int],
+                _3_ClippingHistogram: DoubleArray[Int]) {
 
   def asGroupStats: GroupStats = GroupStats.statsFromData(this)
 
