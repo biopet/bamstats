@@ -1,6 +1,7 @@
 package nl.biopet.tools.bamstats.schema
 
 import play.api.libs.json.{Json, Reads, Writes}
+import nl.biopet.utils.Counts.Implicits._
 
 object Implicits {
 

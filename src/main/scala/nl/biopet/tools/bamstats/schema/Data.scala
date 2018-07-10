@@ -5,7 +5,8 @@ import nl.biopet.utils.io
 import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.utils.Counts
 import play.api.libs.json.{JsValue, Json}
-
+import nl.biopet.tools.bamstats.schema.Implicits._
+import nl.biopet.utils.Counts.Implicits._
 case class Data(mappingQualityHistogram: Counts.DoubleArray[Int],
                 insertSizeHistogram: Counts.DoubleArray[Int],
                 clippingHistogram: Counts.DoubleArray[Int],

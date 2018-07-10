@@ -1,8 +1,8 @@
 package nl.biopet.tools.bamstats.schema
 
-import play.api.libs.json._
 import java.io.File
 
+import nl.biopet.tools.bamstats.schema.Implicits._
 import nl.biopet.tools.bamstats.{GroupID, GroupStats, Stats}
 import nl.biopet.utils.{conversions, io}
 import play.api.libs.json._
