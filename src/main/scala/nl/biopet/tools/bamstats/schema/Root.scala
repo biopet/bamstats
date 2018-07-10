@@ -7,7 +7,7 @@ import nl.biopet.tools.bamstats.{GroupID, GroupStats, Stats}
 import nl.biopet.utils.{conversions, io}
 import play.api.libs.json._
 
-case class Root(samples: Map[String, Sample], bamStats: Option[Aggregation]) {
+case class Root(samples: Map[String, Sample]) {
   def readgroups: Map[GroupID, Readgroup] = {
     samples.flatMap {
       case (sampleId, sampleData) =>
@@ -40,7 +40,7 @@ case class Root(samples: Map[String, Sample], bamStats: Option[Aggregation]) {
 object Root {
   def fromJson(json: JsValue): Root = {
     Json.fromJson[Root](json) match {
-      case JsSuccess(root: Root, path: JsPath) => root
+      case JsSuccess(root: Root, _) => root
       case e: JsError =>
         throw new IllegalStateException(e.errors.mkString("\n"))
     }
@@ -62,14 +62,11 @@ object Root {
                     case (readgroupID, readgroups) =>
                       readgroupID -> Readgroup(
                         readgroups.map(_.stats).reduce(_ += _).statsToData())
-                  },
-                  None
+                  }
                 )
-            },
-            None
+            }
           )
-      },
-      None
+      }
     )
   }
 

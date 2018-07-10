@@ -23,8 +23,14 @@ package nl.biopet.tools.bamstats
 
 import java.io.File
 
-import nl.biopet.tools.bamstats.schema.{Data, FlagStats}
+import nl.biopet.tools.bamstats.schema.{
+  CombinedFlagStats,
+  Data,
+  FlagStats,
+  SingleFlagStats
+}
 import nl.biopet.utils.Histogram
+import org.joda.time.base.BaseSingleFieldPeriod
 
 /**
   * Created by pjvanthof on 05/07/16.
@@ -102,7 +108,10 @@ case class GroupStats(
 
   def statsToData(): Data =
     Data(
-      flagStats = FlagStats(),
+      flagStats =
+        FlagStats(SingleFlagStats(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0),
+                  CombinedFlagStats(IndexedSeq(), IndexedSeq(IndexedSeq()))),
       mappingQualityHistogram = mappingQualityHistogram.toDoubleArray,
       insertSizeHistogram = insertSizeHistogram.toDoubleArray,
       clippingHistogram = clippingHistogram.toDoubleArray,
