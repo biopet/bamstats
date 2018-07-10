@@ -23,8 +23,8 @@ developers := List(
 
 scalaVersion := "2.11.12"
 
-libraryDependencies += "com.github.biopet" %% "common-utils" % "0.7-SNAPSHOT"
-libraryDependencies += "com.github.biopet" %% "tool-utils" % "0.4"
-libraryDependencies += "com.github.biopet" %% "ngs-utils" % "0.4"
-libraryDependencies += "com.github.biopet" %% "tool-test-utils" % "0.2.2" % Test
+libraryDependencies += "com.github.biopet" %% "common-utils" % "0.7-SNAPSHOT" changing ()
+libraryDependencies += "com.github.biopet" %% "tool-utils" % "0.5-SNAPSHOT" changing ()
+libraryDependencies += "com.github.biopet" %% "ngs-utils" % "0.5-SNAPSHOT" changing ()
+libraryDependencies += "com.github.biopet" %% "tool-test-utils" % "0.3-SNAPSHOT" % Test
 libraryDependencies += "com.google.guava" % "guava" % "18.0" % Test
