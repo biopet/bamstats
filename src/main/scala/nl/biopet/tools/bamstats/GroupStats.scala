@@ -23,7 +23,7 @@ package nl.biopet.tools.bamstats
 
 import java.io.File
 
-import nl.biopet.tools.bamstats.schema.Data
+import nl.biopet.tools.bamstats.schema.{Data, FlagStats}
 import nl.biopet.utils.Histogram
 
 /**
@@ -102,6 +102,7 @@ case class GroupStats(
 
   def statsToData(): Data =
     Data(
+      flagStats = FlagStats(),
       mappingQualityHistogram = mappingQualityHistogram.toDoubleArray,
       insertSizeHistogram = insertSizeHistogram.toDoubleArray,
       clippingHistogram = clippingHistogram.toDoubleArray,

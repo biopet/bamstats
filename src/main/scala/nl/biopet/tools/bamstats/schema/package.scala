@@ -8,4 +8,5 @@ package object schema {
                      seqstat: Option[Aggregation])
   case class Aggregation(bla: String)
   case class Readgroup(data: Data)
+  case class FlagStats(bla: String = "placeholder")
 }

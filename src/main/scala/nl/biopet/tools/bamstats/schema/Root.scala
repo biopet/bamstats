@@ -36,12 +36,6 @@ case class Root(samples: Map[String, Sample], bamStats: Option[Aggregation]) {
         Stats(readgroupID, GroupStats.statsFromData(readgroupData.data))
     }
   }.toList
-
-  def validate(): Unit = {
-    readgroups.foreach {
-      case (_, readgroupData) => readgroupData.data.validate()
-    }
-  }
 }
 object Root {
   def fromJson(json: JsValue): Root = {
