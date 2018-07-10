@@ -1,12 +1,12 @@
 package nl.biopet.tools.bamstats.schema
 
 import java.io.File
-import nl.biopet.utils.io
+
 import nl.biopet.tools.bamstats.GroupStats
-import nl.biopet.utils.Counts
-import play.api.libs.json.{JsValue, Json}
 import nl.biopet.tools.bamstats.schema.Implicits._
-import nl.biopet.utils.Counts.Implicits._
+import nl.biopet.utils.{Counts, io}
+import play.api.libs.json.{JsValue, Json}
+
 case class Data(flagStats: FlagStats,
                 mappingQualityHistogram: Counts.DoubleArray[Int],
                 insertSizeHistogram: Counts.DoubleArray[Int],
