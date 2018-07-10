@@ -22,7 +22,6 @@
 package nl.biopet.tools.bamstats
 
 package object schema {
-  case class Flagstat()
   case class Sample(libraries: Map[String, Library])
   case class Library(readgroups: Map[String, Readgroup])
   case class Readgroup(data: Data)
