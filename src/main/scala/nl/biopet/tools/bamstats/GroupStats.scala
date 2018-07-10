@@ -101,7 +101,7 @@ case class GroupStats(
   }
 
   def statsToData(): Data =
-    new Data(
+    Data(
       mappingQualityHistogram = mappingQualityHistogram.toDoubleArray,
       insertSizeHistogram = insertSizeHistogram.toDoubleArray,
       clippingHistogram = clippingHistogram.toDoubleArray,
@@ -111,7 +111,6 @@ case class GroupStats(
       _3_ClippingHistogram = _3_ClippingHistogram.toDoubleArray
     )
 
-  def +(other: GroupStats): GroupStats = ???
 }
 
 object GroupStats {

@@ -67,7 +67,7 @@ object Root {
                   libraryGroups.groupBy(_.groupID.readgroup).map {
                     case (readgroupID, readgroups) =>
                       readgroupID -> Readgroup(
-                        readgroups.map(_.stats).reduce(_ + _).statsToData())
+                        readgroups.map(_.stats).reduce(_ += _).statsToData())
                   },
                   None
                 )
