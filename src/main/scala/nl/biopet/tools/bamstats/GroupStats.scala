@@ -23,26 +23,28 @@ package nl.biopet.tools.bamstats
 
 import java.io.File
 
+import nl.biopet.tools.bamstats.schema._
 import nl.biopet.utils.Histogram
 
 /**
   * Created by pjvanthof on 05/07/16.
   */
-case class Stats(flagstat: FlagstatCollector = new FlagstatCollector(),
-                 mappingQualityHistogram: Histogram[Int] = new Histogram[Int](),
-                 insertSizeHistogram: Histogram[Int] = new Histogram[Int](),
-                 clippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 leftClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 rightClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 _5_ClippingHistogram: Histogram[Int] = new Histogram[Int](),
-                 _3_ClippingHistogram: Histogram[Int] = new Histogram[Int]()) {
+case class GroupStats(
+    flagstat: FlagstatCollector = new FlagstatCollector(),
+    mappingQualityHistogram: Histogram[Int] = new Histogram[Int](),
+    insertSizeHistogram: Histogram[Int] = new Histogram[Int](),
+    clippingHistogram: Histogram[Int] = new Histogram[Int](),
+    leftClippingHistogram: Histogram[Int] = new Histogram[Int](),
+    rightClippingHistogram: Histogram[Int] = new Histogram[Int](),
+    _5_ClippingHistogram: Histogram[Int] = new Histogram[Int](),
+    _3_ClippingHistogram: Histogram[Int] = new Histogram[Int]()) {
 
   flagstat.loadDefaultFunctions()
   flagstat.loadQualityFunctions()
   flagstat.loadOrientationFunctions()
 
-  /** This will add an other [[Stats]] inside `this` */
-  def +=(other: Stats): Stats = {
+  /** This will add an other [[GroupStats]] inside `this` */
+  def +=(other: GroupStats): GroupStats = {
     this.flagstat += other.flagstat
     this.mappingQualityHistogram += other.mappingQualityHistogram
     this.insertSizeHistogram += other.insertSizeHistogram
@@ -97,4 +99,38 @@ case class Stats(flagstat: FlagstatCollector = new FlagstatCollector(),
         "general" -> _3_ClippingHistogram.aggregateStats)
     )
   }
+
+  def statsToData(): Data =
+    Data(
+      flagStats = // TODO: Fix this
+        FlagStats(SingleFlagStats(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0),
+                  CombinedFlagStats(IndexedSeq(), IndexedSeq(IndexedSeq()))),
+      mappingQualityHistogram = mappingQualityHistogram.toDoubleArray,
+      insertSizeHistogram = insertSizeHistogram.toDoubleArray,
+      clippingHistogram = clippingHistogram.toDoubleArray,
+      leftClippingHistogram = leftClippingHistogram.toDoubleArray,
+      rightClippingHistogram = rightClippingHistogram.toDoubleArray,
+      _5_ClippingHistogram = _5_ClippingHistogram.toDoubleArray,
+      _3_ClippingHistogram = _3_ClippingHistogram.toDoubleArray
+    )
+
+}
+
+object GroupStats {
+  def statsFromData(data: Data): GroupStats =
+    new GroupStats(
+      mappingQualityHistogram =
+        Histogram.fromDoubleArray(data.mappingQualityHistogram),
+      insertSizeHistogram = Histogram.fromDoubleArray(data.insertSizeHistogram),
+      clippingHistogram = Histogram.fromDoubleArray(data.clippingHistogram),
+      leftClippingHistogram =
+        Histogram.fromDoubleArray(data.leftClippingHistogram),
+      rightClippingHistogram =
+        Histogram.fromDoubleArray(data.rightClippingHistogram),
+      _5_ClippingHistogram =
+        Histogram.fromDoubleArray(data._5_ClippingHistogram),
+      _3_ClippingHistogram =
+        Histogram.fromDoubleArray(data._3_ClippingHistogram)
+    )
 }

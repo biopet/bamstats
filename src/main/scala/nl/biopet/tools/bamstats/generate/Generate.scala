@@ -24,6 +24,7 @@ package nl.biopet.tools.bamstats.generate
 import java.io.{File, PrintWriter}
 
 import htsjdk.samtools.{SAMSequenceDictionary, SamReader, SamReaderFactory}
+import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.fasta
 import nl.biopet.utils.ngs.intervals.BedRecord
@@ -38,7 +39,6 @@ import scala.concurrent.{Await, Future, TimeoutException}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
 import scala.collection.JavaConversions._
-import nl.biopet.tools.bamstats.Stats
 
 object Generate extends ToolCommand[Args] {
   def emptyArgs: Args = Args()
@@ -184,22 +184,23 @@ object Generate extends ToolCommand[Args] {
   }
 
   /**
-    * This method will wait when all futures are complete and collect a single [[Stats]] instance
+    * This method will wait when all futures are complete and collect a single [[GroupStats]] instance
     *
     * @param futures List of futures to monitor
     * @param msg Optional message for logging
     * @return Output stats
     */
-  def waitOnFutures(futures: List[Future[Map[BedRecord, Stats]]],
-                    msg: Option[String] = None): (Stats, Map[String, Stats]) = {
+  def waitOnFutures(
+      futures: List[Future[Map[BedRecord, GroupStats]]],
+      msg: Option[String] = None): (GroupStats, Map[String, GroupStats]) = {
     msg.foreach(m =>
       logger.info(s"Start monitoring jobs for '$m', ${futures.size} jobs"))
     futures.foreach(_.onFailure { case t => throw new RuntimeException(t) })
     val totalSize = futures.size
-    val totalStats = Stats()
-    val contigStats: mutable.Map[String, Stats] = mutable.Map()
+    val totalStats = GroupStats()
+    val contigStats: mutable.Map[String, GroupStats] = mutable.Map()
 
-    def wait(todo: List[Future[Map[BedRecord, Stats]]]): Unit = {
+    def wait(todo: List[Future[Map[BedRecord, GroupStats]]]): Unit = {
       try {
         logger.info(s"${totalSize - todo.size}/$totalSize tasks done")
         val completed = todo.groupBy(_.isCompleted)
@@ -236,7 +237,7 @@ object Generate extends ToolCommand[Args] {
     * @return Output stats
     */
   def processThread(scatters: List[BedRecord],
-                    bamFile: File): Future[Map[BedRecord, Stats]] =
+                    bamFile: File): Future[Map[BedRecord, GroupStats]] =
     Future {
       logger.debug(s"Start task on ${scatters.size} regions")
       val samReader: SamReader = SamReaderFactory.makeDefault().open(bamFile)
@@ -248,9 +249,9 @@ object Generate extends ToolCommand[Args] {
       results.toMap
     }
 
-  def processRegion(bedRecord: BedRecord, samReader: SamReader): Stats = {
+  def processRegion(bedRecord: BedRecord, samReader: SamReader): GroupStats = {
     //logger.debug(s"Start on $bedRecord")
-    val totalStats = Stats()
+    val totalStats = GroupStats()
     val it =
       samReader.query(bedRecord.chr, bedRecord.start, bedRecord.end, false)
     for (samRecord <- it) {
@@ -295,8 +296,8 @@ object Generate extends ToolCommand[Args] {
     * @param bamFile Input bamfile
     * @return Output stats
     */
-  def processUnmappedReads(bamFile: File): Future[Stats] = Future {
-    val stats = Stats()
+  def processUnmappedReads(bamFile: File): Future[GroupStats] = Future {
+    val stats = GroupStats()
     val samReader = SamReaderFactory.makeDefault().open(bamFile)
     for (samRecord <- samReader.queryUnmapped()) {
       stats.flagstat.loadRecord(samRecord)

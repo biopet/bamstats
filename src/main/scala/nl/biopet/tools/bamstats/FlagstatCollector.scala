@@ -65,8 +65,7 @@ class FlagstatCollector {
     addFunction("ReadNegativeStrand",
                 record => record.getReadNegativeStrandFlag)
 
-    addFunction("NotPrimaryAlignment",
-                record => record.getNotPrimaryAlignmentFlag)
+    addFunction("NotPrimaryAlignment", record => record.isSecondaryAlignment)
 
     addFunction("ReadPaired", record => record.getReadPairedFlag)
     addFunction(
