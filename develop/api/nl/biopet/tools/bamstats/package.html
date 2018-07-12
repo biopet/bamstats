@@ -47,13 +47,35 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"></div>
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
         
 
       <div id="mbrsel">
         <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
-        
-        
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="nl.biopet.tools.bamstats"><span>bamstats</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show All</span></li>
+            </ol>
+          </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
             <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
@@ -83,6 +105,40 @@
       </a>
     </span>
       <p class="shortcomment cmt">Created by pjvan_thof on 21-7-16.</p>
+    </li><li name="nl.biopet.tools.bamstats.GroupID" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GroupIDextendsProductwithSerializable"></a>
+      <a id="GroupID:GroupID"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="package$$GroupID.html"><span class="name">GroupID</span></a><span class="params">(<span name="sample">sample: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="library">library: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="readgroup">readgroup: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#nl.biopet.tools.bamstats.package@GroupIDextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="nl.biopet.tools.bamstats.GroupStats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GroupStatsextendsProductwithSerializable"></a>
+      <a id="GroupStats:GroupStats"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GroupStats.html"><span class="name">GroupStats</span></a><span class="params">(<span name="flagstat">flagstat: <a href="FlagstatCollector.html" class="extype" name="nl.biopet.tools.bamstats.FlagstatCollector">FlagstatCollector</a> = <span class="symbol"><span class="name"><a href="FlagstatCollector.html">new FlagstatCollector()</a></span></span></span>, <span name="mappingQualityHistogram">mappingQualityHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="insertSizeHistogram">insertSizeHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="clippingHistogram">clippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="leftClippingHistogram">leftClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="rightClippingHistogram">rightClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="_5_ClippingHistogram">_5_ClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="_3_ClippingHistogram">_3_ClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#nl.biopet.tools.bamstats.package@GroupStatsextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Created by pjvanthof on 05/07/16.</p>
     </li><li name="nl.biopet.tools.bamstats.Stats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StatsextendsProductwithSerializable"></a>
       <a id="Stats:Stats"></a>
@@ -92,14 +148,14 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Stats.html"><span class="name">Stats</span></a><span class="params">(<span name="flagstat">flagstat: <a href="FlagstatCollector.html" class="extype" name="nl.biopet.tools.bamstats.FlagstatCollector">FlagstatCollector</a> = <span class="symbol"><span class="name"><a href="FlagstatCollector.html">new FlagstatCollector()</a></span></span></span>, <span name="mappingQualityHistogram">mappingQualityHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="insertSizeHistogram">insertSizeHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="clippingHistogram">clippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="leftClippingHistogram">leftClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="rightClippingHistogram">rightClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="_5_ClippingHistogram">_5_ClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="_3_ClippingHistogram">_3_ClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="package$$Stats.html"><span class="name">Stats</span></a><span class="params">(<span name="groupID">groupID: <a href="package$$GroupID.html" class="extype" name="nl.biopet.tools.bamstats.GroupID">GroupID</a></span>, <span name="stats">stats: <a href="GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#nl.biopet.tools.bamstats.package@StatsextendsProductwithSerializable" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Created by pjvanthof on 05/07/16.</p>
+      
     </li></ol>
             </div>
 
@@ -124,6 +180,23 @@
       </a>
     </span>
       
+    </li><li name="nl.biopet.tools.bamstats.GroupStats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GroupStats"></a>
+      <a id="GroupStats:GroupStats"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="GroupStats$.html"><span class="name">GroupStats</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#nl.biopet.tools.bamstats.package@GroupStats" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="nl.biopet.tools.bamstats.generate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="generate"></a>
       <a id="generate:generate"></a>
@@ -141,6 +214,23 @@
       </a>
     </span>
       
+    </li><li name="nl.biopet.tools.bamstats.schema" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="schema"></a>
+      <a id="schema:schema"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="schema/package.html"><span class="name">schema</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#nl.biopet.tools.bamstats.package@schema" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li></ol>
             </div>
 
@@ -150,7 +240,11 @@
         </div>
 
         <div id="inheritedMembers">
-        
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
         
         </div>
 
