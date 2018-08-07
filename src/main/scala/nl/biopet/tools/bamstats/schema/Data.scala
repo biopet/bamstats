@@ -55,4 +55,6 @@ case class Data(flagStats: FlagStats,
       }
     }
   }
+
+  def validate(): Unit = ???
 }
