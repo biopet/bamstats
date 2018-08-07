@@ -57,6 +57,8 @@ case class Root(samples: Map[String, Sample]) {
         Stats(readgroupID, GroupStats.statsFromData(readgroupData.data))
     }
   }.toList
+
+  def validate(): Unit = ???
 }
 object Root {
   def fromJson(json: JsValue): Root = {
