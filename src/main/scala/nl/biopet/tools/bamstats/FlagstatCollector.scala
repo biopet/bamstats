@@ -33,6 +33,7 @@ import scala.collection.mutable
   * Created by pjvan_thof on 21-7-16.
   */
 class FlagstatCollector {
+  //TODO: REFACTOR ENTIRE CLASS
   protected[FlagstatCollector] var functionCount = 0
   var readsCount = 0
   protected[FlagstatCollector] val names: mutable.Map[Int, String] =
