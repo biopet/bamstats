@@ -5,8 +5,8 @@ import htsjdk.samtools.SAMRecord
 class ReadProperties(record: SAMRecord) {
 
   lazy val mapped: Boolean = !record.getReadUnmappedFlag
-  lazy val mateMapped: Boolean =
-    if (record.getReadPairedFlag) !record.getMateUnmappedFlag else false
+  lazy val mateUnmapped: Boolean =
+    if (record.getReadPairedFlag) record.getMateUnmappedFlag else false
 
   lazy val duplicate: Boolean = record.getDuplicateReadFlag
   lazy val firstOfPair: Boolean =
