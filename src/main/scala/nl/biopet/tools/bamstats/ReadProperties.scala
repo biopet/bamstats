@@ -24,7 +24,8 @@ class ReadProperties(record: SAMRecord) {
     else false
   lazy val readFailsVendorQualityCheck: Boolean =
     record.getReadFailsVendorQualityCheckFlag
-  lazy val supplementaryAlignment: Boolean = record.getSupplementaryAlignmentFlag
+  lazy val supplementaryAlignment: Boolean =
+    record.getSupplementaryAlignmentFlag
   lazy val secondaryOrSupplemantary: Boolean = record.isSecondaryOrSupplementary
 
   lazy val mappingQuality: Int = record.getMappingQuality
@@ -87,9 +88,26 @@ class ReadProperties(record: SAMRecord) {
   }
 
   lazy val map: Map[String, Boolean] = {
-    Map("Mapped" -> this.mapped,
-    "Duplicate" -> this.duplicate,
-    "FirstOfPair" -> this.firstOfPair)
-    // TODO: FINISH
+    Map(
+      "Mapped" -> mapped,
+      "Duplicate" -> duplicate,
+      "FirstOfPair" -> firstOfPair,
+      "SecondOfPair" -> secondOfPair,
+      "ReadNegativeStrand" -> readNegativeStrand,
+      "NotPrimaryAlignment" -> notPrimaryAlignment,
+      "ReadPaired" -> readPaired,
+      "ProperPair" -> properPair,
+      "MateNegativeStrand" -> mateNegativeStrand,
+      "MateUnmapped" -> mateUnmapped,
+      "ReadFailsVendorQualityCheck" -> readFailsVendorQualityCheck,
+      "SupplementaryAlignment" -> supplementaryAlignment,
+      "SecondaryOrSupplementary" -> secondaryOrSupplemantary,
+      "First normal, second read inverted (paired end orientation)" -> firstInvertedSecondInverted,
+      "First normal, second read normal" -> firstNormalSecondNormal,
+      "First inverted, second read inverted" -> firstInvertedSecondInverted,
+      "First inverted, second read normal" -> firstInvertedSecondNormal,
+      "Mate in same strand" -> mateInSameStrand,
+      "Mate on other chr" -> mateOnOtherChromosome
+    )
   }
 }

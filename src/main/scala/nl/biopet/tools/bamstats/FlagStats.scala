@@ -22,11 +22,11 @@ class FlagStats(reads: Seq[ReadProperties]) {
   lazy val mateInSameStrand: Long = reads.count(_.mateInSameStrand)
   lazy val mateOnOtherCromosome: Long = reads.count(_.mateOnOtherChromosome)
 
-  def toMap: Map[String, Long] = ???
+  def toMap: Map[String, Long] =
 
   def toCrossCounts: Map[String, Map[String,Long]] = {
     this.toMap.map(
-       x => new FlagStats(reads.filter(_.map(x._1))).toMap
+       x => x._1 -> new FlagStats(reads.filter(_.map(x._1))).toMap
     )
   }
 }
