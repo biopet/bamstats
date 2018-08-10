@@ -82,7 +82,7 @@ class ReadProperties(record: SAMRecord) {
     record.getReferenceIndex == record.getMateReferenceIndex
   }
 
-  val mateOnOtherChromsome: Boolean = {
+  val mateOnOtherChromosome: Boolean = {
     record.getReadPairedFlag && record.getReferenceIndex != record.getMateReferenceIndex
   }
 }
