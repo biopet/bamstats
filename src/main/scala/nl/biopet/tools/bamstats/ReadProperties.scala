@@ -85,4 +85,11 @@ class ReadProperties(record: SAMRecord) {
   lazy val mateOnOtherChromosome: Boolean = {
     record.getReadPairedFlag && record.getReferenceIndex != record.getMateReferenceIndex
   }
+
+  lazy val map: Map[String, Boolean] = {
+    Map("Mapped" -> this.mapped,
+    "Duplicate" -> this.duplicate,
+    "FirstOfPair" -> this.firstOfPair)
+    // TODO: FINISH
+  }
 }
