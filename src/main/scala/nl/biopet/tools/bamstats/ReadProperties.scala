@@ -4,37 +4,37 @@ import htsjdk.samtools.SAMRecord
 
 class ReadProperties(record: SAMRecord) {
 
-  val mapped: Boolean = !record.getReadUnmappedFlag
-  val mateMapped: Boolean =
+  lazy val mapped: Boolean = !record.getReadUnmappedFlag
+  lazy val mateMapped: Boolean =
     if (record.getReadPairedFlag) !record.getMateUnmappedFlag else false
 
-  val duplicate: Boolean = record.getDuplicateReadFlag
-  val firstOfPair: Boolean =
+  lazy val duplicate: Boolean = record.getDuplicateReadFlag
+  lazy val firstOfPair: Boolean =
     if (record.getReadPairedFlag) record.getFirstOfPairFlag else false
-  val secondOfPair: Boolean =
+  lazy val secondOfPair: Boolean =
     if (record.getReadPairedFlag) record.getSecondOfPairFlag else false
-  val readNegativeStrand: Boolean = record.getReadNegativeStrandFlag
+  lazy val readNegativeStrand: Boolean = record.getReadNegativeStrandFlag
   val notPrimaryAlignment: Boolean = record.isSecondaryAlignment
-  val readPaired: Boolean = record.getReadPairedFlag
-  val properPair: Boolean =
+  lazy val readPaired: Boolean = record.getReadPairedFlag
+  lazy val properPair: Boolean =
     if (record.getReadPairedFlag) record.getProperPairFlag else false
-  val mateNegativeStrand: Boolean =
+  lazy val mateNegativeStrand: Boolean =
     if (record.getReadPairedFlag)
       record.getMateNegativeStrandFlag
     else false
-  val readFailsVendorQualityCheck: Boolean =
+  lazy val readFailsVendorQualityCheck: Boolean =
     record.getReadFailsVendorQualityCheckFlag
-  val supplementaryAlignment: Boolean = record.getSupplementaryAlignmentFlag
-  val secondaryOrSupplemantary: Boolean = record.isSecondaryOrSupplementary
+  lazy val supplementaryAlignment: Boolean = record.getSupplementaryAlignmentFlag
+  lazy val secondaryOrSupplemantary: Boolean = record.isSecondaryOrSupplementary
 
-  val mappingQuality: Int = record.getMappingQuality
+  lazy val mappingQuality: Int = record.getMappingQuality
   def mappingQualityGreaterThan(mappingQuality: Int): Boolean = {
     record.getMappingQuality > mappingQuality
   }
 
   // Below functions check read orientation
 
-  val firstNormalSecondInverted: Boolean = {
+  lazy val firstNormalSecondInverted: Boolean = {
     if (record.getReadPairedFlag &&
         record.getReferenceIndex == record.getMateReferenceIndex && record.getReadNegativeStrandFlag != record.getMateNegativeStrandFlag &&
         ((record.getFirstOfPairFlag && !record.getReadNegativeStrandFlag && record.getAlignmentStart < record.getMateAlignmentStart) ||
@@ -44,7 +44,7 @@ class ReadProperties(record: SAMRecord) {
       true
     else false
   }
-  val firstNormalSecondNormal: Boolean = {
+  lazy val firstNormalSecondNormal: Boolean = {
     if (record.getReadPairedFlag &&
         record.getReferenceIndex == record.getMateReferenceIndex && record.getReadNegativeStrandFlag == record.getMateNegativeStrandFlag &&
         ((record.getFirstOfPairFlag && !record.getReadNegativeStrandFlag && record.getAlignmentStart < record.getMateAlignmentStart) ||
@@ -55,7 +55,7 @@ class ReadProperties(record: SAMRecord) {
     else false
   }
 
-  val firstInvertedSecondInverted: Boolean = {
+  lazy val firstInvertedSecondInverted: Boolean = {
     if (record.getReadPairedFlag &&
         record.getReferenceIndex == record.getMateReferenceIndex && record.getReadNegativeStrandFlag == record.getMateNegativeStrandFlag &&
         ((record.getFirstOfPairFlag && record.getReadNegativeStrandFlag && record.getAlignmentStart < record.getMateAlignmentStart) ||
@@ -66,7 +66,7 @@ class ReadProperties(record: SAMRecord) {
     else false
   }
 
-  val firstInvertedSecondNormal: Boolean = {
+  lazy val firstInvertedSecondNormal: Boolean = {
     if (record.getReadPairedFlag &&
         record.getReferenceIndex == record.getMateReferenceIndex && record.getReadNegativeStrandFlag != record.getMateNegativeStrandFlag &&
         ((record.getFirstOfPairFlag && record.getReadNegativeStrandFlag && record.getAlignmentStart < record.getMateAlignmentStart) ||
@@ -77,12 +77,12 @@ class ReadProperties(record: SAMRecord) {
     else false
   }
 
-  val mateInSameStrand: Boolean = {
+  lazy val mateInSameStrand: Boolean = {
     record.getReadPairedFlag && record.getReadNegativeStrandFlag && record.getMateNegativeStrandFlag &&
     record.getReferenceIndex == record.getMateReferenceIndex
   }
 
-  val mateOnOtherChromosome: Boolean = {
+  lazy val mateOnOtherChromosome: Boolean = {
     record.getReadPairedFlag && record.getReferenceIndex != record.getMateReferenceIndex
   }
 }
