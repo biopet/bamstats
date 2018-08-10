@@ -1,18 +1,32 @@
 package nl.biopet.tools.bamstats
 
 class FlagStats(reads: Seq[ReadProperties]) {
-  lazy val all: Int = reads.length
-  lazy val mapped: Int = reads.count(_.mapped)
-  lazy val duplicates: Int = reads.count(_.duplicate)
-  lazy val firstOfPair: Int = reads.count(_.firstOfPair)
-  lazy val secondOfPair: Int = reads.count(_.secondOfPair)
-  lazy val readNegativeStrand: Int = reads.count(_.readNegativeStrand)
-  lazy val notPrimaryAlignment: Int = reads.count(_.notPrimaryAlignment)
-  lazy val readPaired: Int = reads.count(_.readPaired)
-  lazy val properPair: Int = reads.count(_.properPair)
-  lazy val mateNegativeStrand: Int = reads.count(_.mateNegativeStrand)
-  lazy val mateUnmapped: Int = reads.count(_.mateUnmapped)
-  lazy val readFailsVendorQualityCheck: Int = reads.count(_.readFailsVendorQualityCheck)
-  lazy val supplementaryAlignment: Int = reads.count(_.supplementaryAlignment)
-  lazy val secondaryOrSupplementary: Int = reads.count(_.secondaryOrSupplemantary)
+  lazy val all: Long = reads.length
+  lazy val mapped: Long = reads.count(_.mapped)
+  lazy val duplicate: Long = reads.count(_.duplicate)
+  lazy val firstOfPair: Long = reads.count(_.firstOfPair)
+  lazy val secondOfPair: Long = reads.count(_.secondOfPair)
+  lazy val readNegativeStrand: Long = reads.count(_.readNegativeStrand)
+  lazy val notPrimaryAlignment: Long = reads.count(_.notPrimaryAlignment)
+  lazy val readPaired: Long = reads.count(_.readPaired)
+  lazy val properPair: Long = reads.count(_.properPair)
+  lazy val mateNegativeStrand: Long = reads.count(_.mateNegativeStrand)
+  lazy val mateUnmapped: Long = reads.count(_.mateUnmapped)
+  lazy val readFailsVendorQualityCheck: Long = reads.count(_.readFailsVendorQualityCheck)
+  lazy val supplementaryAlignment: Long = reads.count(_.supplementaryAlignment)
+  lazy val secondaryOrSupplementary: Long = reads.count(_.secondaryOrSupplemantary)
+  lazy val firstNormalSecondInverted: Long = reads.count(_.firstNormalSecondInverted)
+  lazy val firstNormalSecondNormal: Long = reads.count(_.firstNormalSecondNormal)
+  lazy val firstInvertedSecondInverted: Long = reads.count(_.firstInvertedSecondInverted)
+  lazy val firstInvertedSecondNormal: Long = reads.count(_.firstInvertedSecondNormal)
+  lazy val mateInSameStrand: Long = reads.count(_.mateInSameStrand)
+  lazy val mateOnOtherCromosome: Long = reads.count(_.mateOnOtherChromosome)
+
+  def toMap: Map[String, Long] = ???
+
+  def toCrossCounts: Map[String, Map[String,Long]] = {
+    this.toMap.map(
+       x => new FlagStats(reads.filter(_.map(x._1))).toMap
+    )
+  }
 }
