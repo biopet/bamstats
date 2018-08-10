@@ -26,7 +26,7 @@ class ReadProperties(record: SAMRecord) {
     record.getReadFailsVendorQualityCheckFlag
   lazy val supplementaryAlignment: Boolean =
     record.getSupplementaryAlignmentFlag
-  lazy val secondaryOrSupplemantary: Boolean = record.isSecondaryOrSupplementary
+  lazy val secondaryOrSupplementary: Boolean = record.isSecondaryOrSupplementary
 
   lazy val mappingQuality: Int = record.getMappingQuality
   def mappingQualityGreaterThan(mappingQuality: Int): Boolean = {
@@ -101,7 +101,7 @@ class ReadProperties(record: SAMRecord) {
       "MateUnmapped" -> mateUnmapped,
       "ReadFailsVendorQualityCheck" -> readFailsVendorQualityCheck,
       "SupplementaryAlignment" -> supplementaryAlignment,
-      "SecondaryOrSupplementary" -> secondaryOrSupplemantary,
+      "SecondaryOrSupplementary" -> secondaryOrSupplementary,
       "First normal, second read inverted (paired end orientation)" -> firstInvertedSecondInverted,
       "First normal, second read normal" -> firstNormalSecondNormal,
       "First inverted, second read inverted" -> firstInvertedSecondInverted,
