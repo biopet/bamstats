@@ -88,6 +88,25 @@ object FlagMethods extends Enumeration {
     map
   }
 
+  def flagStatsToMap(
+      flagStats: mutable.Map[FlagMethods.Value, Long]): Map[String, Long] = {
+    flagStats.map {
+      case (method, count) => {
+        (method.outerEnum.toString() -> count)
+      }
+    }.toMap
+  }
+
+  def crossCountsToMap(
+      crosscounts: mutable.Map[FlagMethods.Value,
+                               mutable.Map[FlagMethods.Value, Long]])
+    : Map[String, Map[String, Long]] = {
+    crosscounts.map {
+      case (method, flagstats) =>
+        (method.outerEnum.toString() -> flagStatsToMap(flagstats))
+    }.toMap
+  }
+
   def getFlagStats(samRecords: Seq[SAMRecord]): Map[FlagMethods.Value, Long] = {
     val results = emptyResult
     samRecords.foreach { record =>
