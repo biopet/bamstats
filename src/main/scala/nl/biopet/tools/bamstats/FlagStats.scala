@@ -1,5 +1,7 @@
 package nl.biopet.tools.bamstats
 
+import java.io.File
+
 import htsjdk.samtools.SAMRecord
 
 import scala.collection.mutable
@@ -11,6 +13,10 @@ class FlagStats(samRecords: Seq[SAMRecord]) {
 
   def crossCounts: Map[FlagMethods.Value, Map[FlagMethods.Value, Long]] =
     FlagMethods.getCrossCounts(samRecords)
+
+  def toSummaryMap() = ???
+  def writeReportToFile(file: File) = ???
+  def writeSummaryToFile(file: File) = ???
 
   def report(): String = {
     val buffer = new mutable.StringBuilder()
@@ -35,7 +41,7 @@ class FlagStats(samRecords: Seq[SAMRecord]) {
     buffer.toString()
   }
 
-  def +(other: FlagStats): FlagStats = {
+  def +=(other: FlagStats): FlagStats = {
     ???
   }
 
