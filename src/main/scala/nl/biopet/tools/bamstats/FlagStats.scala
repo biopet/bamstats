@@ -52,8 +52,13 @@ class FlagStats {
     buffer.toString()
   }
 
-  def +=(other: FlagStats): FlagStats = {
-    ???
+  def +=(other: FlagStats) = {
+    this.flagStats.keys.foreach { method =>
+      this.flagStats(method) += other.flagStats(method)
+      this.crossCounts(method).keys foreach (method2 => {
+        this.crossCounts(method)(method2) += other.crossCounts(method)(method2)
+      })
+    }
   }
 
 }
