@@ -3,6 +3,8 @@ package nl.biopet.tools.bamstats
 import java.io.{File, PrintWriter}
 
 import htsjdk.samtools.SAMRecord
+import nl.biopet.utils.conversions
+import play.api.libs.json.Json
 
 import scala.collection.mutable
 
@@ -22,6 +24,15 @@ class FlagStats {
           if (cross.method(record)) crossCounts(method)(cross) += 1
         })
       }
+    }
+  }
+
+  def +=(other: FlagStats) = {
+    this.flagStats.keys.foreach { method =>
+      this.flagStats(method) += other.flagStats(method)
+      this.crossCounts(method).keys foreach (method2 => {
+        this.crossCounts(method)(method2) += other.crossCounts(method)(method2)
+      })
     }
   }
 
@@ -52,23 +63,58 @@ class FlagStats {
         buffer.append(
           s"#${method.id}\t$count\t$percentage\t${method.outerEnum.toString()}\n")
     }
+    buffer.append("\n")
+
+    buffer.append(crossReport() + "\n")
+    buffer.append(crossReport(fraction = true) + "\n")
+
     buffer.toString()
   }
 
-  def crossReport(
-      crossCounts: Map[FlagMethods.Value, Map[FlagMethods.Value, Long]])
+  def crossReport(fraction: Boolean = false)
     : String = {
-    val buffer = new mutable.StringBuilder()
+    val buffer = new StringBuilder
+
+    for (t <- 0 until names.size) // Header for table
+      buffer.append("\t#" + (t + 1))
+    buffer.append("\n")
+
+    for (t <- 0 until names.size) {
+      buffer.append("#" + (t + 1) + "\t")
+      for (t2 <- 0 until names.size) {
+        val reads = crossCounts(t)(t2)
+        if (fraction) {
+          val percentage = (reads.toFloat / totalCounts(t).toFloat) * 100
+          buffer.append(f"$percentage%.4f" + "%")
+        } else buffer.append(reads)
+        if (t2 == names.size - 1) buffer.append("\n")
+        else buffer.append("\t")
+      }
+    }
     buffer.toString()
   }
 
-  def +=(other: FlagStats) = {
-    this.flagStats.keys.foreach { method =>
-      this.flagStats(method) += other.flagStats(method)
-      this.crossCounts(method).keys foreach (method2 => {
-        this.crossCounts(method)(method2) += other.crossCounts(method)(method2)
-      })
-    }
+
+  def writeReportToFile(outputFile: File): Unit = {
+    val writer = new PrintWriter(outputFile)
+    writer.println(report)
+    writer.close()
   }
 
+  def summary: String = {
+    val map = (for (t <- 0 until names.size) yield {
+      names(t) -> totalCounts(t)
+    }).toMap ++ Map(
+      "Singletons" -> crossCounts(
+        names.find(_._2 == "Mapped").map(_._1).getOrElse(-1))(
+        names.find(_._2 == "MateUnmapped").map(_._1).getOrElse(-1)))
+
+    Json.stringify(conversions.mapToJson(map))
+  }
+
+  def writeSummaryTofile(outputFile: File): Unit = {
+    val writer = new PrintWriter(outputFile)
+    writer.println(summary)
+    writer.close()
+  }
 }
