@@ -30,7 +30,7 @@ import nl.biopet.utils.Histogram
   * Created by pjvanthof on 05/07/16.
   */
 case class GroupStats(
-    flagstat: FlagStats = new FlagStats(Seq()),
+    flagstat: FlagStats = new FlagStats(),
     mappingQualityHistogram: Histogram[Int] = new Histogram[Int](),
     insertSizeHistogram: Histogram[Int] = new Histogram[Int](),
     clippingHistogram: Histogram[Int] = new Histogram[Int](),

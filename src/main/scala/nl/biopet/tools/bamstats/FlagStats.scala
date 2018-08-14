@@ -25,10 +25,16 @@ class FlagStats {
     }
   }
 
-  def toSummaryMap() = ???
-  def writeReportToFile(file: File) = ???
-  def writeSummaryToFile(file: File) = ???
+  def toSummaryMap: Map[String, Any] = {
+    Map()
+  }
 
+  def crossCountsMap: Map[String, Map[String, Long]] = {
+    crossCounts.map {case (method: FlagMethods.Value, countsMap: mutable.Map[FlagMethods.Value, Long]) => {
+      method.
+    }
+    }
+  }
   def report(): String = {
     val buffer = new mutable.StringBuilder()
 
