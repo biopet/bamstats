@@ -25,9 +25,7 @@ import nl.biopet.tools.bamstats.BamStats
 import nl.biopet.tools.bamstats.schema.Root
 import nl.biopet.utils.tool.{AbstractOptParser, ToolCommand}
 
-
 object Validate extends ToolCommand[Args] {
-
 
   def argsParser: AbstractOptParser[Args] = new ArgsParser(toolCommand = this)
 

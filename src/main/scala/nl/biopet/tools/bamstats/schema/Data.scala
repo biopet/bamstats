@@ -58,13 +58,20 @@ case class Data(flagStats: FlagStats,
 
   def validate(): Unit = {
     val groupStats = asGroupStats
-    require(groupStats._3_ClippingHistogram.toDoubleArray == this._3_ClippingHistogram)
-    require(groupStats._5_ClippingHistogram.toDoubleArray == this._5_ClippingHistogram)
-    require(groupStats.clippingHistogram.toDoubleArray == this.clippingHistogram)
-    require(groupStats.insertSizeHistogram.toDoubleArray == this.insertSizeHistogram)
-    require(groupStats.leftClippingHistogram.toDoubleArray == this.leftClippingHistogram)
-    require(groupStats.rightClippingHistogram.toDoubleArray == this.rightClippingHistogram)
-    require(groupStats.mappingQualityHistogram.toDoubleArray == this.mappingQualityHistogram)
+    require(
+      groupStats._3_ClippingHistogram.toDoubleArray == this._3_ClippingHistogram)
+    require(
+      groupStats._5_ClippingHistogram.toDoubleArray == this._5_ClippingHistogram)
+    require(
+      groupStats.clippingHistogram.toDoubleArray == this.clippingHistogram)
+    require(
+      groupStats.insertSizeHistogram.toDoubleArray == this.insertSizeHistogram)
+    require(
+      groupStats.leftClippingHistogram.toDoubleArray == this.leftClippingHistogram)
+    require(
+      groupStats.rightClippingHistogram.toDoubleArray == this.rightClippingHistogram)
+    require(
+      groupStats.mappingQualityHistogram.toDoubleArray == this.mappingQualityHistogram)
     //TODO: Add functions for flagstat here
   }
 }
