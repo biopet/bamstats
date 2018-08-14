@@ -60,7 +60,6 @@ object Generate extends ToolCommand[Args] {
     logger.info("Done")
   }
 
-
   /**
     * This is the main running function of [[Generate]]. This will start the threads and collect and write the results.
     *

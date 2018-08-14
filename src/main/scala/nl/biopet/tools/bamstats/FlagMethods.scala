@@ -80,6 +80,14 @@ object FlagMethods extends Enumeration {
     map
   }
 
+  def emptyCrossResult
+    : mutable.Map[FlagMethods.Value, mutable.Map[FlagMethods.Value, Long]] = {
+    val map =
+      mutable.Map[FlagMethods.Value, mutable.Map[FlagMethods.Value, Long]]()
+    values.foreach(method => map += (method -> emptyResult))
+    map
+  }
+
   def getFlagStats(samRecords: Seq[SAMRecord]): Map[FlagMethods.Value, Long] = {
     val results = emptyResult
     samRecords.foreach { record =>

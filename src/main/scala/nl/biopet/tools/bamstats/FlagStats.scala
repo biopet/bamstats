@@ -6,13 +6,24 @@ import htsjdk.samtools.SAMRecord
 
 import scala.collection.mutable
 
-class FlagStats(samRecords: Seq[SAMRecord]) {
+class FlagStats {
 
-  def flagStats: Map[FlagMethods.Value, Long] =
-    FlagMethods.getFlagStats(samRecords)
+  private val flagStats: mutable.Map[FlagMethods.Value, Long] =
+    FlagMethods.emptyResult
+  private val crossCounts
+    : mutable.Map[FlagMethods.Value, mutable.Map[FlagMethods.Value, Long]] =
+    FlagMethods.emptyCrossResult
 
-  def crossCounts: Map[FlagMethods.Value, Map[FlagMethods.Value, Long]] =
-    FlagMethods.getCrossCounts(samRecords)
+  def loadRecord(record: SAMRecord): Unit = {
+    flagStats.keys.foreach { method =>
+      if (method.method(record)) {
+        flagStats(method) += 1
+        crossCounts(method).keys.foreach(cross => {
+          if (cross.method(record)) crossCounts(method)(cross) += 1
+        })
+      }
+    }
+  }
 
   def toSummaryMap() = ???
   def writeReportToFile(file: File) = ???
@@ -20,10 +31,10 @@ class FlagStats(samRecords: Seq[SAMRecord]) {
 
   def report(): String = {
     val buffer = new mutable.StringBuilder()
-    val stats = flagStats
+
     buffer.append("Number\tTotal Flags\tFraction\tName\n")
-    val totalFlags: Option[Long] = stats.get(FlagMethods.Total)
-    stats.foreach {
+    val totalFlags: Option[Long] = flagStats.get(FlagMethods.Total)
+    flagStats.foreach {
       case (method: FlagMethods.Value, count: Long) =>
         val percentage = totalFlags
           .map(totalCount => f"${(count.toDouble / totalCount) * 100}%.4f")
