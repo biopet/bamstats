@@ -26,7 +26,6 @@ import java.io.{File, PrintWriter}
 import htsjdk.samtools.{SAMSequenceDictionary, SamReader, SamReaderFactory}
 import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.utils.conversions
-import nl.biopet.utils.ngs.fasta
 import nl.biopet.utils.ngs.intervals.BedRecord
 import nl.biopet.utils.tool.ToolCommand
 import play.api.libs.json.Json
@@ -61,25 +60,6 @@ object Generate extends ToolCommand[Args] {
     logger.info("Done")
   }
 
-  /**
-    * This will retrieve the [[SAMSequenceDictionary]] from the bam file.
-    * When `referenceFasta is given he will validate this against the bam file.`
-    */
-  def validateReferenceInBam(
-      bamFile: File,
-      referenceFasta: Option[File]): SAMSequenceDictionary = {
-    val samReader = SamReaderFactory.makeDefault().open(bamFile)
-    val samHeader = samReader.getFileHeader
-    samReader.close()
-    referenceFasta
-      .map { f =>
-        samHeader.getSequenceDictionary.assertSameDictionary(
-          fasta.getCachedDict(f),
-          false)
-        fasta.getCachedDict(f)
-      }
-      .getOrElse(samHeader.getSequenceDictionary)
-  }
 
   /**
     * This is the main running function of [[Generate]]. This will start the threads and collect and write the results.
