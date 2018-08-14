@@ -67,6 +67,21 @@ object FlagMethods extends Enumeration {
     map
   }
 
+  def report(flagstats: Map[FlagMethods.Value, Long]) = {
+    val buffer = new mutable.StringBuilder()
+    buffer.append("Number\tTotal Flags\tFraction\tName\n")
+    val totalFlags: Option[Long] = flagstats.get(Total)
+    flagstats.foreach { case (method: FlagMethods.Value, count: Long) =>
+      val percentage = totalFlags.map(totalCount => f"${(count.toDouble / totalCount) * 100}%.4f").getOrElse("N/A")
+      buffer.append(s"#${method.id}\t$count\t$percentage\t${method.outerEnum.toString()}\n")
+    }
+  }
+
+  def crossReport(crossCounts: Map[FlagMethods.Value, Map[FlagMethods.Value, Long]]): String = {
+    val buffer = new mutable.StringBuilder()
+
+  }
+
   def getFlagStats(samRecords: Seq[SAMRecord]): Map[FlagMethods.Value, Long] = {
     val results = emptyResult
     samRecords.foreach { record =>
