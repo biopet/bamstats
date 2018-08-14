@@ -1,6 +1,6 @@
 package nl.biopet.tools.bamstats
 
-import java.io.File
+import java.io.{File, PrintWriter}
 
 import htsjdk.samtools.SAMRecord
 
@@ -26,15 +26,19 @@ class FlagStats {
   }
 
   def toSummaryMap: Map[String, Any] = {
-    Map()
+    FlagMethods.flagStatsToMap(flagStats) ++ Map(
+      "cross_counts" -> FlagMethods.crossCountsToMap(crossCounts))
   }
 
-  def crossCountsMap: Map[String, Map[String, Long]] = {
-    crossCounts.map {case (method: FlagMethods.Value, countsMap: mutable.Map[FlagMethods.Value, Long]) => {
-      method.
+  def writeAsTsv(file: File): Unit = {
+    val writer = new PrintWriter(file)
+    flagStats.foreach {
+      case (flag, count) =>
+        writer.println(s"${flag.outerEnum.toString()}\t$count")
     }
-    }
+    writer.close()
   }
+
   def report(): String = {
     val buffer = new mutable.StringBuilder()
 
