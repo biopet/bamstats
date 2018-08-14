@@ -59,7 +59,8 @@ case class Root(samples: Map[String, Sample]) {
   }.toList
 
   def validate(): Unit = readgroups foreach {
-    case (_, rg) => rg.data.validate()}
+    case (_, rg) => rg.data.validate()
+  }
 
 }
 object Root {
