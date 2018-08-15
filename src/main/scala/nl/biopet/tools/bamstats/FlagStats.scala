@@ -26,7 +26,7 @@ class FlagStats {
     }
   }
 
-  def +=(other: FlagStats) = {
+  def +=(other: FlagStats): Unit = {
     this.flagStats.keys.foreach { method =>
       this.flagStats(method) += other.flagStats(method)
       this.crossCounts(method).keys foreach (method2 => {
@@ -54,15 +54,16 @@ class FlagStats {
 
     buffer.append(s"Number\tTotal Flags\tFraction\tName$lineSeparator")
     val totalFlags: Option[Long] = flagStats.get(FlagMethods.Total)
-    flagStats.toList.sortBy { case (method, _) => method.id // Sort by order of defining (?)
+    flagStats.toList
+      .sortBy { case (method, _) => method.id } // Sort by order of defining (?)
       .foreach {
-      case (method: FlagMethods.Value, count: Long) =>
-        val percentage = totalFlags
-          .map(totalCount => f"${(count.toDouble / totalCount) * 100}%.4f")
-          .getOrElse("N/A")
-        buffer.append(
-          s"#${method.id}\t$count\t$percentage\t${method.outerEnum.toString()}$lineSeparator")
-    }
+        case (method: FlagMethods.Value, count: Long) =>
+          val percentage = totalFlags
+            .map(totalCount => f"${(count.toDouble / totalCount) * 100}%.4f")
+            .getOrElse("N/A")
+          buffer.append(
+            s"#${method.id}\t$count\t$percentage\t${method.outerEnum.toString()}$lineSeparator")
+      }
     buffer.append(lineSeparator)
 
     buffer.append(crossReport() + lineSeparator)
@@ -71,44 +72,49 @@ class FlagStats {
     buffer.toString()
   }
 
-    /**
-      * This returns a tsv table. All the flag ids are in the first row and the first column.
-      * The table body contains counts
-      * @param fraction use percentages instead of counts
-      * @return a tsv table
-      */
-  def crossReport(fraction: Boolean = false)
-    : String = {
+  /**
+    * This returns a tsv table. All the flag ids are in the first row and the first column.
+    * The table body contains counts
+    * @param fraction use percentages instead of counts
+    * @return a tsv table
+    */
+  def crossReport(fraction: Boolean = false): String = {
     val buffer = new StringBuilder
-    val crossCountsSorted = crossCounts.toList.sortBy { case (method, _) => method.id}
+    val crossCountsSorted = crossCounts.toList.sortBy {
+      case (method, _) => method.id
+    }
 
     // Create header line
     crossCountsSorted
-      .foreach { case (method,_) =>
-        buffer.append(s"\t#${method.id}")}
+      .foreach {
+        case (method, _) =>
+          buffer.append(s"\t#${method.id}")
+      }
     buffer.append(lineSeparator)
-    crossCountsSorted.foreach { case (method, countsMap) =>
-      // Create a prefix to the counts line
-      buffer.append(s"#${method.id}")
-      // Get the total number of counts if we need the percentage later
-      val totalCount: Option[Long] = if (fraction) countsMap.get(FlagMethods.Total) else None
-      // Foreach count get the percentage or count. End the line with a line separator.
-      countsMap.toList.sortBy { case (method, _) => method.id}.foreach {
-        case(_, count) => {
-          if (fraction) {
-            val percentage = totalCount.map(total => f"${((count.toFloat / total ) * 100)}%.4f" + "%").getOrElse("N/A")
-            buffer.append(s"\t$percentage")
+    crossCountsSorted.foreach {
+      case (method, countsMap) =>
+        // Create a prefix to the counts line
+        buffer.append(s"#${method.id}")
+        // Get the total number of counts if we need the percentage later
+        val totalCount: Option[Long] =
+          if (fraction) countsMap.get(FlagMethods.Total) else None
+        // Foreach count get the percentage or count. End the line with a line separator.
+        countsMap.toList.sortBy { case (method, _) => method.id }.foreach {
+          case (_, count) => {
+            if (fraction) {
+              val percentage = totalCount
+                .map(total => f"${((count.toFloat / total) * 100)}%.4f" + "%")
+                .getOrElse("N/A")
+              buffer.append(s"\t$percentage")
+            } else {
+              buffer.append(s"\t$count")
+            }
           }
-          else {
-            buffer.append(s"\t$count")
-          }
-        }
           buffer.append(lineSeparator)
-          }
+        }
     }
     buffer.toString()
   }
-
 
   def writeReportToFile(outputFile: File): Unit = {
     val writer = new PrintWriter(outputFile)
