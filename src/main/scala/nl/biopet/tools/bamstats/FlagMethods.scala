@@ -31,7 +31,7 @@ object FlagMethods extends Enumeration {
   }
   implicit def valueToVal(x: Value): Val = x.asInstanceOf[Val]
 
-  val Total = Val { _ =>
+  val total = Val { _ =>
     true
   }
   val mapped = Val { !_.getReadUnmappedFlag }

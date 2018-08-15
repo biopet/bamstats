@@ -93,7 +93,7 @@ class FlagStats {
     val buffer = new mutable.StringBuilder()
 
     buffer.append(s"Number\tTotal Flags\tFraction\tName$lineSeparator")
-    val totalFlags: Option[Long] = flagStats.get(FlagMethods.Total)
+    val totalFlags: Option[Long] = flagStats.get(FlagMethods.total)
     flagstatsSorted
       .foreach {
         case (method: FlagMethods.Value, count: Long) =>
@@ -132,7 +132,7 @@ class FlagStats {
         buffer.append(s"#${method.id}")
         // Get the total number of counts if we need the percentage later
         val totalCount: Option[Long] =
-          if (fraction) countsList.toMap.get(FlagMethods.Total) else None
+          if (fraction) countsList.toMap.get(FlagMethods.total) else None
         // Foreach count get the percentage or count. End the line with a line separator.
         countsList.foreach {
           case (_, count) => {
