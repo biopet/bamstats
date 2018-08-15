@@ -56,9 +56,9 @@ class FlagStats {
 
   def writeAsTsv(file: File): Unit = {
     val writer = new PrintWriter(file)
-    flagStats.foreach {
+    flagstatsSorted.foreach {
       case (flag, count) =>
-        writer.println(s"${flag.outerEnum.toString()}\t$count")
+        writer.println(s"${flag.name}\t$count")
     }
     writer.close()
   }
@@ -68,15 +68,14 @@ class FlagStats {
 
     buffer.append(s"Number\tTotal Flags\tFraction\tName$lineSeparator")
     val totalFlags: Option[Long] = flagStats.get(FlagMethods.Total)
-    flagStats.toList
-      .sortBy { case (method, _) => method.id } // Sort by order of defining (?)
+    flagstatsSorted
       .foreach {
         case (method: FlagMethods.Value, count: Long) =>
           val percentage = totalFlags
             .map(totalCount => f"${(count.toDouble / totalCount) * 100}%.4f")
             .getOrElse("N/A")
           buffer.append(
-            s"#${method.id}\t$count\t$percentage\t${method.outerEnum.toString()}$lineSeparator")
+            s"#${method.id}\t$count\t$percentage\t${method.name}$lineSeparator")
       }
     buffer.append(lineSeparator)
 
@@ -94,10 +93,6 @@ class FlagStats {
     */
   def crossReport(fraction: Boolean = false): String = {
     val buffer = new StringBuilder
-    val crossCountsSorted = crossCounts.toList.sortBy {
-      case (method, _) => method.id
-    }
-
     // Create header line
     crossCountsSorted
       .foreach {
@@ -106,14 +101,14 @@ class FlagStats {
       }
     buffer.append(lineSeparator)
     crossCountsSorted.foreach {
-      case (method, countsMap) =>
+      case (method, countsList) =>
         // Create a prefix to the counts line
         buffer.append(s"#${method.id}")
         // Get the total number of counts if we need the percentage later
         val totalCount: Option[Long] =
-          if (fraction) countsMap.get(FlagMethods.Total) else None
+          if (fraction) countsList.toMap.get(FlagMethods.Total) else None
         // Foreach count get the percentage or count. End the line with a line separator.
-        countsMap.toList.sortBy { case (method, _) => method.id }.foreach {
+        countsList.foreach {
           case (_, count) => {
             if (fraction) {
               val percentage = totalCount
@@ -141,16 +136,11 @@ class FlagStats {
     * @return A json string with the summary
     */
   def summary: String = {
-    val map = flagStats.toList.sortBy { case (method, _) => method.id }.map {
+    val map: Map[String, Long] = flagstatsSorted.map {
       case (method, count) =>
-        (method.outerEnum.toString() ->)
-    }
-    val map = (for (t <- 0 until names.size) yield {
-      names(t) -> totalCounts(t)
-    }).toMap ++ Map(
-      "Singletons" -> crossCounts(
-        names.find(_._2 == "Mapped").map(_._1).getOrElse(-1))(
-        names.find(_._2 == "MateUnmapped").map(_._1).getOrElse(-1)))
+        (method.name -> count)
+    }.toMap ++ Map(
+      "Singletons" -> crossCounts(FlagMethods.mapped)(FlagMethods.mateUnmapped))
 
     Json.stringify(conversions.mapToJson(map))
   }

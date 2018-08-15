@@ -5,13 +5,15 @@ import htsjdk.samtools.SAMRecord
 import scala.collection.mutable
 
 object FlagMethods extends Enumeration {
-  protected case class Val(method: SAMRecord => Boolean) extends super.Val
+  protected case class Val(method: SAMRecord => Boolean) extends super.Val {
+    def name: String = toString
+  }
   implicit def valueToVal(x: Value): Val = x.asInstanceOf[Val]
 
   val Total = Val { _ =>
     true
   }
-  val Mapped = Val { !_.getReadUnmappedFlag }
+  val mapped = Val { !_.getReadUnmappedFlag }
   val mateUnmapped = Val { record =>
     record.getReadPairedFlag && record.getMateUnmappedFlag
   }
