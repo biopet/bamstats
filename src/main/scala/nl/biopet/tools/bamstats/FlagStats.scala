@@ -49,6 +49,11 @@ class FlagStats {
     }
   }
 
+  def ==(other: FlagStats): Boolean = {
+    this.flagStats == other.flagStats
+    this.crossCounts == other.crossCounts
+  }
+
   def toSummaryMap: Map[String, Any] = {
     FlagMethods.flagStatsToMap(flagStats) ++ Map(
       "cross_counts" -> FlagMethods.crossCountsToMap(crossCounts))
