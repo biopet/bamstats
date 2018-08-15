@@ -145,7 +145,7 @@ class FlagStats {
     Json.stringify(conversions.mapToJson(map))
   }
 
-  def writeSummaryTofile(outputFile: File): Unit = {
+  def writeSummaryToFile(outputFile: File): Unit = {
     val writer = new PrintWriter(outputFile)
     writer.println(summary)
     writer.close()
