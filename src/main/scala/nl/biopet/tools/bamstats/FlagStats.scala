@@ -15,6 +15,20 @@ class FlagStats {
     : mutable.Map[FlagMethods.Value, mutable.Map[FlagMethods.Value, Long]] =
     FlagMethods.emptyCrossResult
 
+  def flagstatsSorted: List[(FlagMethods.Value, Long)] = {
+    flagStats.toList.sortBy { case (method, _) => method.id }
+  }
+
+  def crossCountsSorted
+    : List[(FlagMethods.Value, List[(FlagMethods.Value, Long)])] = {
+    crossCounts.toList.sortBy { case (method, _) => method.id }.map {
+      case (method, countsMap) =>
+        val sortedMap = countsMap.toList.sortBy {
+          case (method, _) => method.id
+        }
+        (method, sortedMap)
+    }
+  }
   def loadRecord(record: SAMRecord): Unit = {
     flagStats.keys.foreach { method =>
       if (method.method(record)) {
@@ -122,7 +136,15 @@ class FlagStats {
     writer.close()
   }
 
+  /**
+    *
+    * @return A json string with the summary
+    */
   def summary: String = {
+    val map = flagStats.toList.sortBy { case (method, _) => method.id }.map {
+      case (method, count) =>
+        (method.outerEnum.toString() ->)
+    }
     val map = (for (t <- 0 until names.size) yield {
       names(t) -> totalCounts(t)
     }).toMap ++ Map(
