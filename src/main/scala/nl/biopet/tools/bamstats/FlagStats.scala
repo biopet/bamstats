@@ -24,7 +24,7 @@ class FlagStats {
     crossCounts.toList.sortBy { case (method, _) => method.id }.map {
       case (method, countsMap) =>
         val sortedMap = countsMap.toList.sortBy {
-          case (method, _) => method.id
+          case (innerMethod, _) => innerMethod.id
         }
         (method, sortedMap)
     }
@@ -112,7 +112,7 @@ class FlagStats {
           case (_, count) => {
             if (fraction) {
               val percentage = totalCount
-                .map(total => f"${((count.toFloat / total) * 100)}%.4f" + "%")
+                .map(total => f"${(count.toFloat / total) * 100}%.4f" + "%")
                 .getOrElse("N/A")
               buffer.append(s"\t$percentage")
             } else {
@@ -127,7 +127,7 @@ class FlagStats {
 
   def writeReportToFile(outputFile: File): Unit = {
     val writer = new PrintWriter(outputFile)
-    writer.println(report)
+    writer.println(report())
     writer.close()
   }
 
@@ -138,7 +138,7 @@ class FlagStats {
   def summary: String = {
     val map: Map[String, Long] = flagstatsSorted.map {
       case (method, count) =>
-        (method.name -> count)
+        method.name -> count
     }.toMap ++ Map(
       "Singletons" -> crossCounts(FlagMethods.mapped)(FlagMethods.mateUnmapped))
 
