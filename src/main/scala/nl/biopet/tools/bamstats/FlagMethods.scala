@@ -94,7 +94,7 @@ object FlagMethods extends Enumeration {
       flagStats: mutable.Map[FlagMethods.Value, Long]): Map[String, Long] = {
     flagStats.map {
       case (method, count) => {
-        (method.outerEnum.toString() -> count)
+        (method.name -> count)
       }
     }.toMap
   }
@@ -105,7 +105,7 @@ object FlagMethods extends Enumeration {
     : Map[String, Map[String, Long]] = {
     crosscounts.map {
       case (method, flagstats) =>
-        (method.outerEnum.toString() -> flagStatsToMap(flagstats))
+        (method.name -> flagStatsToMap(flagstats))
     }.toMap
   }
 
@@ -113,7 +113,7 @@ object FlagMethods extends Enumeration {
     val results = emptyResult
     samRecords.foreach { record =>
       results.keys.foreach { flagMethod =>
-        if (flagMethod(record)) results(flagMethod) += 1
+        if (flagMethod.method(record)) results(flagMethod) += 1
       }
     }
     results.toMap
