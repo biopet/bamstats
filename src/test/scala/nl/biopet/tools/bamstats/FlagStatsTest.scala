@@ -55,7 +55,10 @@ class FlagStatsTest extends BiopetTest {
 
   @Test
   def testFlagstatsReport(): Unit = {
-    println(flagstats.report())
+    flagstats.report() should include("28\t100.0000%\ttotal")
+    flagstats.report() should include("26\t92.8571%\tproperPair")
+    flagstats.report() should include("15\t53.5714%\tfirstOfPair")
+    flagstats.report() should include("14\t46.4286%\tsecondOfPair")
   }
 
 }

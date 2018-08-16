@@ -92,13 +92,13 @@ class FlagStats {
   def report(): String = {
     val buffer = new mutable.StringBuilder()
 
-    buffer.append(s"Number\tTotal Flags\tFraction\tName$lineSeparator")
+    buffer.append(s"Number\tTotal Flags\tPercentage\tName$lineSeparator")
     val totalFlags: Option[Long] = flagStats.get(FlagMethods.total)
     flagstatsSorted
       .foreach {
         case (method: FlagMethods.Value, count: Long) =>
           val percentage = totalFlags
-            .map(totalCount => f"${(count.toDouble / totalCount) * 100}%.4f")
+            .map(totalCount => f"${(count.toDouble / totalCount) * 100}%.4f" + "%")
             .getOrElse("N/A")
           buffer.append(
             s"#${method.id}\t$count\t$percentage\t${method.name}$lineSeparator")
