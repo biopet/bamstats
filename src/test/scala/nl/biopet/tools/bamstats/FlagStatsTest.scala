@@ -21,8 +21,36 @@
 
 package nl.biopet.tools.bamstats
 
-import org.scalatest.Matchers
-import org.scalatest.testng.TestNGSuite
+import htsjdk.samtools.{SAMRecord, SamReaderFactory}
+import nl.biopet.test.BiopetTest
 import org.testng.annotations.Test
+import scala.collection.JavaConversions.collectionAsScalaIterable
 
-class FlagStatsTest extends TestNGSuite with Matchers {}
+class FlagStatsTest extends BiopetTest {
+
+  val flagstats: FlagStats = new FlagStats()
+  val samReader =
+    SamReaderFactory.makeDefault().open(resourceFile("/11_target.sam"))
+  val recordsList: Iterable[SAMRecord] =
+    collectionAsScalaIterable[SAMRecord](samReader.iterator().toList)
+  recordsList.foreach(flagstats.loadRecord)
+
+  @Test
+  def testFlagstatsResults(): Unit = {
+    val values = flagstats.toSummaryMap
+    val crossCounts: Map[String, Map[String, Long]] = values
+      .getOrElse("crossCounts", Map())
+      .asInstanceOf[Map[String, Map[String, Long]]]
+    values("mapped") shouldBe 28
+    values("readPaired") shouldBe 28
+    values("properPair") shouldBe 26
+    values("duplicate") shouldBe 0
+    values("firstOfPair") shouldBe 15
+    values("secondOfPair") shouldBe 13
+    values("mateInSameStrand") shouldBe 0
+    values("mateOnOtherChromosome") shouldBe 2
+
+    crossCounts("firstOfPair")("mapped") shouldBe 15
+  }
+
+}
