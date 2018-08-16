@@ -22,9 +22,12 @@
 package nl.biopet.tools.bamstats
 
 import java.io.{File, PrintWriter}
+import java.util.Locale
+
 import htsjdk.samtools.SAMRecord
 import nl.biopet.utils.conversions
 import play.api.libs.json.Json
+
 import scala.collection.mutable
 import util.Properties.lineSeparator
 
@@ -98,7 +101,10 @@ class FlagStats {
       .foreach {
         case (method: FlagMethods.Value, count: Long) =>
           val percentage = totalFlags
-            .map(totalCount => f"${(count.toDouble / totalCount) * 100}%.4f" + "%")
+            .map(
+              totalCount =>
+                "%.4f".formatLocal(Locale.US,
+                                   (count.toDouble / totalCount) * 100) + "%")
             .getOrElse("N/A")
           buffer.append(
             s"#${method.id}\t$count\t$percentage\t${method.name}$lineSeparator")
