@@ -145,9 +145,13 @@ class FlagStats {
         countsList.foreach {
           case (_, count) => {
             if (fraction) {
-              val percentage = totalCount
-                .map(total => f"${(count.toFloat / total) * 100}%.4f" + "%")
-                .getOrElse("N/A")
+              val percentage =
+                totalCount
+                  .map(
+                    total =>
+                      "%.4f".formatLocal(Locale.US,
+                                         (count.toFloat / total) * 100) + "%")
+                  .getOrElse("N/A")
               buffer.append(s"\t$percentage")
             } else {
               buffer.append(s"\t$count")
