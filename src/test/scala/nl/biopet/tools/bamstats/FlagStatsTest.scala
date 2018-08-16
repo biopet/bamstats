@@ -53,4 +53,9 @@ class FlagStatsTest extends BiopetTest {
     crossCounts("firstOfPair")("mapped") shouldBe 15
   }
 
+  @Test
+  def testFlagstatsReport(): Unit = {
+    println(flagstats.report())
+  }
+
 }

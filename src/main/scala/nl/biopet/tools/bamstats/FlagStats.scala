@@ -126,13 +126,15 @@ class FlagStats {
           buffer.append(s"\t#${method.id}")
       }
     buffer.append(lineSeparator)
+
+    val totalCount: Option[Long] =
+      if (fraction) flagStats.toMap.get(FlagMethods.total) else None
     crossCountsSorted.foreach {
       case (method, countsList) =>
         // Create a prefix to the counts line
         buffer.append(s"#${method.id}")
         // Get the total number of counts if we need the percentage later
-        val totalCount: Option[Long] =
-          if (fraction) countsList.toMap.get(FlagMethods.total) else None
+
         // Foreach count get the percentage or count. End the line with a line separator.
         countsList.foreach {
           case (_, count) => {
@@ -145,8 +147,8 @@ class FlagStats {
               buffer.append(s"\t$count")
             }
           }
-          buffer.append(lineSeparator)
         }
+        buffer.append(lineSeparator)
     }
     buffer.toString()
   }
