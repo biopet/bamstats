@@ -58,7 +58,8 @@ class FlagStatsTest extends BiopetTest {
     flagstats.report() should include("28\t100.0000%\ttotal")
     flagstats.report() should include("26\t92.8571%\tproperPair")
     flagstats.report() should include("15\t53.5714%\tfirstOfPair")
-    flagstats.report() should include("14\t46.4286%\tsecondOfPair")
+    flagstats.report() should include("13\t46.4286%\tsecondOfPair")
+    flagstats.report() should include("2\t7.1429%\tmateOnOtherChromosome")
   }
 
 }
