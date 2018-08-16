@@ -77,7 +77,7 @@ class FlagStats {
 
   def toSummaryMap: Map[String, Any] = {
     FlagMethods.flagStatsToMap(flagStats) ++ Map(
-      "cross_counts" -> FlagMethods.crossCountsToMap(crossCounts))
+      "crossCounts" -> FlagMethods.crossCountsToMap(crossCounts))
   }
 
   def writeAsTsv(file: File): Unit = {
