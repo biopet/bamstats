@@ -55,7 +55,8 @@ case class GroupStats(
   def writeStatsToFiles(outputDir: File): Unit = {
     this.flagstat.writeReportToFile(new File(outputDir, "flagstats"))
     this.flagstat
-      .writeSummaryToFile(new File(outputDir, "flagstats.summary.json"))
+      .writeSummaryToFile(new File(outputDir, "flagstats.summary.json"),
+                          includeCrossCounts = false)
     this.mappingQualityHistogram
       .writeHistogramToTsv(new File(outputDir, "mapping_quality.tsv"))
     this.insertSizeHistogram
