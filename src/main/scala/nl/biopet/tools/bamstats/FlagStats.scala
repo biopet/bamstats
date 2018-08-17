@@ -78,9 +78,16 @@ class FlagStats {
     this.crossCounts == other.crossCounts
   }
 
-  def toSummaryMap: Map[String, Any] = {
-    FlagMethods.flagStatsToMap(flagStats) ++ Map(
-      "crossCounts" -> FlagMethods.crossCountsToMap(crossCounts))
+  def toSummaryMap(includeCrossCounts: Boolean = true): Map[String, Any] = {
+    FlagMethods.flagStatsToMap(flagStats) ++ {
+      if (includeCrossCounts)
+        Map("crossCounts" -> FlagMethods.crossCountsToMap(crossCounts))
+      else Map()
+    } ++
+      Map(
+        "singletons" -> crossCounts(FlagMethods.mapped)(
+          FlagMethods.mateUnmapped))
+
   }
 
   def writeAsTsv(file: File): Unit = {
@@ -173,19 +180,14 @@ class FlagStats {
     *
     * @return A json string with the summary
     */
-  def summary: String = {
-    val map: Map[String, Long] = flagstatsSorted.map {
-      case (method, count) =>
-        method.name -> count
-    }.toMap ++ Map(
-      "Singletons" -> crossCounts(FlagMethods.mapped)(FlagMethods.mateUnmapped))
-
-    Json.stringify(conversions.mapToJson(map))
+  def toSummaryJson(includeCrossCounts: Boolean = true): String = {
+    Json.stringify(conversions.mapToJson(toSummaryMap(includeCrossCounts)))
   }
 
-  def writeSummaryToFile(outputFile: File): Unit = {
+  def writeSummaryToFile(outputFile: File,
+                         includeCrossCounts: Boolean = true): Unit = {
     val writer = new PrintWriter(outputFile)
-    writer.println(summary)
+    writer.println(toSummaryJson(includeCrossCounts))
     writer.close()
   }
 }
