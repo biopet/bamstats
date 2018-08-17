@@ -26,7 +26,6 @@ import nl.biopet.test.BiopetTest
 import org.testng.annotations.Test
 
 import scala.collection.JavaConversions.collectionAsScalaIterable
-import scala.util.Properties.lineSeparator
 class FlagStatsTest extends BiopetTest {
 
   val flagstats: FlagStats = new FlagStats()
@@ -38,7 +37,7 @@ class FlagStatsTest extends BiopetTest {
 
   @Test
   def testFlagstatsResults(): Unit = {
-    val values = flagstats.toSummaryMap
+    val values = flagstats.toSummaryMap()
     val crossCounts: Map[String, Map[String, Long]] = values
       .getOrElse("crossCounts", Map())
       .asInstanceOf[Map[String, Map[String, Long]]]
@@ -50,7 +49,7 @@ class FlagStatsTest extends BiopetTest {
     values("secondOfPair") shouldBe 13
     values("mateInSameStrand") shouldBe 0
     values("mateOnOtherChromosome") shouldBe 2
-
+    values("singletons") shouldBe 0
     crossCounts("firstOfPair")("mapped") shouldBe 15
   }
 
@@ -64,31 +63,6 @@ class FlagStatsTest extends BiopetTest {
     flagstats.report() should include("#1\t#2\t#3\t#4")
     flagstats.report() should include("28\t28\t0\t0")
     flagstats.report() should include("100.0000%\t100.0000%\t0.0000%\t0.0000%")
-  }
-
-  @Test
-  def testFlagstatsSummary(): Unit = {
-    flagstats.summary shouldBe
-      """{
-        |"notPrimaryAlignment":0,
-        |"mapped":28,
-        |"firstNormalSecondInverted":26,
-        |"duplicate":0,"mateUnmapped":0,
-        |"properPair":26,
-        |"total":28,
-        |"mateInSameStrand":0,
-        |"readFailsVendorQualityCheck":0,
-        |"firstInvertedSecondNormal":0,
-        |"readPaired":28,
-        |"mateNegativeStrand":15,
-        |"Singletons":0,
-        |"firstNormalSecondNormal":0,
-        |"secondOfPair":13,
-        |"firstOfPair":15,
-        |"supplementaryAlignment":0,
-        |"firstInvertedSecondInverted":0,
-        |"mateOnOtherChromosome":2,
-        |"readNegativeStrand":13}""".stripMargin.replace(lineSeparator, "")
   }
 
   @Test

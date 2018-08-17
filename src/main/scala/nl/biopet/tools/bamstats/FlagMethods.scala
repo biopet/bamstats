@@ -59,6 +59,12 @@ object FlagMethods extends Enumeration {
   def mappingQualityGreaterThan(mappingQuality: Int): Val = Val {
     _.getMappingQuality > mappingQuality
   }
+  val mappingQualityGreaterThan10 = mappingQualityGreaterThan(10)
+  val mappingQualityGreaterThan20 = mappingQualityGreaterThan(20)
+  val mappingQualityGreaterThan30 = mappingQualityGreaterThan(30)
+  val mappingQualityGreaterThan40 = mappingQualityGreaterThan(40)
+  val mappingQualityGreaterThan50 = mappingQualityGreaterThan(50)
+  val mappingQualityGreaterThan60 = mappingQualityGreaterThan(60)
 
   // Below functions check read orientation
   val firstNormalSecondInverted = Val { record =>
@@ -138,26 +144,4 @@ object FlagMethods extends Enumeration {
         (method.name -> flagStatsToMap(flagstats))
     }.toMap
   }
-
-  def getFlagStats(samRecords: Seq[SAMRecord]): Map[FlagMethods.Value, Long] = {
-    val results = emptyResult
-    samRecords.foreach { record =>
-      results.keys.foreach { flagMethod =>
-        if (flagMethod.method(record)) results(flagMethod) += 1
-      }
-    }
-    results.toMap
-  }
-
-  def getCrossCounts(samRecords: Seq[SAMRecord])
-    : Map[FlagMethods.Value, Map[FlagMethods.Value, Long]] = {
-    val results = mutable.Map[FlagMethods.Value, Map[FlagMethods.Value, Long]]()
-    values.foreach { method =>
-      results(method) = {
-        getFlagStats(samRecords.filter(method.method))
-      }
-    }
-    results.toMap
-  }
-
 }

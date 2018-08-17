@@ -74,7 +74,7 @@ case class GroupStats(
 
   def toSummaryMap: Map[String, Map[String, Any]] = {
     Map(
-      "flagstats" -> flagstat.toSummaryMap,
+      "flagstats" -> flagstat.toSummaryMap(false),
       "mapping_quality" -> Map(
         "histogram" -> mappingQualityHistogram.toSummaryMap,
         "general" -> mappingQualityHistogram.aggregateStats),
