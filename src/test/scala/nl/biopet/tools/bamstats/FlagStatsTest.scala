@@ -21,15 +21,16 @@
 
 package nl.biopet.tools.bamstats
 
-import htsjdk.samtools.{SAMRecord, SamReaderFactory}
+import htsjdk.samtools.{SAMRecord, SamReader, SamReaderFactory}
 import nl.biopet.test.BiopetTest
 import org.testng.annotations.Test
+
 import scala.collection.JavaConversions.collectionAsScalaIterable
-import util.Properties.lineSeparator
+import scala.util.Properties.lineSeparator
 class FlagStatsTest extends BiopetTest {
 
   val flagstats: FlagStats = new FlagStats()
-  val samReader =
+  val samReader: SamReader =
     SamReaderFactory.makeDefault().open(resourceFile("/11_target.sam"))
   val recordsList: Iterable[SAMRecord] =
     collectionAsScalaIterable[SAMRecord](samReader.iterator().toList)
@@ -90,4 +91,26 @@ class FlagStatsTest extends BiopetTest {
         |"readNegativeStrand":13}""".stripMargin.replace(lineSeparator, "")
   }
 
+  @Test
+  def testFlagStatsOrder(): Unit = {
+    val keyList = flagstats.flagstatsSorted.map {
+      case (method, _) => method
+    }
+    keyList shouldBe FlagMethods.values.toList
+    // Also reverse list to make sure test works
+    keyList shouldNot be(FlagMethods.values.toList.reverse)
+  }
+
+  @Test
+  def testCrossCountsOrder(): Unit = {
+    flagstats.crossCountsSorted.foreach {
+      case (_, countsMap) =>
+        val keyList = countsMap.map { case (method, _) => method }
+        keyList shouldBe FlagMethods.values.toList
+        keyList shouldNot be(FlagMethods.values.toList.reverse)
+    }
+    val keyList = flagstats.crossCountsSorted.map { case (method, _) => method }
+    keyList shouldBe FlagMethods.values.toList
+    keyList shouldNot be(FlagMethods.values.toList.reverse)
+  }
 }
