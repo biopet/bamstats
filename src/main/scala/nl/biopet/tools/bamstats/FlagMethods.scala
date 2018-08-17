@@ -59,12 +59,12 @@ object FlagMethods extends Enumeration {
   def mappingQualityGreaterThan(mappingQuality: Int): Val = Val {
     _.getMappingQuality > mappingQuality
   }
-  val mappingQualityGreaterThan10 = mappingQualityGreaterThan(10)
-  val mappingQualityGreaterThan20 = mappingQualityGreaterThan(20)
-  val mappingQualityGreaterThan30 = mappingQualityGreaterThan(30)
-  val mappingQualityGreaterThan40 = mappingQualityGreaterThan(40)
-  val mappingQualityGreaterThan50 = mappingQualityGreaterThan(50)
-  val mappingQualityGreaterThan60 = mappingQualityGreaterThan(60)
+  val mappingQualityGreaterThan10: Val = mappingQualityGreaterThan(10)
+  val mappingQualityGreaterThan20: Val = mappingQualityGreaterThan(20)
+  val mappingQualityGreaterThan30: Val = mappingQualityGreaterThan(30)
+  val mappingQualityGreaterThan40: Val = mappingQualityGreaterThan(40)
+  val mappingQualityGreaterThan50: Val = mappingQualityGreaterThan(50)
+  val mappingQualityGreaterThan60: Val = mappingQualityGreaterThan(60)
 
   // Below functions check read orientation
   val firstNormalSecondInverted = Val { record =>
@@ -129,9 +129,8 @@ object FlagMethods extends Enumeration {
   def flagStatsToMap(
       flagStats: mutable.Map[FlagMethods.Value, Long]): Map[String, Long] = {
     flagStats.map {
-      case (method, count) => {
-        (method.name -> count)
-      }
+      case (method, count) =>
+        method.name -> count
     }.toMap
   }
 
@@ -141,7 +140,7 @@ object FlagMethods extends Enumeration {
     : Map[String, Map[String, Long]] = {
     crosscounts.map {
       case (method, flagstats) =>
-        (method.name -> flagStatsToMap(flagstats))
+        method.name -> flagStatsToMap(flagstats)
     }.toMap
   }
 }

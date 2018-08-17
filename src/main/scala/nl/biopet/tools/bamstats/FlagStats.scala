@@ -74,7 +74,7 @@ class FlagStats {
   }
 
   def ==(other: FlagStats): Boolean = {
-    this.flagStats == other.flagStats
+    this.flagStats == other.flagStats &&
     this.crossCounts == other.crossCounts
   }
 
@@ -150,7 +150,7 @@ class FlagStats {
 
         // Foreach count get the percentage or count. End the line with a line separator.
         countsList.foreach {
-          case (_, count) => {
+          case (_, count) =>
             if (fraction) {
               val percentage =
                 totalCount
@@ -163,7 +163,6 @@ class FlagStats {
             } else {
               buffer.append(s"\t$count")
             }
-          }
         }
         buffer.append(lineSeparator)
     }
