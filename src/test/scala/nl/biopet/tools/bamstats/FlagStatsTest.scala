@@ -25,7 +25,7 @@ import htsjdk.samtools.{SAMRecord, SamReaderFactory}
 import nl.biopet.test.BiopetTest
 import org.testng.annotations.Test
 import scala.collection.JavaConversions.collectionAsScalaIterable
-
+import util.Properties.lineSeparator
 class FlagStatsTest extends BiopetTest {
 
   val flagstats: FlagStats = new FlagStats()
@@ -65,5 +65,29 @@ class FlagStatsTest extends BiopetTest {
     flagstats.report() should include("100.0000%\t100.0000%\t0.0000%\t0.0000%")
   }
 
+  @Test
+  def testFlagstatsSummary(): Unit = {
+    flagstats.summary shouldBe
+      """{
+        |"notPrimaryAlignment":0,
+        |"mapped":28,
+        |"firstNormalSecondInverted":26,
+        |"duplicate":0,"mateUnmapped":0,
+        |"properPair":26,
+        |"total":28,
+        |"mateInSameStrand":0,
+        |"readFailsVendorQualityCheck":0,
+        |"firstInvertedSecondNormal":0,
+        |"readPaired":28,
+        |"mateNegativeStrand":15,
+        |"Singletons":0,
+        |"firstNormalSecondNormal":0,
+        |"secondOfPair":13,
+        |"firstOfPair":15,
+        |"supplementaryAlignment":0,
+        |"firstInvertedSecondInverted":0,
+        |"mateOnOtherChromosome":2,
+        |"readNegativeStrand":13}""".stripMargin.replace(lineSeparator, "")
+  }
 
 }
