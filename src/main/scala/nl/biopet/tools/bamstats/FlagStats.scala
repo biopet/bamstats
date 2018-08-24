@@ -73,11 +73,6 @@ class FlagStats {
     }
   }
 
-  def ==(other: FlagStats): Boolean = {
-    this.flagStats == other.flagStats &&
-    this.crossCounts == other.crossCounts
-  }
-
   def toSummaryMap(includeCrossCounts: Boolean = true): Map[String, Any] = {
     FlagMethods.flagStatsToMap(flagStats) ++ {
       if (includeCrossCounts)
