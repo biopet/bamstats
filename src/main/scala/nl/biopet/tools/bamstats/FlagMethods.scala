@@ -24,6 +24,7 @@ package nl.biopet.tools.bamstats
 import htsjdk.samtools.SAMRecord
 
 import scala.collection.mutable
+import scala.language.implicitConversions
 
 object FlagMethods extends Enumeration {
   protected case class Val(method: SAMRecord => Boolean) extends super.Val {

@@ -51,7 +51,7 @@ object Generate extends ToolCommand[Args] {
       cmdArgs.referenceFasta match {
         case Some(reference) =>
           validateReferenceInBam(cmdArgs.bamFile, reference)
-        case _ => {
+        case _ =>
           val seqDict = SamReaderFactory
             .makeDefault()
             .open(cmdArgs.bamFile)
@@ -60,8 +60,6 @@ object Generate extends ToolCommand[Args] {
           logger.warn(
             "No reference file provided. Reference from BAM File is not validated")
           seqDict
-        }
-
       }
 
     init(cmdArgs.outputDir,
