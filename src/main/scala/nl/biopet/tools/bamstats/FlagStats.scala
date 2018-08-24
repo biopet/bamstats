@@ -33,28 +33,18 @@ import util.Properties.lineSeparator
 
 class FlagStats {
 
-  private def emptyResult: mutable.Map[FlagMethods.Value, Long] = {
-    val map = mutable.Map[FlagMethods.Value, Long]()
-    FlagMethods.values.foreach(x => map += (x -> 0L))
-    map
+  private val orderedMethodKeys: List[FlagMethods.Value] = {
+    FlagMethods.values.toList.sortBy(_.id)
   }
 
-  private def emptyCrossResult
-    : mutable.Map[FlagMethods.Value, mutable.Map[FlagMethods.Value, Long]] = {
-    val map =
-      mutable.Map[FlagMethods.Value, mutable.Map[FlagMethods.Value, Long]]()
-    FlagMethods.values.foreach(method => map += (method -> emptyResult))
-    map
-  }
+  private val emptyFlagStats = Array.fill(orderedMethodKeys.size)(0L)
+  private val flagStats: Array[Long] = emptyFlagStats
+  private val crossCounts: Array[Array[Long]] = Array.fill(orderedMethodKeys.size)(emptyFlagStats)
 
-  private val flagStats: mutable.Map[FlagMethods.Value, Long] =
-    emptyResult
-  private val crossCounts
-    : mutable.Map[FlagMethods.Value, mutable.Map[FlagMethods.Value, Long]] =
-    emptyCrossResult
+
 
   def flagstatsSorted: List[(FlagMethods.Value, Long)] = {
-    flagStats.toList.sortBy { case (method, _) => method.id }
+    orderedMethodKeys.zip(flagStats)
   }
 
   def crossCountsSorted
