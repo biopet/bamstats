@@ -119,9 +119,9 @@ class FlagStats {
   def flagStatsToMap: Map[String, Long] = flagstatsSortedNames.toMap
 
   def crossCountsToMap: Map[String, Map[String, Long]] = {
-    crossCountsToMap.map {
-      case (name, stats) => name -> stats
-    }
+    crossCountsSortedNames.map {
+      case (name, stats) => name -> stats.toMap
+    }.toMap
   }
 
   def writeAsTsv(file: File): Unit = {
