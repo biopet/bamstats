@@ -25,10 +25,7 @@ import play.api.libs.json.{Json, Reads, Writes}
 import nl.biopet.utils.DoubleArray.Implicits._
 
 object Implicits {
-  implicit val singleFlagStatsReads: Reads[SingleFlagStats] =
-    Json.reads[SingleFlagStats]
-  implicit val combinedFlagStatsReads: Reads[CombinedFlagStats] =
-    Json.reads[CombinedFlagStats]
+
   implicit val flagStatsReads: Reads[FlagStatsData] = Json.reads[FlagStatsData]
   implicit val dataReads: Reads[Data] = Json.reads[Data]
   implicit val readgroupReads: Reads[Readgroup] = Json.reads[Readgroup]
@@ -36,10 +33,6 @@ object Implicits {
   implicit val sampleReads: Reads[Sample] = Json.reads[Sample]
   implicit val rootReads: Reads[Root] = Json.reads[Root]
 
-  implicit val singleFlagStatsWrites: Writes[SingleFlagStats] =
-    Json.writes[SingleFlagStats]
-  implicit val combinedFlagStatsWrites: Writes[CombinedFlagStats] =
-    Json.writes[CombinedFlagStats]
   implicit val flagStatsWrites: Writes[FlagStatsData] =
     Json.writes[FlagStatsData]
   implicit val dataWrites: Writes[Data] = Json.writes[Data]

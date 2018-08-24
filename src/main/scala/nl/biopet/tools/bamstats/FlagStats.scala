@@ -90,7 +90,7 @@ class FlagStats {
       flagStatsData.crossCounts.map {
         case (name, map) =>
           val innerMap = map.map {
-            case (name, count) => FlagMethods.nameToVal(name) -> count
+            case (innerName, count) => FlagMethods.nameToVal(innerName) -> count
           }
           require(innerMap.keySet == flagStats.keySet,
                   "Imported crossCount data incompatible")
@@ -112,9 +112,9 @@ class FlagStats {
     }
   }
 
-  def toFlagStatsData(): FlagStatsData = {
-    new FlagStatsData(flagStats = FlagMethods.flagStatsToMap(flagStats),
-                      FlagMethods.crossCountsToMap(crossCounts))
+  def toFlagStatsData: FlagStatsData = {
+    FlagStatsData(flagStats = FlagMethods.flagStatsToMap(flagStats),
+                  FlagMethods.crossCountsToMap(crossCounts))
   }
 
   def toSummaryMap(includeCrossCounts: Boolean = true): Map[String, Any] = {
