@@ -33,37 +33,52 @@ import util.Properties.lineSeparator
 
 class FlagStats {
 
-  private val orderedMethodKeys: List[FlagMethods.Value] = {
+  // orders flag methods by ID. Used to make sure array layouts are consistent
+  private val orderedMethods: List[FlagMethods.Value] = {
     FlagMethods.values.toList.sortBy(_.id)
   }
 
-  private val emptyFlagStats = Array.fill(orderedMethodKeys.size)(0L)
+  private val emptyFlagStats = Array.fill(orderedMethods.size)(0L)
+
+  // Representation as arrays instead of maps is chosen because an index is a lot faster than a hashmap.
+  // Given bam files may contain millions of reads, this is the most prudent option.
   private val flagStats: Array[Long] = emptyFlagStats
-  private val crossCounts: Array[Array[Long]] = Array.fill(orderedMethodKeys.size)(emptyFlagStats)
+  private val crossCounts: Array[Array[Long]] =
+    Array.fill(orderedMethods.size)(emptyFlagStats)
 
-
-
+  /**
+    * Method that returns a sorted list of flagstats. Can be used as a to map conversion
+    * @return
+    */
   def flagstatsSorted: List[(FlagMethods.Value, Long)] = {
-    orderedMethodKeys.zip(flagStats)
+    orderedMethods.zip(flagStats)
   }
 
-  def crossCountsSorted
-    : List[(FlagMethods.Value, List[(FlagMethods.Value, Long)])] = {
-    crossCounts.toList.sortBy { case (method, _) => method.id }.map {
-      case (method, countsMap) =>
-        val sortedMap = countsMap.toList.sortBy {
-          case (innerMethod, _) => innerMethod.id
-        }
-        (method, sortedMap)
-    }
-  }
+//  def crossCountsSorted
+//    : List[(FlagMethods.Value, List[(FlagMethods.Value, Long)])] = {
+//    crossCounts.toList.sortBy { case (method, _) => method.id }.map {
+//      case (method, countsMap) =>
+//        val sortedMap = countsMap.toList.sortBy {
+//          case (innerMethod, _) => innerMethod.id
+//        }
+//        (method, sortedMap)
+//    }
+//  }
+
   def loadRecord(record: SAMRecord): Unit = {
-    flagStats.keys.foreach { method =>
-      if (method.method(record)) {
-        flagStats(method) += 1
-        crossCounts(method).keys.foreach(cross => {
-          if (cross.method(record)) crossCounts(method)(cross) += 1
-        })
+    // First check which indexes are positive for the flag
+    val positiveResults: List[Int] = orderedMethods.flatMap { method =>
+      if (method(record)) {
+        Some(method.id)
+      } else None
+    }
+    // Add 1 for the positive indexes. For the crosscounts also add 1 for the positive indexes.
+    // With this method only the positive index positions are traversed over.
+    // Negative index positions are ignored, which should speed up things.
+    positiveResults.foreach { index =>
+      flagStats(index) += 1
+      positiveResults.foreach { innerIndex =>
+        crossCounts(index)(innerIndex) += 1
       }
     }
   }
