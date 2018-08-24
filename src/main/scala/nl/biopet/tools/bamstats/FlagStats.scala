@@ -41,7 +41,7 @@ class FlagStats {
   private val orderedNames: List[String] = orderedMethods.map(_.name)
   private val orderedKeys: List[Int] = orderedMethods.map(_.id)
 
-  private val emptyFlagStats = Array.fill(orderedMethods.size)(0L)
+  private def emptyFlagStats = Array.fill(orderedMethods.size)(0L)
 
   // Representation as arrays instead of maps is chosen because an index is a lot faster than a hashmap.
   // Given bam files may contain millions of reads, this is the most prudent option.
