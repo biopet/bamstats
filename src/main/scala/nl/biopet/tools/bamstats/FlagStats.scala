@@ -38,6 +38,9 @@ class FlagStats {
     FlagMethods.values.toList.sortBy(_.id)
   }
 
+  private val orderedNames: List[String] = orderedMethods.map(_.name)
+  private val orderedKeys: List[Int] = orderedMethods.map(_.id)
+
   private val emptyFlagStats = Array.fill(orderedMethods.size)(0L)
 
   // Representation as arrays instead of maps is chosen because an index is a lot faster than a hashmap.
@@ -50,20 +53,30 @@ class FlagStats {
     * Method that returns a sorted list of flagstats. Can be used as a to map conversion
     * @return
     */
-  def flagstatsSorted: List[(FlagMethods.Value, Long)] = {
+  def flagstatsSortedNames: List[(String, Long)] = {
+    orderedNames.zip(flagStats)
+  }
+
+  def flagstatsSortedMethods: List[(FlagMethods.Value, Long)] = {
     orderedMethods.zip(flagStats)
   }
 
-//  def crossCountsSorted
-//    : List[(FlagMethods.Value, List[(FlagMethods.Value, Long)])] = {
-//    crossCounts.toList.sortBy { case (method, _) => method.id }.map {
-//      case (method, countsMap) =>
-//        val sortedMap = countsMap.toList.sortBy {
-//          case (innerMethod, _) => innerMethod.id
-//        }
-//        (method, sortedMap)
-//    }
-//  }
+  def crossCountsSortedNames: List[(String, List[(String, Long)])] = {
+    orderedNames.zip(crossCounts).map {
+      case (name, stats) =>
+        name -> orderedNames.zip(stats)
+    }
+  }
+
+  def crossCountsSortedMethods
+    : List[(FlagMethods.Value, List[(FlagMethods.Value, Long)])] = {
+    orderedMethods.zip(crossCounts).map {
+      case (method, stats) =>
+        method -> orderedMethods.zip(stats)
+    }
+  }
+
+  def totalReads = flagStats(FlagMethods.total.id)
 
   def loadRecord(record: SAMRecord): Unit = {
     // First check which indexes are positive for the flag
@@ -84,11 +97,11 @@ class FlagStats {
   }
 
   def +=(other: FlagStats): Unit = {
-    this.flagStats.keys.foreach { method =>
-      this.flagStats(method) += other.flagStats(method)
-      this.crossCounts(method).keys foreach (method2 => {
-        this.crossCounts(method)(method2) += other.crossCounts(method)(method2)
-      })
+    orderedKeys.foreach { key =>
+      this.flagStats(key) += other.flagStats(key)
+      orderedKeys.foreach { innerKey =>
+        this.crossCounts(key)(innerKey) += other.crossCounts(key)(innerKey)
+      }
     }
   }
 
@@ -99,34 +112,24 @@ class FlagStats {
       else Map()
     } ++
       Map(
-        "singletons" -> crossCounts(FlagMethods.mapped)(
-          FlagMethods.mateUnmapped))
+        "singletons" -> crossCounts(FlagMethods.mapped.id)(
+          FlagMethods.mateUnmapped.id))
 
   }
 
-  private def flagStatsMapper(
-      mutableFlagStats: mutable.Map[FlagMethods.Value, Long])
-    : Map[String, Long] = {
-    mutableFlagStats.map {
-      case (method, count) =>
-        method.name -> count
-    }.toMap
-  }
-
-  def flagStatsToMap: Map[String, Long] = flagStatsMapper(flagStats)
+  def flagStatsToMap: Map[String, Long] = flagstatsSortedNames.toMap
 
   def crossCountsToMap: Map[String, Map[String, Long]] = {
-    crossCounts.map {
-      case (method, flagstats) =>
-        method.name -> flagStatsMapper(flagstats)
-    }.toMap
+    crossCountsToMap.map {
+      case (name, stats) => name -> stats
+    }
   }
 
   def writeAsTsv(file: File): Unit = {
     val writer = new PrintWriter(file)
-    flagstatsSorted.foreach {
-      case (flag, count) =>
-        writer.println(s"${flag.name}\t$count")
+    flagstatsSortedNames.foreach {
+      case (name, count) =>
+        writer.println(s"$name\t$count")
     }
     writer.close()
   }
@@ -135,16 +138,14 @@ class FlagStats {
     val buffer = new mutable.StringBuilder()
 
     buffer.append(s"Number\tTotal Flags\tPercentage\tName$lineSeparator")
-    val totalFlags: Option[Long] = flagStats.get(FlagMethods.total)
-    flagstatsSorted
+    flagstatsSortedMethods
       .foreach {
         case (method: FlagMethods.Value, count: Long) =>
-          val percentage = totalFlags
-            .map(
-              totalCount =>
-                "%.4f".formatLocal(Locale.US,
-                                   (count.toDouble / totalCount) * 100) + "%")
-            .getOrElse("N/A")
+          val percentage = totalReads match {
+            case 0 => "N/A"
+            case _ =>
+              "%.4f".formatLocal(Locale.US, (count.toDouble / totalReads) * 100) + "%"
+          }
           buffer.append(
             s"#${method.id}\t$count\t$percentage\t${method.name}$lineSeparator")
       }
@@ -165,16 +166,14 @@ class FlagStats {
   def crossReport(fraction: Boolean = false): String = {
     val buffer = new StringBuilder
     // Create header line
-    crossCountsSorted
+    crossCountsSortedMethods
       .foreach {
         case (method, _) =>
           buffer.append(s"\t#${method.id}")
       }
     buffer.append(lineSeparator)
 
-    val totalCount: Option[Long] =
-      if (fraction) flagStats.toMap.get(FlagMethods.total) else None
-    crossCountsSorted.foreach {
+    crossCountsSortedMethods.foreach {
       case (method, countsList) =>
         // Create a prefix to the counts line
         buffer.append(s"#${method.id}")
@@ -184,13 +183,12 @@ class FlagStats {
         countsList.foreach {
           case (_, count) =>
             if (fraction) {
-              val percentage =
-                totalCount
-                  .map(
-                    total =>
-                      "%.4f".formatLocal(Locale.US,
-                                         (count.toFloat / total) * 100) + "%")
-                  .getOrElse("N/A")
+              val percentage = totalReads match {
+                case 0 => "N/A"
+                case _ =>
+                  "%.4f".formatLocal(Locale.US,
+                                     (count.toDouble / totalReads) * 100) + "%"
+              }
               buffer.append(s"\t$percentage")
             } else {
               buffer.append(s"\t$count")
