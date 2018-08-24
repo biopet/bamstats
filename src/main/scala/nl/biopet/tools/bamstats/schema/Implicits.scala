@@ -40,7 +40,8 @@ object Implicits {
     Json.writes[SingleFlagStats]
   implicit val combinedFlagStatsWrites: Writes[CombinedFlagStats] =
     Json.writes[CombinedFlagStats]
-  implicit val flagStatsWrites: Writes[FlagStatsData] = Json.writes[FlagStatsData]
+  implicit val flagStatsWrites: Writes[FlagStatsData] =
+    Json.writes[FlagStatsData]
   implicit val dataWrites: Writes[Data] = Json.writes[Data]
   implicit val readgroupWrites: Writes[Readgroup] = Json.writes[Readgroup]
   implicit val libraryWrites: Writes[Library] = Json.writes[Library]

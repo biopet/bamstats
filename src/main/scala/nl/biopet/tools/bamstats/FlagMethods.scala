@@ -38,7 +38,8 @@ object FlagMethods extends Enumeration {
   def nameToVal(name: String): FlagMethods.Value = {
     nameToValOption(name) match {
       case Some(flagMethod) => flagMethod
-      case _ => throw new NoSuchFieldException(s"$name is not an existing FlagMethod.")
+      case _ =>
+        throw new NoSuchFieldException(s"$name is not an existing FlagMethod.")
     }
   }
 

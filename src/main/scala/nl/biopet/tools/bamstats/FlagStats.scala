@@ -79,16 +79,37 @@ class FlagStats {
   }
 
   def addFlagStatsData(flagStatsData: FlagStatsData): Unit = {
-    val newFlagStats = flagStatsData.flagStats.map {case (name, count) =>
-        FlagMethods.nameToVal(name) -> count}
+    val newFlagStats = flagStatsData.flagStats.map {
+      case (name, count) =>
+        FlagMethods.nameToVal(name) -> count
+    }
+    require(newFlagStats.keySet == flagStats.keySet,
+            "Imported FlagStat data incompatible.")
+
     val newCrossCounts: Map[FlagMethods.Value, Map[FlagMethods.Value, Long]] =
-      flagStatsData.crossCounts.map {case (name, map) =>
-      val innerMap = map.map{ case (name, count) => FlagMethods.nameToVal(name) -> count}
+      flagStatsData.crossCounts.map {
+        case (name, map) =>
+          val innerMap = map.map {
+            case (name, count) => FlagMethods.nameToVal(name) -> count
+          }
+          require(innerMap.keySet == flagStats.keySet,
+                  "Imported crossCount data incompatible")
           FlagMethods.nameToVal(name) -> innerMap
       }
-    w
-    require(newFlagStats.keys.toSet == flagStats.keys.toSet, "Imported FlagStat data incompatible.")
+    require(newCrossCounts.keySet == crossCounts.keySet,
+            "Imported crossCount data incompatible")
 
+    newFlagStats.foreach {
+      case (method, count) =>
+        this.flagStats(method) += count
+    }
+    newCrossCounts.foreach {
+      case (method, map) =>
+        map.foreach {
+          case (innerMethod, count) =>
+            this.crossCounts(method)(innerMethod) += count
+        }
+    }
   }
 
   def toSummaryMap(includeCrossCounts: Boolean = true): Map[String, Any] = {
@@ -207,10 +228,7 @@ class FlagStats {
 object FlagStats {
   def fromFlagStatsData(flagStatsData: FlagStatsData): FlagStats = {
     val newFlagStats = new FlagStats
-    val flagStats =
-    newFlagStats.flagStats.foreach { case (flagMethod, _) =>
-      newFlagStats.flagStats(flagMethod) += flagStats(flagMethod)
-    }
+    newFlagStats.addFlagStatsData(flagStatsData)
     newFlagStats
   }
 }
