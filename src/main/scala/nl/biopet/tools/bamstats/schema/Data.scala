@@ -28,7 +28,7 @@ import nl.biopet.tools.bamstats.schema.Implicits._
 import nl.biopet.utils.{io, DoubleArray}
 import play.api.libs.json.{JsValue, Json}
 
-case class Data(flagStats: FlagStats,
+case class Data(flagStats: FlagStatsData,
                 mappingQualityHistogram: DoubleArray[Int],
                 insertSizeHistogram: DoubleArray[Int],
                 clippingHistogram: DoubleArray[Int],
