@@ -37,10 +37,13 @@ class FlagStats {
   private val orderedMethods: List[FlagMethods.Value] = {
     FlagMethods.values.toList.sortBy(_.id)
   }
-
   private val orderedNames: List[String] = orderedMethods.map(_.name)
   private val orderedKeys: List[Int] = orderedMethods.map(_.id)
 
+  /**
+    * Creates an empty flagstats array
+    * @return An array of length FlagMethods.values.size and filled with 0
+    */
   private def emptyFlagStats = Array.fill(orderedMethods.size)(0L)
 
   // Representation as arrays instead of maps is chosen because an index is a lot faster than a hashmap.
@@ -50,17 +53,25 @@ class FlagStats {
     Array.fill(orderedMethods.size)(emptyFlagStats)
 
   /**
-    * Method that returns a sorted list of flagstats. Can be used as a to map conversion
-    * @return
+    * Method to return flagstats with names.
+    * @return a sorted list of flagstats with names
     */
   def flagstatsSortedNames: List[(String, Long)] = {
     orderedNames.zip(flagStats)
   }
 
+  /**
+    * Method to return flagstats with methods.
+    * @return a sorted list of flagstats with methods
+    */
   def flagstatsSortedMethods: List[(FlagMethods.Value, Long)] = {
     orderedMethods.zip(flagStats)
   }
 
+  /**
+    * Returns a crosscount table with names
+    * @return a sorted list of names with crosscounts.
+    */
   def crossCountsSortedNames: List[(String, List[(String, Long)])] = {
     orderedNames.zip(crossCounts).map {
       case (name, stats) =>
@@ -68,6 +79,10 @@ class FlagStats {
     }
   }
 
+  /***
+    * Returns a crosscount table with methods
+    * @return a sorted list of methods with crosscounts.
+    */
   def crossCountsSortedMethods
     : List[(FlagMethods.Value, List[(FlagMethods.Value, Long)])] = {
     orderedMethods.zip(crossCounts).map {
@@ -76,8 +91,17 @@ class FlagStats {
     }
   }
 
-  def totalReads = flagStats(FlagMethods.total.id)
+  /**
+    * Gets the total number of reads by reading it from the flagstats array
+    * @return the total number of reads.
+    */
+  def totalReads: Long = flagStats(FlagMethods.total.id)
 
+  /**
+    * Loads one SAMrecord and tests it for the flags.
+    * Then updates the internal flagstats and crosscounts counters
+    * @param record a SAMrecord
+    */
   def loadRecord(record: SAMRecord): Unit = {
     // First check which index positions have a 'true' flag
     val positiveResults: List[Int] = orderedMethods.flatMap { method =>
@@ -95,6 +119,10 @@ class FlagStats {
     }
   }
 
+  /**
+    * Add another flagstats instance
+    * @param other another FlagStats instance
+    */
   def +=(other: FlagStats): Unit = {
     orderedKeys.foreach { key =>
       this.flagStats(key) += other.flagStats(key)
@@ -104,6 +132,11 @@ class FlagStats {
     }
   }
 
+  /**
+    * Create a summary map of the gathered counts
+    * @param includeCrossCounts Whether Crosscounts should be included in the summary
+    * @return a summary map
+    */
   def toSummaryMap(includeCrossCounts: Boolean = true): Map[String, Any] = {
     flagStatsToMap ++ {
       if (includeCrossCounts)
@@ -116,14 +149,26 @@ class FlagStats {
 
   }
 
+  /**
+    * Convert flagstats to a map
+    * @return a map with method names as a key and counts as value.
+    */
   def flagStatsToMap: Map[String, Long] = flagstatsSortedNames.toMap
 
+  /**
+    * Converts crosscounts to a map
+    * @return a map with method names as a key and flagstats maps as values
+    */
   def crossCountsToMap: Map[String, Map[String, Long]] = {
     crossCountsSortedNames.map {
       case (name, stats) => name -> stats.toMap
     }.toMap
   }
 
+  /**
+    * Write a TSV file with names in the first column and counts in the second.
+    * @param file the output file
+    */
   def writeAsTsv(file: File): Unit = {
     val writer = new PrintWriter(file)
     flagstatsSortedNames.foreach {
@@ -133,6 +178,11 @@ class FlagStats {
     writer.close()
   }
 
+  /**
+    * A report that includes a table of the flagstats including percentages.
+    * Also includes crosscounts with raw numbers and percentages
+    * @return a string containing the report
+    */
   def report(): String = {
     val buffer = new mutable.StringBuilder()
 
@@ -198,6 +248,10 @@ class FlagStats {
     buffer.toString()
   }
 
+  /**
+    * Write the report to file
+    * @param outputFile the file to which the report will be written.
+    */
   def writeReportToFile(outputFile: File): Unit = {
     val writer = new PrintWriter(outputFile)
     writer.println(report())
@@ -212,6 +266,11 @@ class FlagStats {
     Json.stringify(conversions.mapToJson(toSummaryMap(includeCrossCounts)))
   }
 
+  /**
+    * Write the summary map to a tsv file
+    * @param outputFile the file
+    * @param includeCrossCounts whether crosscunts should be included.
+    */
   def writeSummaryToFile(outputFile: File,
                          includeCrossCounts: Boolean = true): Unit = {
     val writer = new PrintWriter(outputFile)
