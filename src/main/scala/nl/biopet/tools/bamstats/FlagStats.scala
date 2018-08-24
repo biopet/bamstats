@@ -112,6 +112,11 @@ class FlagStats {
     }
   }
 
+  def toFlagStatsData(): FlagStatsData = {
+    new FlagStatsData(flagStats = FlagMethods.flagStatsToMap(flagStats),
+                      FlagMethods.crossCountsToMap(crossCounts))
+  }
+
   def toSummaryMap(includeCrossCounts: Boolean = true): Map[String, Any] = {
     FlagMethods.flagStatsToMap(flagStats) ++ {
       if (includeCrossCounts)
