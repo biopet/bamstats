@@ -74,15 +74,33 @@ class FlagStats {
   }
 
   def toSummaryMap(includeCrossCounts: Boolean = true): Map[String, Any] = {
-    FlagMethods.flagStatsToMap(flagStats) ++ {
+    flagStatsToMap ++ {
       if (includeCrossCounts)
-        Map("crossCounts" -> FlagMethods.crossCountsToMap(crossCounts))
+        Map("crossCounts" -> crossCountsToMap)
       else Map()
     } ++
       Map(
         "singletons" -> crossCounts(FlagMethods.mapped)(
           FlagMethods.mateUnmapped))
 
+  }
+
+  private def flagStatsMapper(
+      mutableFlagStats: mutable.Map[FlagMethods.Value, Long])
+    : Map[String, Long] = {
+    mutableFlagStats.map {
+      case (method, count) =>
+        method.name -> count
+    }.toMap
+  }
+
+  def flagStatsToMap: Map[String, Long] = flagStatsMapper(flagStats)
+
+  def crossCountsToMap: Map[String, Map[String, Long]] = {
+    crossCounts.map {
+      case (method, flagstats) =>
+        method.name -> flagStatsMapper(flagstats)
+    }.toMap
   }
 
   def writeAsTsv(file: File): Unit = {
