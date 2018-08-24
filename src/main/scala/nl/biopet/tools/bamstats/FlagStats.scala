@@ -79,15 +79,14 @@ class FlagStats {
   def totalReads = flagStats(FlagMethods.total.id)
 
   def loadRecord(record: SAMRecord): Unit = {
-    // First check which indexes are positive for the flag
+    // First check which index positions have a 'true' flag
     val positiveResults: List[Int] = orderedMethods.flatMap { method =>
-      if (method(record)) {
+      if (method.method(record)) {
         Some(method.id)
       } else None
     }
-    // Add 1 for the positive indexes. For the crosscounts also add 1 for the positive indexes.
-    // With this method only the positive index positions are traversed over.
-    // Negative index positions are ignored, which should speed up things.
+    // Only update the positions which have a true flag.
+    // This is a lot faster than traversing over all the positions
     positiveResults.foreach { index =>
       flagStats(index) += 1
       positiveResults.foreach { innerIndex =>
