@@ -31,6 +31,17 @@ object FlagMethods extends Enumeration {
   }
   implicit def valueToVal(x: Value): Val = x.asInstanceOf[Val]
 
+  def nameToValOption(name: String): Option[FlagMethods.Value] = {
+    this.values.find(_.name == name)
+  }
+
+  def nameToVal(name: String): FlagMethods.Value = {
+    nameToValOption(name) match {
+      case Some(flagMethod) => flagMethod
+      case _ => throw new NoSuchFieldException(s"$name is not an existing FlagMethod.")
+    }
+  }
+
   val total = Val { _ =>
     true
   }

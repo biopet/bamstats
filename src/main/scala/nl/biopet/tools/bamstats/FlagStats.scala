@@ -25,6 +25,7 @@ import java.io.{File, PrintWriter}
 import java.util.Locale
 
 import htsjdk.samtools.SAMRecord
+import nl.biopet.tools.bamstats.schema.FlagStatsData
 import nl.biopet.utils.conversions
 import play.api.libs.json.Json
 
@@ -38,7 +39,6 @@ class FlagStats {
   private val crossCounts
     : mutable.Map[FlagMethods.Value, mutable.Map[FlagMethods.Value, Long]] =
     FlagMethods.emptyCrossResult
-
   def flagstatsSorted: List[(FlagMethods.Value, Long)] = {
     flagStats.toList.sortBy { case (method, _) => method.id }
   }
@@ -76,6 +76,19 @@ class FlagStats {
   def ==(other: FlagStats): Boolean = {
     this.flagStats == other.flagStats &&
     this.crossCounts == other.crossCounts
+  }
+
+  def addFlagStatsData(flagStatsData: FlagStatsData): Unit = {
+    val newFlagStats = flagStatsData.flagStats.map {case (name, count) =>
+        FlagMethods.nameToVal(name) -> count}
+    val newCrossCounts: Map[FlagMethods.Value, Map[FlagMethods.Value, Long]] =
+      flagStatsData.crossCounts.map {case (name, map) =>
+      val innerMap = map.map{ case (name, count) => FlagMethods.nameToVal(name) -> count}
+          FlagMethods.nameToVal(name) -> innerMap
+      }
+    w
+    require(newFlagStats.keys.toSet == flagStats.keys.toSet, "Imported FlagStat data incompatible.")
+
   }
 
   def toSummaryMap(includeCrossCounts: Boolean = true): Map[String, Any] = {
@@ -188,5 +201,16 @@ class FlagStats {
     val writer = new PrintWriter(outputFile)
     writer.println(toSummaryJson(includeCrossCounts))
     writer.close()
+  }
+}
+
+object FlagStats {
+  def fromFlagStatsData(flagStatsData: FlagStatsData): FlagStats = {
+    val newFlagStats = new FlagStats
+    val flagStats =
+    newFlagStats.flagStats.foreach { case (flagMethod, _) =>
+      newFlagStats.flagStats(flagMethod) += flagStats(flagMethod)
+    }
+    newFlagStats
   }
 }
