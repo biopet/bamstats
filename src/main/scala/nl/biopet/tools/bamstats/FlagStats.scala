@@ -139,11 +139,7 @@ class FlagStats {
     * @param flagStatsData the FlagStatsData
     */
   def addFlagStatsData(flagStatsData: FlagStatsData): Unit = {
-    require(flagStatsData.flagStats.keySet == FlagMethods.values.map(_.name),
-            "FlagStatsData incompatible. Missing or unknown names in flagstats")
-    require(
-      flagStatsData.crossCounts.keys == orderedNames,
-      "FlagStatsData incompatible. Missing or unkown names in crosscounts")
+
     flagStatsData.flagStats.toList.foreach {
       case (name, count) =>
         this.flagStats(FlagMethods.nameToVal(name).id) += count

@@ -28,17 +28,34 @@ package object schema {
   case class FlagStatsData(flagStats: Map[String, Long],
                            crossCounts: CrossCounts) {
     def validate(): Unit = {
-
+      require(
+        flagStats.keySet == FlagMethods.values.map(_.name),
+        "FlagStatsData incompatible. Missing or unknown names in flagstats")
+      require(
+        crossCounts.keys.toSet == flagStats.keySet,
+        "FlagStatsData incompatible. Internally corrupt. CrossCount keys do not match flagstats keys.")
       crossCounts.validate()
     }
   }
   case class CrossCounts(keys: List[String], counts: List[List[Long]]) {
     def validate(): Unit = {
-        val numberOfMethods = keys.length
-        require(counts.length == numberOfMethods, "Number of rows not equal to number of methods.")
-        counts.zipWithIndex.foreach { case (row, index) =>
-          require(row.length == numberOfMethods, s"Number of columns not equal to number of methods on row $index")
-        }
+      val totalIndex = keys.indexOf(FlagMethods.total.name)
+      val totalsColumn: List[Long] = counts.map(_(totalIndex))
+
+      for (index <- 0 until keys.length) {
+        require(totalsColumn(index) == counts(index)(index),
+                s"Crossline at ($index,$index) is not equal to" +
+                  s" the value in the totals column at ($index,$totalIndex)")
+      }
+      val numberOfMethods = keys.length
+      require(counts.length == numberOfMethods,
+              "Number of rows not equal to number of methods.")
+      counts.zipWithIndex.foreach {
+        case (row, index) =>
+          require(
+            row.length == numberOfMethods,
+            s"Number of columns not equal to number of methods on row $index")
       }
     }
+  }
 }
