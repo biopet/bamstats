@@ -30,7 +30,7 @@ import nl.biopet.utils.Histogram
   * Created by pjvanthof on 05/07/16.
   */
 case class GroupStats(
-    flagstat: FlagstatCollector = new FlagstatCollector(),
+    flagstat: FlagStats = new FlagStats(),
     mappingQualityHistogram: Histogram[Int] = new Histogram[Int](),
     insertSizeHistogram: Histogram[Int] = new Histogram[Int](),
     clippingHistogram: Histogram[Int] = new Histogram[Int](),
@@ -38,10 +38,6 @@ case class GroupStats(
     rightClippingHistogram: Histogram[Int] = new Histogram[Int](),
     _5_ClippingHistogram: Histogram[Int] = new Histogram[Int](),
     _3_ClippingHistogram: Histogram[Int] = new Histogram[Int]()) {
-
-  flagstat.loadDefaultFunctions()
-  flagstat.loadQualityFunctions()
-  flagstat.loadOrientationFunctions()
 
   /** This will add an other [[GroupStats]] inside `this` */
   def +=(other: GroupStats): GroupStats = {
@@ -59,7 +55,8 @@ case class GroupStats(
   def writeStatsToFiles(outputDir: File): Unit = {
     this.flagstat.writeReportToFile(new File(outputDir, "flagstats"))
     this.flagstat
-      .writeSummaryTofile(new File(outputDir, "flagstats.summary.json"))
+      .writeSummaryToFile(new File(outputDir, "flagstats.summary.json"),
+                          includeCrossCounts = false)
     this.mappingQualityHistogram
       .writeHistogramToTsv(new File(outputDir, "mapping_quality.tsv"))
     this.insertSizeHistogram
@@ -78,7 +75,7 @@ case class GroupStats(
 
   def toSummaryMap: Map[String, Map[String, Any]] = {
     Map(
-      "flagstats" -> flagstat.toSummaryMap,
+      "flagstats" -> flagstat.toSummaryMap(false),
       "mapping_quality" -> Map(
         "histogram" -> mappingQualityHistogram.toSummaryMap,
         "general" -> mappingQualityHistogram.aggregateStats),
