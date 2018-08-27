@@ -88,23 +88,23 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="nl.biopet.tools.bamstats.FlagstatCollector" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="FlagstatCollectorextendsAnyRef"></a>
-      <a id="FlagstatCollector:FlagstatCollector"></a>
+              <ol><li name="nl.biopet.tools.bamstats.FlagStats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FlagStatsextendsAnyRef"></a>
+      <a id="FlagStats:FlagStats"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="FlagstatCollector.html"><span class="name">FlagstatCollector</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="FlagStats.html"><span class="name">FlagStats</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#nl.biopet.tools.bamstats.package@FlagstatCollectorextendsAnyRef" title="Permalink" target="_top">
+      <a href="../../../../index.html#nl.biopet.tools.bamstats.package@FlagStatsextendsAnyRef" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Created by pjvan_thof on 21-7-16.</p>
+      
     </li><li name="nl.biopet.tools.bamstats.GroupID" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="GroupIDextendsProductwithSerializable"></a>
       <a id="GroupID:GroupID"></a>
@@ -131,7 +131,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="GroupStats.html"><span class="name">GroupStats</span></a><span class="params">(<span name="flagstat">flagstat: <a href="FlagstatCollector.html" class="extype" name="nl.biopet.tools.bamstats.FlagstatCollector">FlagstatCollector</a> = <span class="symbol"><span class="name"><a href="FlagstatCollector.html">new FlagstatCollector()</a></span></span></span>, <span name="mappingQualityHistogram">mappingQualityHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="insertSizeHistogram">insertSizeHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="clippingHistogram">clippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="leftClippingHistogram">leftClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="rightClippingHistogram">rightClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="_5_ClippingHistogram">_5_ClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="_3_ClippingHistogram">_3_ClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="GroupStats.html"><span class="name">GroupStats</span></a><span class="params">(<span name="flagstat">flagstat: <a href="FlagStats.html" class="extype" name="nl.biopet.tools.bamstats.FlagStats">FlagStats</a> = <span class="symbol"><span class="name"><a href="FlagStats.html">new FlagStats()</a></span></span></span>, <span name="mappingQualityHistogram">mappingQualityHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="insertSizeHistogram">insertSizeHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="clippingHistogram">clippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="leftClippingHistogram">leftClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="rightClippingHistogram">rightClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="_5_ClippingHistogram">_5_ClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>, <span name="_3_ClippingHistogram">_3_ClippingHistogram: <span class="extype" name="nl.biopet.utils.Histogram">Histogram</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">new Histogram[Int]()</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#nl.biopet.tools.bamstats.package@GroupStatsextendsProductwithSerializable" title="Permalink" target="_top">
@@ -176,6 +176,23 @@
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#nl.biopet.tools.bamstats.package@BamStats" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="nl.biopet.tools.bamstats.FlagMethods" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FlagMethods"></a>
+      <a id="FlagMethods:FlagMethods"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="FlagMethods$.html"><span class="name">FlagMethods</span></a><span class="result"> extends <span class="extype" name="scala.Enumeration">Enumeration</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#nl.biopet.tools.bamstats.package@FlagMethods" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -227,6 +244,23 @@
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#nl.biopet.tools.bamstats.package@schema" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="nl.biopet.tools.bamstats.validate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="validate"></a>
+      <a id="validate:validate"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="validate/package.html"><span class="name">validate</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#nl.biopet.tools.bamstats.package@validate" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
