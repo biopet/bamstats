@@ -26,5 +26,6 @@ package object schema {
   case class Library(readgroups: Map[String, Readgroup])
   case class Readgroup(data: Data)
   case class FlagStatsData(flagStats: Map[String, Long],
-                           crossCounts: Map[String, Map[String, Long]])
+                           crossCounts: CrossCounts)
+  case class CrossCounts(keys: List[String], counts: List[List[Long]])
 }

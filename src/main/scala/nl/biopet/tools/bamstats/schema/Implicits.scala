@@ -26,6 +26,7 @@ import nl.biopet.utils.DoubleArray.Implicits._
 
 object Implicits {
 
+  implicit val crossCountsReads: Reads[CrossCounts] = Json.reads[CrossCounts]
   implicit val flagStatsReads: Reads[FlagStatsData] = Json.reads[FlagStatsData]
   implicit val dataReads: Reads[Data] = Json.reads[Data]
   implicit val readgroupReads: Reads[Readgroup] = Json.reads[Readgroup]
@@ -33,6 +34,7 @@ object Implicits {
   implicit val sampleReads: Reads[Sample] = Json.reads[Sample]
   implicit val rootReads: Reads[Root] = Json.reads[Root]
 
+  implicit val crossCountsWrites: Writes[CrossCounts] = Json.writes[CrossCounts]
   implicit val flagStatsWrites: Writes[FlagStatsData] =
     Json.writes[FlagStatsData]
   implicit val dataWrites: Writes[Data] = Json.writes[Data]
