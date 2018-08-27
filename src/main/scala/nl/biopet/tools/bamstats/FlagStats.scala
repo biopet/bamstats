@@ -139,20 +139,19 @@ class FlagStats {
     * @param flagStatsData the FlagStatsData
     */
   def addFlagStatsData(flagStatsData: FlagStatsData): Unit = {
+    require(flagStatsData.flagStats.keySet == orderedNames.toSet)
+    require(flagStatsData.crossCounts.keys.toSet == orderedNames.toSet)
+    flagStatsData.validate()
 
     flagStatsData.flagStats.toList.foreach {
       case (name, count) =>
         this.flagStats(FlagMethods.nameToVal(name).id) += count
     }
-    flagStatsData.crossCounts.keys.foreach {
-      case (name, countsMap) =>
-        require(
-          countsMap.keySet == FlagMethods.values.map(_.name),
-          "FlagStatsData incompatible. Missing or unkown names in crosscounts")
-        val index: Int = FlagMethods.nameToVal(name).id
-        countsMap.foreach {
-          case (innerName, count) =>
-            val innerIndex = FlagMethods.nameToVal(innerName).id
+    val indexedCrossCountsKeys = flagStatsData.crossCounts.keys.map(FlagMethods.nameToVal(_).id)
+    indexedCrossCountsKeys.zip(flagStatsData.crossCounts.counts) foreach {
+      case (index, countsArray) =>
+        indexedCrossCountsKeys.zip(countsArray).foreach {
+          case (innerIndex, count) =>
             this.crossCounts(index)(innerIndex) += count
         }
     }

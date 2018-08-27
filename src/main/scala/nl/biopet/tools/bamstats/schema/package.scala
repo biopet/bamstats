@@ -42,19 +42,21 @@ package object schema {
       val totalIndex = keys.indexOf(FlagMethods.total.name)
       val totalsColumn: List[Long] = counts.map(_(totalIndex))
 
-      for (index <- 0 until keys.length) {
-        require(totalsColumn(index) == counts(index)(index),
-                s"Crossline at ($index,$index) is not equal to" +
-                  s" the value in the totals column at ($index,$totalIndex)")
-      }
       val numberOfMethods = keys.length
       require(counts.length == numberOfMethods,
-              "Number of rows not equal to number of methods.")
+        "Number of rows not equal to number of methods.")
       counts.zipWithIndex.foreach {
         case (row, index) =>
           require(
             row.length == numberOfMethods,
             s"Number of columns not equal to number of methods on row $index")
+
+      for (index <- 0 until keys.length) {
+        require(totalsColumn(index) == counts(index)(index),
+                s"Crossline at ($index,$index) is not equal to" +
+                  s" the value in the totals column at ($index,$totalIndex)")
+      }
+
       }
     }
   }
