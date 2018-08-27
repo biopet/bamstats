@@ -51,9 +51,10 @@ object Generate extends ToolCommand[Args] {
       cmdArgs.referenceFasta match {
         case Some(reference) =>
           validateReferenceInBam(cmdArgs.bamFile, reference)
-        case _ => getDictFromBam(cmdArgs.bamFile)
+        case _ =>
+          logger.warn("Reference from BAM file not validated with external reference.")
+          getDictFromBam(cmdArgs.bamFile)
       }
-
     init(cmdArgs.outputDir,
          cmdArgs.bamFile,
          sequenceDict,
