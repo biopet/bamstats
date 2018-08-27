@@ -162,6 +162,14 @@ class FlagStats {
   }
 
   /**
+    * Returns a FlagStatsData object that can be serialized into data.
+    * @return a FlagStatsData object
+    */
+  def toFlagStatsData: FlagStatsData = {
+    FlagStatsData(flagStats = flagStatsToMap, crossCounts = crossCountsToMap)
+  }
+
+  /**
     * Create a summary map of the gathered counts
     * @param includeCrossCounts Whether Crosscounts should be included in the summary
     * @return a summary map
