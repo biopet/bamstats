@@ -25,7 +25,7 @@ import java.io.{File, PrintWriter}
 import java.util.Locale
 
 import htsjdk.samtools.SAMRecord
-import nl.biopet.tools.bamstats.schema.FlagStatsData
+import nl.biopet.tools.bamstats.schema.{CrossCounts, FlagStatsData}
 import nl.biopet.utils.conversions
 import play.api.libs.json.Json
 
@@ -142,13 +142,13 @@ class FlagStats {
     require(flagStatsData.flagStats.keySet == FlagMethods.values.map(_.name),
             "FlagStatsData incompatible. Missing or unknown names in flagstats")
     require(
-      flagStatsData.crossCounts.keySet == FlagMethods.values.map(_.name),
+      flagStatsData.crossCounts.keys == orderedNames,
       "FlagStatsData incompatible. Missing or unkown names in crosscounts")
     flagStatsData.flagStats.toList.foreach {
       case (name, count) =>
         this.flagStats(FlagMethods.nameToVal(name).id) += count
     }
-    flagStatsData.crossCounts.foreach {
+    flagStatsData.crossCounts.keys.foreach {
       case (name, countsMap) =>
         require(
           countsMap.keySet == FlagMethods.values.map(_.name),
@@ -167,7 +167,11 @@ class FlagStats {
     * @return a FlagStatsData object
     */
   def toFlagStatsData: FlagStatsData = {
-    FlagStatsData(flagStats = flagStatsToMap, crossCounts = crossCountsToMap)
+    val crossCountsData: CrossCounts = CrossCounts(
+      keys = orderedNames,
+      counts = crossCounts.map(_.toList).toList
+    )
+    FlagStatsData(flagStatsToMap, crossCounts = crossCountsData)
   }
 
   /**

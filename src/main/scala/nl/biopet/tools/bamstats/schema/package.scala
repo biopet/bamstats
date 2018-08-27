@@ -26,6 +26,19 @@ package object schema {
   case class Library(readgroups: Map[String, Readgroup])
   case class Readgroup(data: Data)
   case class FlagStatsData(flagStats: Map[String, Long],
-                           crossCounts: CrossCounts)
-  case class CrossCounts(keys: List[String], counts: List[List[Long]])
+                           crossCounts: CrossCounts) {
+    def validate(): Unit = {
+
+      crossCounts.validate()
+    }
+  }
+  case class CrossCounts(keys: List[String], counts: List[List[Long]]) {
+    def validate(): Unit = {
+        val numberOfMethods = keys.length
+        require(counts.length == numberOfMethods, "Number of rows not equal to number of methods.")
+        counts.zipWithIndex.foreach { case (row, index) =>
+          require(row.length == numberOfMethods, s"Number of columns not equal to number of methods on row $index")
+        }
+      }
+    }
 }
