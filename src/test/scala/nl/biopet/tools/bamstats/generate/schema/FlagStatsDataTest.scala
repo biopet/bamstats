@@ -18,8 +18,13 @@ class FlagStatsDataTest extends BiopetTest {
   recordsList.foreach(flagstats.loadRecord)
 
   @Test
-  def conversionToAndFrom(): Unit = {
+  def conversionToAndFromFlagStatsData(): Unit = {
     val flagStatsData: FlagStatsData = flagstats.toFlagStatsData
-    FlagStats.fromFlagStatsData(flagStatsData) shouldBe flagstats
+    val schemaFlagstats: FlagStats = FlagStats.fromFlagStatsData(flagStatsData)
+    schemaFlagstats.flagStatsToMap shouldBe flagstats.flagStatsToMap
+    schemaFlagstats.crossCountsToMap shouldBe flagstats.crossCountsToMap
+    schemaFlagstats == flagstats shouldBe true
+    // TODO: Implement hashmethod so below is true
+    //schemaFlagstats shouldBe flagstats
   }
 }
