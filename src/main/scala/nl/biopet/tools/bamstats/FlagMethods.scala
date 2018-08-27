@@ -23,7 +23,6 @@ package nl.biopet.tools.bamstats
 
 import htsjdk.samtools.SAMRecord
 
-import scala.collection.mutable
 import scala.language.implicitConversions
 
 object FlagMethods extends Enumeration {
