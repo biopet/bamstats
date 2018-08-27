@@ -165,6 +165,11 @@ class FlagStats {
     }.toMap
   }
 
+  def ==(other: FlagStats): Boolean = {
+    this.flagStatsToMap == other.flagStatsToMap
+    this.crossCountsToMap == other.crossCountsToMap
+  }
+
   /**
     * Write a TSV file with names in the first column and counts in the second.
     * @param file the output file

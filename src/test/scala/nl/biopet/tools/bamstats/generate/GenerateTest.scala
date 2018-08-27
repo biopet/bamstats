@@ -24,7 +24,6 @@ package nl.biopet.tools.bamstats.generate
 import java.io.File
 
 import com.google.common.io.Files
-import nl.biopet.tools.bamstats.generate.Generate
 import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
