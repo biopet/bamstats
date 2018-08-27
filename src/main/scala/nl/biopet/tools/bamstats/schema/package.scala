@@ -39,24 +39,28 @@ package object schema {
   }
   case class CrossCounts(keys: List[String], counts: List[List[Long]]) {
     def validate(): Unit = {
+      // Test whether the keys match keys known by te program
       val totalIndex = keys.indexOf(FlagMethods.total.name)
-      val totalsColumn: List[Long] = counts.map(_(totalIndex))
 
+      // Test whether the matrix of counts is a true square.
       val numberOfMethods = keys.length
       require(counts.length == numberOfMethods,
-        "Number of rows not equal to number of methods.")
+              "Number of rows not equal to number of methods.")
       counts.zipWithIndex.foreach {
         case (row, index) =>
           require(
             row.length == numberOfMethods,
             s"Number of columns not equal to number of methods on row $index")
+      }
 
+      // Test whether the crossline (condition A and condition A is true)
+      // Matches with the total value (condition A and always true is true)
+      // These values should always match. Otherwise the matrix is wrongly constructed.
+      val totalsColumn: List[Long] = counts.map(_(totalIndex))
       for (index <- 0 until keys.length) {
         require(totalsColumn(index) == counts(index)(index),
                 s"Crossline at ($index,$index) is not equal to" +
                   s" the value in the totals column at ($index,$totalIndex)")
-      }
-
       }
     }
   }

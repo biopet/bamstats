@@ -139,17 +139,23 @@ class FlagStats {
     * @param flagStatsData the FlagStatsData
     */
   def addFlagStatsData(flagStatsData: FlagStatsData): Unit = {
-    require(flagStatsData.flagStats.keySet == orderedNames.toSet)
-    require(flagStatsData.crossCounts.keys.toSet == orderedNames.toSet)
     flagStatsData.validate()
 
+    // Add flagstats data by converting name string to index int.
     flagStatsData.flagStats.toList.foreach {
       case (name, count) =>
         this.flagStats(FlagMethods.nameToVal(name).id) += count
     }
-    val indexedCrossCountsKeys = flagStatsData.crossCounts.keys.map(FlagMethods.nameToVal(_).id)
+
+    // Add crosccounts data.
+    // First convert the keysList to list of indexes (int).
+    val indexedCrossCountsKeys =
+      flagStatsData.crossCounts.keys.map(FlagMethods.nameToVal(_).id)
+
+    // Zip the rows with the correct indexes
     indexedCrossCountsKeys.zip(flagStatsData.crossCounts.counts) foreach {
       case (index, countsArray) =>
+        // Zip the columns with the correct indexes
         indexedCrossCountsKeys.zip(countsArray).foreach {
           case (innerIndex, count) =>
             this.crossCounts(index)(innerIndex) += count
