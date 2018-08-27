@@ -49,6 +49,7 @@ object Validate extends ToolCommand[Args] {
   def manualText: String =
     s"""
        | See example.
+       |
      """.stripMargin
 
   def exampleText: String =

@@ -124,36 +124,4 @@ object FlagMethods extends Enumeration {
   val mateOnOtherChromosome = Val { record =>
     record.getReadPairedFlag && record.getReferenceIndex != record.getMateReferenceIndex
   }
-
-  def emptyResult: mutable.Map[FlagMethods.Value, Long] = {
-    val map = mutable.Map[FlagMethods.Value, Long]()
-    values.foreach(x => map += (x -> 0L))
-    map
-  }
-
-  def emptyCrossResult
-    : mutable.Map[FlagMethods.Value, mutable.Map[FlagMethods.Value, Long]] = {
-    val map =
-      mutable.Map[FlagMethods.Value, mutable.Map[FlagMethods.Value, Long]]()
-    values.foreach(method => map += (method -> emptyResult))
-    map
-  }
-
-  def flagStatsToMap(
-      flagStats: mutable.Map[FlagMethods.Value, Long]): Map[String, Long] = {
-    flagStats.map {
-      case (method, count) =>
-        method.name -> count
-    }.toMap
-  }
-
-  def crossCountsToMap(
-      crosscounts: mutable.Map[FlagMethods.Value,
-                               mutable.Map[FlagMethods.Value, Long]])
-    : Map[String, Map[String, Long]] = {
-    crosscounts.map {
-      case (method, flagstats) =>
-        method.name -> flagStatsToMap(flagstats)
-    }.toMap
-  }
 }

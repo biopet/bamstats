@@ -67,7 +67,7 @@ class FlagStatsTest extends BiopetTest {
 
   @Test
   def testFlagStatsOrder(): Unit = {
-    val keyList = flagstats.flagstatsSorted.map {
+    val keyList = flagstats.flagstatsSortedMethods.map {
       case (method, _) => method
     }
     keyList shouldBe FlagMethods.values.toList
@@ -77,13 +77,15 @@ class FlagStatsTest extends BiopetTest {
 
   @Test
   def testCrossCountsOrder(): Unit = {
-    flagstats.crossCountsSorted.foreach {
+    flagstats.crossCountsSortedMethods.foreach {
       case (_, countsMap) =>
         val keyList = countsMap.map { case (method, _) => method }
         keyList shouldBe FlagMethods.values.toList
         keyList shouldNot be(FlagMethods.values.toList.reverse)
     }
-    val keyList = flagstats.crossCountsSorted.map { case (method, _) => method }
+    val keyList = flagstats.crossCountsSortedMethods.map {
+      case (method, _) => method
+    }
     keyList shouldBe FlagMethods.values.toList
     keyList shouldNot be(FlagMethods.values.toList.reverse)
   }
