@@ -133,6 +133,20 @@ class FlagStats {
     }
   }
 
+  def addFlagStatsData(flagStatsData: FlagStatsData): Unit = {
+    require(flagStatsData.flagStats.keySet == FlagMethods.values.map(_.name), "FlagStatsData incompatible. Missing or unknown names in flagstats")
+    require(flagStatsData.crossCounts.keySet == FlagMethods.values.map(_.name), "FlagStatsData incompatible. Missing or unkown names in crosscounts")
+    flagStatsData.flagStats.toList.foreach { case (name, count) =>
+      this.flagStats(FlagMethods.nameToVal(name).id) += count
+    }
+    flagStatsData.crossCounts.foreach { case (name, countsMap) =>
+      require(countsMap.keySet == FlagMethods.values.map(_.name), "FlagStatsData incompatible. Missing or unkown names in crosscounts")
+      val index: Int = FlagMethods.nameToVal(name).id
+      countsMap.foreach { case(innerName, count) =>
+      val innerIndex = FlagMethods.nameToVal(innerName).id
+      this.crossCounts(index)(innerIndex) += count}
+    }
+  }
   /**
     * Create a summary map of the gathered counts
     * @param includeCrossCounts Whether Crosscounts should be included in the summary
