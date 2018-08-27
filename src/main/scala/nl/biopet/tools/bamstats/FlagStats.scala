@@ -45,13 +45,14 @@ class FlagStats {
     * Creates an empty flagstats array
     * @return An array of length FlagMethods.values.size and filled with 0
     */
-  private def emptyFlagStats = Array.fill(orderedMethods.size)(0L)
+  private def emptyFlagstatArray: Array[Long] =
+    Array.fill(orderedMethods.size)(0L)
 
   // Representation as arrays instead of maps is chosen because an index is a lot faster than a hashmap.
   // Given bam files may contain millions of reads, this is the most prudent option.
-  private val flagStats: Array[Long] = emptyFlagStats
+  private val flagStats: Array[Long] = emptyFlagstatArray
   private val crossCounts: Array[Array[Long]] =
-    Array.fill(orderedMethods.size)(emptyFlagStats)
+    Array.fill(orderedMethods.size)(emptyFlagstatArray)
 
   /**
     * Method to return flagstats with names.
@@ -200,6 +201,11 @@ class FlagStats {
     crossCountsSortedNames.map {
       case (name, stats) => name -> stats.toMap
     }.toMap
+  }
+
+  def ==(other: FlagStats): Boolean = {
+    this.flagStatsToMap == other.flagStatsToMap
+    this.crossCountsToMap == other.crossCountsToMap
   }
 
   /**
