@@ -22,15 +22,23 @@
 package nl.biopet.tools.bamstats
 
 package object schema {
+
   case class Sample(libraries: Map[String, Library])
   case class Library(readgroups: Map[String, Readgroup])
   case class Readgroup(data: Data)
+
+  val expectedKeys: Set[String] = FlagMethods.values.map(_.name)
+
   case class FlagStatsData(flagStats: Map[String, Long],
                            crossCounts: CrossCounts) {
+
     def validate(): Unit = {
       require(
-        flagStats.keySet == FlagMethods.values.map(_.name),
-        "FlagStatsData incompatible. Missing or unknown names in flagstats")
+        flagStats.keySet == expectedKeys,
+        "FlagStatsData incompatible. Missing and/or unknown names in flagstats.\n" +
+          s"Missing: ${(expectedKeys -- flagStats.keySet).mkString(",")}\n" +
+          s"Unknown: ${(flagStats.keySet -- expectedKeys).mkString(",")}"
+      )
       require(
         crossCounts.keys.toSet == flagStats.keySet,
         "FlagStatsData incompatible. Internally corrupt. CrossCount keys do not match flagstats keys.")
@@ -40,8 +48,12 @@ package object schema {
   case class CrossCounts(keys: List[String], counts: List[List[Long]]) {
     def validate(): Unit = {
       // Test whether the keys match keys known by te program
-      require(keys.toSet == FlagMethods.values.map(_.name),
-              "Missing or unknown names in crosscounts")
+      require(
+        keys.toSet == expectedKeys,
+        "FlagStatsData incompatible. Missing and/or unknown names in crosscounts.\n" +
+          s"Missing: ${(expectedKeys -- keys.toSet).mkString(",")}\n" +
+          s"Unknown: ${(keys.toSet -- expectedKeys).mkString(",")}"
+      )
 
       // Test whether the matrix of counts is a true square.
       val numberOfMethods = keys.length

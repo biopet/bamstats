@@ -21,9 +21,11 @@
 
 package nl.biopet.tools.bamstats.schema
 
+import java.io.File
+
 import nl.biopet.test.BiopetTest
 import nl.biopet.tools.bamstats.GroupID
-import org.testng.annotations.Test
+import org.testng.annotations.{DataProvider, Test}
 
 class SchemaTest extends BiopetTest {
 
@@ -36,4 +38,28 @@ class SchemaTest extends BiopetTest {
         groupId shouldBe GroupID("sample", "library", "readgroup")
     }
   }
+
+  @DataProvider(name = "wrongJson")
+  def provider(): Array[Array[Any]] = {
+    Array(
+      Array(
+        resourceFile("/bamstatsIncorrectFlagstatKeys.json"),
+        List(
+          "FlagStatsData incompatible. Missing and/or unknown names in flagstats.",
+          "Missing: properPair,readFailsVendorQualityCheck",
+          "Unknown: properPairs")
+      )
+    )
+  }
+
+  @Test(dataProvider = "wrongJson")
+  def testValidationExceptions(json: File, messages: List[String]): Unit = {
+    val root: Root = Root.fromFile(json)
+    val errorMessage = intercept[IllegalArgumentException] {
+      root.validate()
+    }.getMessage
+    errorMessage should include("requirement failed:")
+    messages.foreach(errorMessage should include(_))
+  }
+
 }
