@@ -40,7 +40,8 @@ package object schema {
   case class CrossCounts(keys: List[String], counts: List[List[Long]]) {
     def validate(): Unit = {
       // Test whether the keys match keys known by te program
-      val totalIndex = keys.indexOf(FlagMethods.total.name)
+      require(keys.toSet == FlagMethods.values.map(_.name),
+              "Missing or unknown names in crosscounts")
 
       // Test whether the matrix of counts is a true square.
       val numberOfMethods = keys.length
@@ -56,6 +57,7 @@ package object schema {
       // Test whether the crossline (condition A and condition A is true)
       // Matches with the total value (condition A and always true is true)
       // These values should always match. Otherwise the matrix is wrongly constructed.
+      val totalIndex = keys.indexOf(FlagMethods.total.name)
       val totalsColumn: List[Long] = counts.map(_(totalIndex))
       for (index <- 0 until keys.length) {
         require(totalsColumn(index) == counts(index)(index),
