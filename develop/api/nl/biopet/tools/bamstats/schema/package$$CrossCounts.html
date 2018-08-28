@@ -1,9 +1,9 @@
 <!DOCTYPE html >
 <html>
         <head>
-          <title>FlagStats - nl.biopet.tools.bamstats.schema.FlagStats</title>
-          <meta name="description" content="FlagStats - nl.biopet.tools.bamstats.schema.FlagStats" />
-          <meta name="keywords" content="FlagStats nl.biopet.tools.bamstats.schema.FlagStats" />
+          <title>CrossCounts - nl.biopet.tools.bamstats.schema.CrossCounts</title>
+          <meta name="description" content="CrossCounts - nl.biopet.tools.bamstats.schema.CrossCounts" />
+          <meta name="keywords" content="CrossCounts nl.biopet.tools.bamstats.schema.CrossCounts" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -16,7 +16,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../../index.html';
-            var hash = 'nl.biopet.tools.bamstats.schema.package$$FlagStats';
+            var hash = 'nl.biopet.tools.bamstats.schema.package$$CrossCounts';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -30,10 +30,10 @@
       <div id="definition">
         <img alt="Class" src="../../../../../lib/class_big.png" />
         <p id="owner"><a href="../../../../package.html" class="extype" name="nl">nl</a>.<a href="../../../package.html" class="extype" name="nl.biopet">biopet</a>.<a href="../../package.html" class="extype" name="nl.biopet.tools">tools</a>.<a href="../package.html" class="extype" name="nl.biopet.tools.bamstats">bamstats</a>.<a href="package.html" class="extype" name="nl.biopet.tools.bamstats.schema">schema</a></p>
-        <h1>FlagStats</h1><h3><span class="morelinks"><div>Related Doc:
+        <h1>CrossCounts</h1><h3><span class="morelinks"><div>Related Doc:
             <a href="package.html" class="extype" name="nl.biopet.tools.bamstats.schema">package schema</a>
           </div></span></h3><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -45,7 +45,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">FlagStats</span><span class="params">(<span name="singleFlagStats">singleFlagStats: <a href="package$$SingleFlagStats.html" class="extype" name="nl.biopet.tools.bamstats.schema.SingleFlagStats">SingleFlagStats</a></span>, <span name="combinedFlagStats">combinedFlagStats: <a href="package$$CombinedFlagStats.html" class="extype" name="nl.biopet.tools.bamstats.schema.CombinedFlagStats">CombinedFlagStats</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">CrossCounts</span><span class="params">(<span name="keys">keys: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="counts">counts: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Long">Long</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -69,7 +69,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="nl.biopet.tools.bamstats.schema.FlagStats"><span>FlagStats</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="nl.biopet.tools.bamstats.schema.CrossCounts"><span>CrossCounts</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -88,19 +88,19 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="nl.biopet.tools.bamstats.schema.FlagStats#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(singleFlagStats:nl.biopet.tools.bamstats.schema.package.SingleFlagStats,combinedFlagStats:nl.biopet.tools.bamstats.schema.package.CombinedFlagStats):nl.biopet.tools.bamstats.schema.package.FlagStats"></a>
-      <a id="&lt;init&gt;:FlagStats"></a>
+              <ol><li name="nl.biopet.tools.bamstats.schema.CrossCounts#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(keys:List[String],counts:List[List[Long]]):nl.biopet.tools.bamstats.schema.package.CrossCounts"></a>
+      <a id="&lt;init&gt;:CrossCounts"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">FlagStats</span><span class="params">(<span name="singleFlagStats">singleFlagStats: <a href="package$$SingleFlagStats.html" class="extype" name="nl.biopet.tools.bamstats.schema.SingleFlagStats">SingleFlagStats</a></span>, <span name="combinedFlagStats">combinedFlagStats: <a href="package$$CombinedFlagStats.html" class="extype" name="nl.biopet.tools.bamstats.schema.CombinedFlagStats">CombinedFlagStats</a></span>)</span>
+        <span class="name">CrossCounts</span><span class="params">(<span name="keys">keys: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="counts">counts: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Long">Long</span>]]</span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@&lt;init&gt;(singleFlagStats:nl.biopet.tools.bamstats.schema.package.SingleFlagStats,combinedFlagStats:nl.biopet.tools.bamstats.schema.package.CombinedFlagStats):nl.biopet.tools.bamstats.schema.package.FlagStats" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@&lt;init&gt;(keys:List[String],counts:List[List[Long]]):nl.biopet.tools.bamstats.schema.package.CrossCounts" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -126,7 +126,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@!=(x$1:Any):Boolean" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -143,7 +143,7 @@
         <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@##():Int" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@##():Int" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -160,7 +160,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@==(x$1:Any):Boolean" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@==(x$1:Any):Boolean" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -177,7 +177,7 @@
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@asInstanceOf[T0]:T0" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -194,7 +194,7 @@
         <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@clone():Object" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@clone():Object" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -205,19 +205,19 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.schema.FlagStats#combinedFlagStats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="combinedFlagStats:nl.biopet.tools.bamstats.schema.package.CombinedFlagStats"></a>
-      <a id="combinedFlagStats:CombinedFlagStats"></a>
+    </li><li name="nl.biopet.tools.bamstats.schema.CrossCounts#counts" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="counts:List[List[Long]]"></a>
+      <a id="counts:List[List[Long]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">combinedFlagStats</span><span class="result">: <a href="package$$CombinedFlagStats.html" class="extype" name="nl.biopet.tools.bamstats.schema.CombinedFlagStats">CombinedFlagStats</a></span>
+        <span class="name">counts</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Long">Long</span>]]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@combinedFlagStats:nl.biopet.tools.bamstats.schema.package.CombinedFlagStats" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@counts:List[List[Long]]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -234,7 +234,7 @@
         <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -251,7 +251,7 @@
         <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@finalize():Unit" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@finalize():Unit" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -274,7 +274,7 @@
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@getClass():Class[_]" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@getClass():Class[_]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -291,11 +291,28 @@
         <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="nl.biopet.tools.bamstats.schema.CrossCounts#keys" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="keys:List[String]"></a>
+      <a id="keys:List[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">keys</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@keys:List[String]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -308,7 +325,7 @@
         <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -325,7 +342,7 @@
         <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@notify():Unit" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@notify():Unit" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -342,28 +359,11 @@
         <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@notifyAll():Unit" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@notifyAll():Unit" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.schema.FlagStats#singleFlagStats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="singleFlagStats:nl.biopet.tools.bamstats.schema.package.SingleFlagStats"></a>
-      <a id="singleFlagStats:SingleFlagStats"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">singleFlagStats</span><span class="result">: <a href="package$$SingleFlagStats.html" class="extype" name="nl.biopet.tools.bamstats.schema.SingleFlagStats">SingleFlagStats</a></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@singleFlagStats:nl.biopet.tools.bamstats.schema.package.SingleFlagStats" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -376,11 +376,96 @@
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="nl.biopet.tools.bamstats.schema.CrossCounts#toFlagStatsMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toFlagStatsMap:Map[String,Long]"></a>
+      <a id="toFlagStatsMap:Map[String,Long]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toFlagStatsMap</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Long">Long</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@toFlagStatsMap:Map[String,Long]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Returns the total values zipped with the keys.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the total values zipped with the keys. This should equal the flagstats data.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A map with names and counts</p></dd></dl></div>
+    </li><li name="nl.biopet.tools.bamstats.schema.CrossCounts#totalIndex" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="totalIndex:Int"></a>
+      <a id="totalIndex:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">totalIndex</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@totalIndex:Int" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="nl.biopet.tools.bamstats.schema.CrossCounts#totalNumberOfReads" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="totalNumberOfReads:Long"></a>
+      <a id="totalNumberOfReads:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">totalNumberOfReads</span><span class="result">: <span class="extype" name="scala.Long">Long</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@totalNumberOfReads:Long" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="nl.biopet.tools.bamstats.schema.CrossCounts#totalsColumn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="totalsColumn:List[Long]"></a>
+      <a id="totalsColumn:List[Long]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">totalsColumn</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Long">Long</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@totalsColumn:List[Long]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="nl.biopet.tools.bamstats.schema.CrossCounts#validate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="validate():Unit"></a>
+      <a id="validate():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">validate</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@validate():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Validate the crosscounts table.</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -393,7 +478,7 @@
         <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@wait():Unit" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@wait():Unit" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -416,7 +501,7 @@
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -439,7 +524,7 @@
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$FlagStats@wait(x$1:Long):Unit" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.package$$CrossCounts@wait(x$1:Long):Unit" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
