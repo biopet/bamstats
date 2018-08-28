@@ -243,28 +243,7 @@ object Generate extends ToolCommand[Args] {
 
       // Read based stats
       if (samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
-        totalStats.flagstat.loadRecord(samRecord)
-        if (!samRecord.getReadUnmappedFlag) { // Mapped read
-          totalStats.mappingQualityHistogram.add(samRecord.getMappingQuality)
-        }
-        if (samRecord.getReadPairedFlag && samRecord.getProperPairFlag && samRecord.getFirstOfPairFlag && !samRecord.getSecondOfPairFlag)
-          totalStats.insertSizeHistogram.add(
-            samRecord.getInferredInsertSize.abs)
-
-        val leftClipping = samRecord.getAlignmentStart - samRecord.getUnclippedStart
-        val rightClipping = samRecord.getUnclippedEnd - samRecord.getAlignmentEnd
-
-        totalStats.clippingHistogram.add(leftClipping + rightClipping)
-        totalStats.leftClippingHistogram.add(leftClipping)
-        totalStats.rightClippingHistogram.add(rightClipping)
-
-        if (samRecord.getReadNegativeStrandFlag) {
-          totalStats._5_ClippingHistogram.add(leftClipping)
-          totalStats._3_ClippingHistogram.add(rightClipping)
-        } else {
-          totalStats._5_ClippingHistogram.add(rightClipping)
-          totalStats._3_ClippingHistogram.add(leftClipping)
-        }
+        totalStats.loadRecord(samRecord)
 
         //TODO: Bin Support
       }
