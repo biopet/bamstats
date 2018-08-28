@@ -52,7 +52,8 @@ object Generate extends ToolCommand[Args] {
         case Some(reference) =>
           validateReferenceInBam(cmdArgs.bamFile, reference)
         case _ =>
-          logger.warn("Reference from BAM file not validated with external reference.")
+          logger.warn(
+            "Reference from BAM file not validated with external reference.")
           getDictFromBam(cmdArgs.bamFile)
       }
     init(cmdArgs.outputDir,
