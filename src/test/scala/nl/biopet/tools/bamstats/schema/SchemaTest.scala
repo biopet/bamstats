@@ -58,6 +58,11 @@ class SchemaTest extends BiopetTest {
         resourceFile("/json/bamstatsCrosscountsIncorrectRowSize.json"),
         List(
           s"Number of rows (24) not equal to number of methods (${FlagMethods.values.toList.length})")
+      ),
+      Array(
+        resourceFile("/json/bamstatsCrosscountsIncorrectColumnSize.json"),
+        List(
+          s"Number of columns (24) not equal to number of methods (${FlagMethods.values.toList.length}) on row 5")
       )
     )
   }

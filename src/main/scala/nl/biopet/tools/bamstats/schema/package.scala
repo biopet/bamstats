@@ -65,7 +65,9 @@ package object schema {
         case (row, index) =>
           require(
             row.length == numberOfMethods,
-            s"Number of columns (${row.length}) not equal to number of methods (${numberOfMethods}) on row $index")
+            // Added +1 to the index because the fifth row is "5" for humans, not "4".
+            s"Number of columns (${row.length}) not equal to number of methods (${numberOfMethods}) on row ${index + 1}"
+          )
       }
 
       // Test whether the crossline (condition A and condition A is true)
