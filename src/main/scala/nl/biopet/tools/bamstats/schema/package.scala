@@ -45,13 +45,14 @@ package object schema {
 
       // Test whether the matrix of counts is a true square.
       val numberOfMethods = keys.length
-      require(counts.length == numberOfMethods,
-              "Number of rows not equal to number of methods.")
+      require(
+        counts.length == numberOfMethods,
+        s"Number of rows (${counts.length}) not equal to number of methods ($numberOfMethods).")
       counts.zipWithIndex.foreach {
         case (row, index) =>
           require(
             row.length == numberOfMethods,
-            s"Number of columns not equal to number of methods on row $index")
+            s"Number of columns (${row.length}) not equal to number of methods (${numberOfMethods}) on row $index")
       }
 
       // Test whether the crossline (condition A and condition A is true)
