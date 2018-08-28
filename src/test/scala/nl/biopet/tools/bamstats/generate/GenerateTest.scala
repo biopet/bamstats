@@ -45,7 +45,7 @@ class GenerateTest extends ToolTest[Args] {
     Generate.main(
       Array("-b", pairedBam01.getAbsolutePath, "-o", outputDir.getAbsolutePath))
 
-    new File(outputDir, "json/bamstats.json") should exist
+    new File(outputDir, "bamstats.json") should exist
     new File(outputDir, "bamstats.summary.json") should exist
 
     new File(outputDir, "flagstats.tsv") shouldNot exist
@@ -78,7 +78,7 @@ class GenerateTest extends ToolTest[Args] {
             outputDir.getAbsolutePath,
             "--tsvOutputs"))
 
-    new File(outputDir, "json/bamstats.json") should exist
+    new File(outputDir, "bamstats.json") should exist
     new File(outputDir, "bamstats.summary.json") should exist
 
     new File(outputDir, "flagstats.tsv") should exist
