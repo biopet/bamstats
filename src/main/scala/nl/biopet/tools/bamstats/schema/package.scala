@@ -48,6 +48,7 @@ package object schema {
   case class CrossCounts(keys: List[String], counts: List[List[Long]]) {
     def validate(): Unit = {
       // Test whether the keys match keys known by te program
+      // If the tests from FlagstatsData have succeeded, this should always succeed.
       require(
         keys.toSet == expectedKeys,
         "FlagStatsData incompatible. Missing and/or unknown names in crosscounts.\n" +

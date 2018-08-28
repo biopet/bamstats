@@ -31,7 +31,7 @@ class SchemaTest extends BiopetTest {
 
   @Test
   def testRoot(): Unit = {
-    val root: Root = Root.fromFile(resourceFile("/bamstats.json"))
+    val root: Root = Root.fromFile(resourceFile("/json/bamstats.json"))
     root.validate()
     root.readgroups.headOption.foreach {
       case (groupId, stats) =>
@@ -43,11 +43,16 @@ class SchemaTest extends BiopetTest {
   def provider(): Array[Array[Any]] = {
     Array(
       Array(
-        resourceFile("/bamstatsIncorrectFlagstatKeys.json"),
+        resourceFile("/json/bamstatsIncorrectFlagstatKeys.json"),
         List(
           "FlagStatsData incompatible. Missing and/or unknown names in flagstats.",
           "Missing: properPair,readFailsVendorQualityCheck",
           "Unknown: properPairs")
+      ),
+      Array(
+        resourceFile("/json/bamstatsIncorrectCrosscountsKeys.json"),
+        List(
+          "FlagStatsData incompatible. Internally corrupt. CrossCount keys do not match flagstats keys.")
       )
     )
   }
