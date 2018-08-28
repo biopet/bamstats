@@ -43,9 +43,35 @@ package object schema {
         crossCounts.keys.toSet == flagStats.keySet,
         "FlagStatsData incompatible. Internally corrupt. CrossCount keys do not match flagstats keys.")
       crossCounts.validate()
+
+      // This requirement should be evaluated last. Otherwise it will mask other errors,
+      // which will lead to confusion.
+      require(
+        crossCounts.toFlagStatsMap == flagStats,
+        "Internally corrupt FlagStatsData. The CrossCounts table totals do not equal the flagstats.")
     }
   }
   case class CrossCounts(keys: List[String], counts: List[List[Long]]) {
+    val totalIndex = keys.indexOf(FlagMethods.total.name)
+    val totalNumberOfReads: Long = counts(totalIndex)(totalIndex)
+
+    /**
+      * Calculates a list with all the totals values
+      * @return a list of Longs
+      */
+    def totalsColumn: List[Long] = counts.map(_(totalIndex))
+
+    /**
+      * Returns the total values zipped with the keys. This should equal the flagstats data.
+      * @return A map with names and counts
+      */
+    def toFlagStatsMap: Map[String, Long] = {
+      keys.zip(totalsColumn).toMap
+    }
+
+    /**
+      * Validate the crosscounts table.
+      */
     def validate(): Unit = {
       // Test whether the keys match keys known by te program
       // If the tests from FlagstatsData have succeeded, this should always succeed.
@@ -73,12 +99,15 @@ package object schema {
       // Test whether the crossline (condition A and condition A is true)
       // Matches with the total value (condition A and always true is true)
       // These values should always match. Otherwise the matrix is wrongly constructed.
-      val totalIndex = keys.indexOf(FlagMethods.total.name)
-      val totalsColumn: List[Long] = counts.map(_(totalIndex))
+      // Use index +1 for human readable matrix notation.
       for (index <- keys.indices) {
-        require(totalsColumn(index) == counts(index)(index),
-                s"Crossline at ($index,$index) is not equal to" +
-                  s" the value in the totals column at ($index,$totalIndex)")
+        require(
+          totalsColumn(index) == counts(index)(index),
+          s"Crossline at (${index + 1},${index + 1})" +
+            s" with value '${counts(index)(index)}' is not equal to" +
+            s" the value in the totals column at (${index + 1},${totalIndex + 1})" +
+            s" with value '${counts(index)(totalIndex)}'"
+        )
       }
     }
   }

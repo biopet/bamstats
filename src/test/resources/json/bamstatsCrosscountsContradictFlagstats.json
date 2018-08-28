@@ -1,0 +1,129 @@
+{
+  "samples": {
+    "sample": {
+      "libraries": {
+        "library": {
+          "readgroups": {
+            "readgroup": {
+              "data": {
+                "flagStats": {
+                  "flagStats": {
+                    "mappingQualityGreaterThan40": 0,
+                    "notPrimaryAlignment": 0,
+                    "mapped": 0,
+                    "firstNormalSecondInverted": 0,
+                    "mappingQualityGreaterThan30": 0,
+                    "duplicate": 0,
+                    "mateUnmapped": 0,
+                    "properPair": 0,
+                    "total": 0,
+                    "mateInSameStrand": 0,
+                    "readFailsVendorQualityCheck": 0,
+                    "mappingQualityGreaterThan60": 0,
+                    "firstInvertedSecondNormal": 0,
+                    "mappingQualityGreaterThan50": 0,
+                    "mappingQualityGreaterThan20": 0,
+                    "readPaired": 0,
+                    "mappingQualityGreaterThan10": 0,
+                    "mateNegativeStrand": 0,
+                    "firstNormalSecondNormal": 0,
+                    "secondOfPair": 0,
+                    "firstOfPair": 0,
+                    "supplementaryAlignment": 0,
+                    "firstInvertedSecondInverted": 0,
+                    "mateOnOtherChromosome": 0,
+                    "readNegativeStrand": 0
+                  },
+                  "crossCounts": {
+                    "keys": [
+                      "total",
+                      "mapped",
+                      "mateUnmapped",
+                      "duplicate",
+                      "firstOfPair",
+                      "secondOfPair",
+                      "readNegativeStrand",
+                      "notPrimaryAlignment",
+                      "readPaired",
+                      "properPair",
+                      "mateNegativeStrand",
+                      "readFailsVendorQualityCheck",
+                      "supplementaryAlignment",
+                      "mappingQualityGreaterThan10",
+                      "mappingQualityGreaterThan20",
+                      "mappingQualityGreaterThan30",
+                      "mappingQualityGreaterThan40",
+                      "mappingQualityGreaterThan50",
+                      "mappingQualityGreaterThan60",
+                      "firstNormalSecondInverted",
+                      "firstNormalSecondNormal",
+                      "firstInvertedSecondInverted",
+                      "firstInvertedSecondNormal",
+                      "mateInSameStrand",
+                      "mateOnOtherChromosome"
+                    ],
+                    "counts": [
+                      [19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [4,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [5,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [9,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+                    ]
+                  }
+                },
+                "mappingQualityHistogram": {
+                  "values": [],
+                  "counts": []
+                },
+                "insertSizeHistogram": {
+                  "values": [],
+                  "counts": []
+                },
+                "clippingHistogram": {
+                  "values": [],
+                  "counts": []
+                },
+                "leftClippingHistogram": {
+                  "values": [],
+                  "counts": []
+                },
+                "rightClippingHistogram": {
+                  "values": [],
+                  "counts": []
+                },
+                "_5_ClippingHistogram": {
+                  "values": [],
+                  "counts": []
+                },
+                "_3_ClippingHistogram": {
+                  "values": [],
+                  "counts": []
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

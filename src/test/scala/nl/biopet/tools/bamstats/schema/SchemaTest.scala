@@ -63,6 +63,16 @@ class SchemaTest extends BiopetTest {
         resourceFile("/json/bamstatsCrosscountsIncorrectColumnSize.json"),
         List(
           s"Number of columns (24) not equal to number of methods (${FlagMethods.values.toList.length}) on row 5")
+      ),
+      Array(
+        resourceFile("/json/bamstatsCrosscountsInvalidMatrix.json"),
+        List(
+          "Crossline at (5,5) with value '8' is not equal to the value in the totals column at (5,1) with value '9'")
+      ),
+      Array(
+        resourceFile("/json/bamstatsCrosscountsContradictFlagstats.json"),
+        List(
+          "Internally corrupt FlagStatsData. The CrossCounts table totals do not equal the flagstats.")
       )
     )
   }
