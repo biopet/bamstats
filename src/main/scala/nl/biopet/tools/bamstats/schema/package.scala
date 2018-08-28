@@ -59,7 +59,7 @@ package object schema {
       // These values should always match. Otherwise the matrix is wrongly constructed.
       val totalIndex = keys.indexOf(FlagMethods.total.name)
       val totalsColumn: List[Long] = counts.map(_(totalIndex))
-      for (index <- 0 until keys.length) {
+      for (index <- keys.indices) {
         require(totalsColumn(index) == counts(index)(index),
                 s"Crossline at ($index,$index) is not equal to" +
                   s" the value in the totals column at ($index,$totalIndex)")
