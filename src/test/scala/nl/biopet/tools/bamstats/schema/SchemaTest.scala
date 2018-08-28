@@ -33,7 +33,7 @@ class SchemaTest extends BiopetTest {
   def testRoot(): Unit = {
     val root: Root = Root.fromFile(resourceFile("/json/bamstats.json"))
     root.validate()
-    root.readgroups.headOption.foreach {
+    root.readgroups.foreach {
       case (groupId, stats) =>
         groupId shouldBe GroupID("sample", "library", "readgroup")
     }
@@ -85,6 +85,26 @@ class SchemaTest extends BiopetTest {
     }.getMessage
     errorMessage should include("requirement failed:")
     messages.foreach(errorMessage should include(_))
+  }
+
+  /**
+    * This test was added to test otherwise unreachable error in crosscounts.
+    */
+  @Test
+  def testCrosscountValidationError(): Unit = {
+    val root: Root =
+      Root.fromFile(resourceFile("/json/bamstatsIncorrectCrosscountsKeys.json"))
+    root.readgroups.headOption.foreach {
+      case (_, data) =>
+        val errorMessage = intercept[IllegalArgumentException] {
+          data.data.flagStats.crossCounts.validate()
+        }.getMessage
+        errorMessage should include(
+          "FlagStatsData incompatible. Missing and/or unknown names in crosscounts.")
+        errorMessage should include(
+          "Missing: properPair,readFailsVendorQualityCheck")
+        errorMessage should include("Unknown: properPairs")
+    }
   }
 
 }

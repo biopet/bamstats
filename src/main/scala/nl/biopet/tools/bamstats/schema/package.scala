@@ -54,12 +54,7 @@ package object schema {
   case class CrossCounts(keys: List[String], counts: List[List[Long]]) {
     val totalIndex = keys.indexOf(FlagMethods.total.name)
     val totalNumberOfReads: Long = counts(totalIndex)(totalIndex)
-
-    /**
-      * Calculates a list with all the totals values
-      * @return a list of Longs
-      */
-    def totalsColumn: List[Long] = counts.map(_(totalIndex))
+    val totalsColumn: List[Long] = counts.map(_(totalIndex))
 
     /**
       * Returns the total values zipped with the keys. This should equal the flagstats data.
