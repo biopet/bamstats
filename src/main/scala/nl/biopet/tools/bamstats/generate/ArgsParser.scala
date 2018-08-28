@@ -37,12 +37,12 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   opt[File]('b', "bam") required () valueName "<file>" action { (x, c) =>
     c.copy(bamFile = x)
   } text "Input bam file"
-  opt[Int]("binSize") valueName "<int>" action { (x, c) =>
-    c.copy(binSize = x)
-  } text "Bin size of stats (beta)"
-  opt[Int]("threadBinSize") valueName "<int>" action { (x, c) =>
-    c.copy(threadBinSize = x)
-  } text "Size of region per thread"
+  opt[File]("bedFile") valueName "<file>" action { (x, c) =>
+    c.copy(bedFile = Some(x))
+  } text "Extract information for this region."
+  opt[File]("scatterBedFile") valueName "<file>" action { (x, c) =>
+    c.copy(scatterBedFile = Some(x))
+  } text "Extract information for this region, excluding reads that originate from another region."
   opt[Unit]("tsvOutputs") action { (_, c) =>
     c.copy(tsvOutputs = true)
   } text "Also output tsv files, default there is only a json"
