@@ -23,7 +23,7 @@ package nl.biopet.tools.bamstats.generate
 
 import java.io.{File, PrintWriter}
 
-import htsjdk.samtools.{SAMSequenceDictionary, SamReader, SamReaderFactory}
+import htsjdk.samtools.{SAMRecord, SAMSequenceDictionary, SamReader, SamReaderFactory}
 import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.bam._
@@ -84,9 +84,13 @@ object Generate extends ToolCommand[Args] {
            tsvOutput: Boolean): Unit = {
 
     val regions: Option[BedRecordList] = bedFile.map(BedRecordList.fromFile)
-
-    val contigsFutures =
-      regions.map(x => processThread(x.allRecords.toList, bamFile))
+    val samReader: SamReader= SamReaderFactory.makeDefault().open(bamFile)
+    val records: Iterator[SAMRecord] = regions match {
+      case Some(bedRecordList: BedRecordList) =>
+        val intervals = bedRecordList.toQy.toArray
+        samReader.query(intervals, true)
+      case _ => samReader.iterator().toIterator
+    }
 
     val unmappedStats = processUnmappedReads(bamFile)
     val (stats, contigStats) = waitOnFutures(contigsFutures)
