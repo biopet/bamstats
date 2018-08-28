@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package nl.biopet.tools.bamstats.generate.schema
+package nl.biopet.tools.bamstats.schema
 
 import htsjdk.samtools.{SAMRecord, SamReader, SamReaderFactory}
 import nl.biopet.test.BiopetTest
