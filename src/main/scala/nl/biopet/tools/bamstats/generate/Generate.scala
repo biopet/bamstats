@@ -83,18 +83,17 @@ object Generate extends ToolCommand[Args] {
            excludePartialReads: Boolean,
            tsvOutput: Boolean): Unit = {
 
-    val regions: Option[BedRecordList] = bedFile.map(BedRecordList.fromFile)
-    val samReader: SamReader= SamReaderFactory.makeDefault().open(bamFile)
-    val records: Iterator[SAMRecord] = regions match {
-      case Some(bedRecordList: BedRecordList) =>
-        val intervals = bedRecordList.toQy.toArray
-        samReader.query(intervals, true)
-      case _ => samReader.iterator().toIterator
-    }
+    val regions = bedFile.map(BedRecordList.fromFile(_).combineOverlap)
 
-    val unmappedStats = processUnmappedReads(bamFile)
-    val (stats, contigStats) = waitOnFutures(contigsFutures)
-    stats += Await.result(unmappedStats, Duration.Inf)
+    val samReader: SamReader= SamReaderFactory.makeDefault().open(bamFile)
+    val records: Iterator[SAMRecord] = samReader.iterator().toIterator
+
+    val stats = GroupStats()
+
+    if (regions.isDefined) {
+
+    }
+    else records.foreach(stats.loadRecord)
 
     if (tsvOutput) {
       stats.flagstat.writeAsTsv(
