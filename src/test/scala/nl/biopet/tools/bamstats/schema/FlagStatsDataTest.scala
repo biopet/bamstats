@@ -24,7 +24,6 @@ package nl.biopet.tools.bamstats.schema
 import htsjdk.samtools.{SAMRecord, SamReader, SamReaderFactory}
 import nl.biopet.test.BiopetTest
 import nl.biopet.tools.bamstats.FlagStats
-import nl.biopet.tools.bamstats.schema.{CrossCounts, FlagStatsData}
 import nl.biopet.tools.bamstats.schema.Implicits._
 import org.testng.annotations.Test
 import play.api.libs.json.Json
