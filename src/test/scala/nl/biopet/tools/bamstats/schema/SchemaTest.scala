@@ -24,7 +24,7 @@ package nl.biopet.tools.bamstats.schema
 import java.io.File
 
 import nl.biopet.test.BiopetTest
-import nl.biopet.tools.bamstats.GroupID
+import nl.biopet.tools.bamstats.{FlagMethods, GroupID}
 import org.testng.annotations.{DataProvider, Test}
 
 class SchemaTest extends BiopetTest {
@@ -53,6 +53,11 @@ class SchemaTest extends BiopetTest {
         resourceFile("/json/bamstatsIncorrectCrosscountsKeys.json"),
         List(
           "FlagStatsData incompatible. Internally corrupt. CrossCount keys do not match flagstats keys.")
+      ),
+      Array(
+        resourceFile("/json/bamstatsCrosscountsIncorrectRowSize.json"),
+        List(
+          s"Number of rows (24) not equal to number of methods (${FlagMethods.values.toList.length})")
       )
     )
   }
