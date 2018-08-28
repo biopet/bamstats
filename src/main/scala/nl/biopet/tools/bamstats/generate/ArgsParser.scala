@@ -40,9 +40,9 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   opt[File]("bedFile") valueName "<file>" action { (x, c) =>
     c.copy(bedFile = Some(x))
   } text "Extract information for this region."
-  opt[File]("scatterBedFile") valueName "<file>" action { (x, c) =>
-    c.copy(scatterBedFile = Some(x))
-  } text "Extract information for this region, excluding reads that originate from another region."
+  opt[File]("scatterBedFile") action { (_, c) =>
+    c.copy(excludePartialReads = true)
+  } text "Exclude reads that originate from another region."
   opt[Unit]("tsvOutputs") action { (_, c) =>
     c.copy(tsvOutputs = true)
   } text "Also output tsv files, default there is only a json"

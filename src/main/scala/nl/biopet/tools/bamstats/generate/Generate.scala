@@ -27,7 +27,7 @@ import htsjdk.samtools.{SAMSequenceDictionary, SamReader, SamReaderFactory}
 import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.bam._
-import nl.biopet.utils.ngs.intervals.BedRecord
+import nl.biopet.utils.ngs.intervals.{BedRecord, BedRecordList}
 import nl.biopet.utils.tool.ToolCommand
 import play.api.libs.json.Json
 
@@ -56,11 +56,12 @@ object Generate extends ToolCommand[Args] {
             "Reference from BAM file not validated with external reference.")
           getDictFromBam(cmdArgs.bamFile)
       }
+
     init(cmdArgs.outputDir,
          cmdArgs.bamFile,
          sequenceDict,
-         cmdArgs.binSize,
-         cmdArgs.threadBinSize,
+         cmdArgs.bedFile,
+         cmdArgs.excludePartialReads,
          cmdArgs.tsvOutputs)
 
     logger.info("Done")
@@ -78,23 +79,14 @@ object Generate extends ToolCommand[Args] {
   def init(outputDir: File,
            bamFile: File,
            referenceDict: SAMSequenceDictionary,
-           binSize: Int,
-           threadBinSize: Int,
+           bedFile: Option[File],
+           excludePartialReads: Boolean,
            tsvOutput: Boolean): Unit = {
-    val contigs = referenceDict.getSequences
-      .flatMap(
-        r =>
-          BedRecord(r.getSequenceName, 0, r.getSequenceLength)
-            .scatter(threadBinSize))
-    val groups =
-      contigs.foldLeft((List[List[BedRecord]](), List[BedRecord](), 0L)) {
-        case ((finalList, tempList, oldSize), b) =>
-          if (oldSize < threadBinSize)
-            (finalList, b :: tempList, oldSize + b.length)
-          else (tempList :: finalList, b :: Nil, b.length)
-      }
+
+    val regions: Option[BedRecordList] = bedFile.map(BedRecordList.fromFile)
+
     val contigsFutures =
-      (groups._2 :: groups._1).map(x => processThread(x, bamFile))
+      regions.map(x => processThread(x.allRecords.toList, bamFile))
 
     val unmappedStats = processUnmappedReads(bamFile)
     val (stats, contigStats) = waitOnFutures(contigsFutures)

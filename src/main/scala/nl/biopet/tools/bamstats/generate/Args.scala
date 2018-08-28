@@ -27,5 +27,5 @@ case class Args(outputDir: File = null,
                 bamFile: File = null,
                 referenceFasta: Option[File] = None,
                 bedFile: Option[File] = None,
-                scatterBedFile: Option[File] = None,
+                excludePartialReads: Boolean = false,
                 tsvOutputs: Boolean = false)
