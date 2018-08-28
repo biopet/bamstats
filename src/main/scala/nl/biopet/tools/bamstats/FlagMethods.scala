@@ -23,13 +23,25 @@ package nl.biopet.tools.bamstats
 
 import htsjdk.samtools.SAMRecord
 
-import scala.collection.mutable
+import scala.language.implicitConversions
 
 object FlagMethods extends Enumeration {
   protected case class Val(method: SAMRecord => Boolean) extends super.Val {
     def name: String = toString
   }
   implicit def valueToVal(x: Value): Val = x.asInstanceOf[Val]
+
+  def nameToValOption(name: String): Option[FlagMethods.Value] = {
+    this.values.find(_.name == name)
+  }
+
+  def nameToVal(name: String): FlagMethods.Value = {
+    nameToValOption(name) match {
+      case Some(flagMethod) => flagMethod
+      case _ =>
+        throw new NoSuchFieldException(s"$name is not an existing FlagMethod.")
+    }
+  }
 
   val total = Val { _ =>
     true

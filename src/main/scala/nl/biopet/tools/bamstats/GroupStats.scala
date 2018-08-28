@@ -99,10 +99,7 @@ case class GroupStats(
 
   def statsToData(): Data =
     Data(
-      flagStats = // TODO: Fix this
-        FlagStats(SingleFlagStats(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0),
-                  CombinedFlagStats(IndexedSeq(), IndexedSeq(IndexedSeq()))),
+      flagStats = flagstat.toFlagStatsData,
       mappingQualityHistogram = mappingQualityHistogram.toDoubleArray,
       insertSizeHistogram = insertSizeHistogram.toDoubleArray,
       clippingHistogram = clippingHistogram.toDoubleArray,

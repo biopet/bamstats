@@ -25,6 +25,7 @@ import java.io.{File, PrintWriter}
 import java.util.Locale
 
 import htsjdk.samtools.SAMRecord
+import nl.biopet.tools.bamstats.schema.{CrossCounts, FlagStatsData}
 import nl.biopet.utils.conversions
 import play.api.libs.json.Json
 
@@ -131,6 +132,47 @@ class FlagStats {
         this.crossCounts(key)(innerKey) += other.crossCounts(key)(innerKey)
       }
     }
+  }
+
+  /**
+    * Method to add FlagStatsData which can be read from JSON
+    * @param flagStatsData the FlagStatsData
+    */
+  def addFlagStatsData(flagStatsData: FlagStatsData): Unit = {
+    flagStatsData.validate()
+
+    // Add flagstats data by converting name string to index int.
+    flagStatsData.flagStats.toList.foreach {
+      case (name, count) =>
+        this.flagStats(FlagMethods.nameToVal(name).id) += count
+    }
+
+    // Add crosccounts data.
+    // First convert the keysList to list of indexes (int).
+    val indexedCrossCountsKeys =
+      flagStatsData.crossCounts.keys.map(FlagMethods.nameToVal(_).id)
+
+    // Zip the rows with the correct indexes
+    indexedCrossCountsKeys.zip(flagStatsData.crossCounts.counts) foreach {
+      case (index, countsArray) =>
+        // Zip the columns with the correct indexes
+        indexedCrossCountsKeys.zip(countsArray).foreach {
+          case (innerIndex, count) =>
+            this.crossCounts(index)(innerIndex) += count
+        }
+    }
+  }
+
+  /**
+    * Returns a FlagStatsData object that can be serialized into data.
+    * @return a FlagStatsData object
+    */
+  def toFlagStatsData: FlagStatsData = {
+    val crossCountsData: CrossCounts = CrossCounts(
+      keys = orderedNames,
+      counts = crossCounts.map(_.toList).toList
+    )
+    FlagStatsData(flagStatsToMap, crossCounts = crossCountsData)
   }
 
   /**
@@ -282,5 +324,13 @@ class FlagStats {
     val writer = new PrintWriter(outputFile)
     writer.println(toSummaryJson(includeCrossCounts))
     writer.close()
+  }
+}
+
+object FlagStats {
+  def fromFlagStatsData(flagStatsData: FlagStatsData): FlagStats = {
+    val newFlagStats = new FlagStats
+    newFlagStats.addFlagStatsData(flagStatsData)
+    newFlagStats
   }
 }

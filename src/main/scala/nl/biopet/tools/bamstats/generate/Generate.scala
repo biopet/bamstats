@@ -26,18 +26,18 @@ import java.io.{File, PrintWriter}
 import htsjdk.samtools.{SAMSequenceDictionary, SamReader, SamReaderFactory}
 import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.utils.conversions
+import nl.biopet.utils.ngs.bam._
 import nl.biopet.utils.ngs.intervals.BedRecord
 import nl.biopet.utils.tool.ToolCommand
 import play.api.libs.json.Json
-import nl.biopet.utils.ngs.bam._
 
+import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future, TimeoutException}
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
-import scala.collection.JavaConversions._
 
 object Generate extends ToolCommand[Args] {
   def emptyArgs: Args = Args()
@@ -51,9 +51,11 @@ object Generate extends ToolCommand[Args] {
       cmdArgs.referenceFasta match {
         case Some(reference) =>
           validateReferenceInBam(cmdArgs.bamFile, reference)
-        case _ => getDictFromBam(cmdArgs.bamFile)
+        case _ =>
+          logger.warn(
+            "Reference from BAM file not validated with external reference.")
+          getDictFromBam(cmdArgs.bamFile)
       }
-
     init(cmdArgs.outputDir,
          cmdArgs.bamFile,
          sequenceDict,

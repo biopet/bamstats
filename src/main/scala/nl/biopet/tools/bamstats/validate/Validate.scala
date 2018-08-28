@@ -42,10 +42,13 @@ object Validate extends ToolCommand[Args] {
   def descriptionText: String =
     s"""
        |Validates a ${BamStats.toolName} file.
+       |If aggregation values can not be regenerated the file is considered corrupt.
+       |This should only happen when the file has been manually edited.
      """.stripMargin
 
   def manualText: String =
     s"""
+       | See example.
        |
      """.stripMargin
 

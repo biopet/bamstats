@@ -23,12 +23,12 @@ package nl.biopet.tools.bamstats.schema
 
 import java.io.File
 
-import nl.biopet.tools.bamstats.GroupStats
+import nl.biopet.tools.bamstats.{FlagStats, GroupStats}
 import nl.biopet.tools.bamstats.schema.Implicits._
-import nl.biopet.utils.{io, DoubleArray}
+import nl.biopet.utils.{DoubleArray, io}
 import play.api.libs.json.{JsValue, Json}
 
-case class Data(flagStats: FlagStats,
+case class Data(flagStats: FlagStatsData,
                 mappingQualityHistogram: DoubleArray[Int],
                 insertSizeHistogram: DoubleArray[Int],
                 clippingHistogram: DoubleArray[Int],
@@ -72,6 +72,7 @@ case class Data(flagStats: FlagStats,
       groupStats.rightClippingHistogram.toDoubleArray == this.rightClippingHistogram)
     require(
       groupStats.mappingQualityHistogram.toDoubleArray == this.mappingQualityHistogram)
-    //TODO: Add functions for flagstat here
+    require(
+      FlagStats.fromFlagStatsData(flagStats).toFlagStatsData == this.flagStats)
   }
 }
