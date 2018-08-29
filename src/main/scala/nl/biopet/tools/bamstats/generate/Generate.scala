@@ -122,7 +122,7 @@ object Generate extends ToolCommand[Args] {
       samReader.queryUnmapped().foreach(stats.loadRecord)
     }
 
-    // If no regions were specified, and no explicit intructions to get unmapped reads
+    // If no regions were specified, and no explicit instructions to get unmapped reads
     // read the entire file
     if (bedFile.isEmpty && !getUnmappedReads) {
       val records: Iterator[SAMRecord] = samReader.iterator().toIterator
