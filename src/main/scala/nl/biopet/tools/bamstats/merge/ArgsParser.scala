@@ -38,8 +38,4 @@ class ArgsParser(toolCommand: ToolCommand[Args])
     .valueName("<seqstat file>")
     .action((x, c) => c.copy(outputFile = Some(x)))
     .text("Output file")
-  opt[File]("combinedOutputFile")
-    .valueName("<seqstat file>")
-    .action((x, c) => c.copy(combineOutputFile = Some(x)))
-    .text("Combined output file")
 }

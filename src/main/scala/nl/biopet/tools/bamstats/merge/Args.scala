@@ -23,6 +23,4 @@ package nl.biopet.tools.bamstats.merge
 
 import java.io.File
 
-case class Args(inputFiles: List[File] = Nil,
-                outputFile: Option[File] = None,
-                combineOutputFile: Option[File] = None)
+case class Args(inputFiles: List[File] = Nil, outputFile: Option[File] = None)
