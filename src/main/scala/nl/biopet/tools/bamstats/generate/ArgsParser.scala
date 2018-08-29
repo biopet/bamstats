@@ -43,12 +43,14 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   opt[File]("excludePartialReads") action { (_, c) =>
     c.copy(excludePartialReads = true)
   } text "Exclude reads that originate from another region."
-  opt[Unit]('u',"includeUnmappedReadsWithRegions")
+  // How should this option be adequately named?
+  opt[Unit]('u', "includeUnmappedReadsWithRegions")
     .action((_, c) => c.copy(getUnmappedReads = true))
-    .text("If no BED file is given this option returns only the stats on the unmapped reads." +
-      "If a BED file is given, this option returns the stats on the regions and on the unmapped reads. " +
-  "If this option is not specified and no BED file is given, " +
-    "all reads including unmapped are included in the stats. " )
+    .text(
+      "If no BED file is given this option returns only the stats on the unmapped reads." +
+        "If a BED file is given, this option returns the stats on the regions and on the unmapped reads. " +
+        "If this option is not specified and no BED file is given, " +
+        "all reads including unmapped are included in the stats. ")
   opt[Unit]("tsvOutputs") action { (_, c) =>
     c.copy(tsvOutputs = true)
   } text "Also output tsv files, default there is only a json"

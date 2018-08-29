@@ -37,7 +37,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object Generate extends ToolCommand[Args] {
   def emptyArgs: Args = Args()
+
   def argsParser = new ArgsParser(this)
+
   def main(args: Array[String]): Unit = {
     val cmdArgs = cmdArrayToArgs(args)
 
@@ -53,36 +55,11 @@ object Generate extends ToolCommand[Args] {
           getDictFromBam(cmdArgs.bamFile)
       }
 
-    val samReader: SamReader =
-      SamReaderFactory.makeDefault().open(cmdArgs.bamFile)
+    val stats = extractStats(bamFile = cmdArgs.bamFile,
+                             bedFile = cmdArgs.bedFile,
+                             excludePartialReads = cmdArgs.excludePartialReads,
+                             getUnmappedReads = cmdArgs.getUnmappedReads)
 
-    val stats = GroupStats()
-
-    cmdArgs.bedFile match {
-      case Some(bedFile: File) =>
-        val regions = BedRecordList.fromFile(bedFile).combineOverlap
-        regions.allRecords.foreach { bedRecord =>
-          val samRecordIterator: SAMRecordIterator =
-            // Is contained = excludePartialReads an option here?
-            // I think not, because this also excludes reads that originate within the region, but end
-            // in another region.
-            samReader.query(bedRecord.chr,
-                            bedRecord.start,
-                            bedRecord.end,
-                            false)
-          samRecordIterator.foreach { samRecord =>
-            // Read based stats
-            // If excludePartialReads is false, continue.
-            // If excludePartialReads is true, determine whether the alignment start is within the region.
-            if (!cmdArgs.excludePartialReads || samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
-              stats.loadRecord(samRecord)
-            }
-          }
-        }
-      case _ =>
-        val records: Iterator[SAMRecord] = samReader.iterator().toIterator
-        records.foreach(stats.loadRecord)
-    }
     if (cmdArgs.tsvOutputs) {
       writeStatsToTsv(stats, outputDir = cmdArgs.outputDir)
     }
@@ -105,6 +82,50 @@ object Generate extends ToolCommand[Args] {
 
     logger.info("Done")
   }
+
+  def extractStats(bamFile: File,
+                   bedFile: Option[File],
+                   excludePartialReads: Boolean = false,
+                   getUnmappedReads: Boolean = false): GroupStats = {
+    val samReader: SamReader =
+      SamReaderFactory.makeDefault().open(bamFile)
+    val stats = GroupStats()
+
+    // Read stats from regions
+    bedFile.foreach { bed =>
+      val regions = BedRecordList.fromFile(bed).combineOverlap
+      regions.allRecords.foreach { bedRecord =>
+        val samRecordIterator: SAMRecordIterator =
+          // Is contained = excludePartialReads an option here?
+          // I think not, because this also excludes reads that originate within the region, but end
+          // in another region.
+          samReader.query(bedRecord.chr, bedRecord.start, bedRecord.end, false)
+        samRecordIterator.foreach { samRecord =>
+          // Read based stats
+          // If excludePartialReads is false, continue.
+          // If excludePartialReads is true, determine whether the alignment start is within the region.
+          if (!excludePartialReads || samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
+            stats.loadRecord(samRecord)
+          }
+        }
+      }
+    }
+
+    // Read stats from unmappedReads
+    if (getUnmappedReads) {
+      samReader.queryUnmapped().foreach(stats.loadRecord)
+    }
+
+    // If no regions were specified, and no explicit intructions to get unmapped reads
+    // read the entire file
+    if (bedFile.isEmpty && !getUnmappedReads) {
+      val records: Iterator[SAMRecord] = samReader.iterator().toIterator
+      records.foreach(stats.loadRecord)
+    }
+
+    stats
+  }
+
 
   def writeStatsToTsv(stats: GroupStats, outputDir: File): Unit = {
     stats.flagstat.writeAsTsv(
