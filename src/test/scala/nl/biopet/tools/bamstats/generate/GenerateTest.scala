@@ -43,11 +43,11 @@ class GenerateTest extends ToolTest[Args] {
   val testGroupID: GroupID = GroupID("xf33hai", "3rasdsq", "a7kac")
   val pairedBam01 = new File(resourcePath("/paired01.bam"))
   val groupIdArgs: Array[String] = Array("--sample",
-    testGroupID.sample,
+                                         testGroupID.sample,
                                          "--library",
-    testGroupID.library,
+                                         testGroupID.library,
                                          "--readgroup",
-    testGroupID.readgroup)
+                                         testGroupID.readgroup)
 
   @Test
   def testMain(): Unit = {
