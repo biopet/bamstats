@@ -53,8 +53,6 @@ object Generate extends ToolCommand[Args] {
           getDictFromBam(cmdArgs.bamFile)
       }
 
-    val outputDir = cmdArgs.outputDir
-
     val samReader: SamReader =
       SamReaderFactory.makeDefault().open(cmdArgs.bamFile)
 
@@ -86,56 +84,7 @@ object Generate extends ToolCommand[Args] {
         records.foreach(stats.loadRecord)
     }
     if (cmdArgs.tsvOutputs) {
-      stats.flagstat.writeAsTsv(
-        new File(outputDir, "flagstats.tsv")
-      )
-
-      stats.insertSizeHistogram.writeFilesAndPlot(outputDir,
-                                                  "insertsize",
-                                                  "Insertsize",
-                                                  "Reads",
-                                                  "Insertsize distribution")
-
-      stats.mappingQualityHistogram.writeFilesAndPlot(
-        outputDir,
-        "mappingQuality",
-        "Mapping Quality",
-        "Reads",
-        "Mapping Quality distribution")
-
-      stats.clippingHistogram.writeFilesAndPlot(outputDir,
-                                                "clipping",
-                                                "CLipped bases",
-                                                "Reads",
-                                                "Clipping distribution")
-
-      stats.leftClippingHistogram.writeFilesAndPlot(
-        outputDir,
-        "left_clipping",
-        "CLipped bases",
-        "Reads",
-        "Left Clipping distribution")
-
-      stats.rightClippingHistogram.writeFilesAndPlot(
-        outputDir,
-        "right_clipping",
-        "CLipped bases",
-        "Reads",
-        "Right Clipping distribution")
-
-      stats._3_ClippingHistogram.writeFilesAndPlot(
-        outputDir,
-        "3prime_clipping",
-        "CLipped bases",
-        "Reads",
-        "3 Prime Clipping distribution")
-
-      stats._5_ClippingHistogram.writeFilesAndPlot(
-        outputDir,
-        "5prime_clipping",
-        "CLipped bases",
-        "Reads",
-        "5 Prime Clipping distribution")
+      writeStatsToTsv(stats, outputDir = cmdArgs.outputDir)
     }
 
     val groupedStats = Root.fromGroupStats(
@@ -143,17 +92,70 @@ object Generate extends ToolCommand[Args] {
               library = cmdArgs.library,
               readgroup = cmdArgs.readgroup),
       stats)
-    val statsWriter = new PrintWriter(new File(outputDir, "bamstats.json"))
+    val statsWriter = new PrintWriter(
+      new File(cmdArgs.outputDir, "bamstats.json"))
     statsWriter.println(Json.stringify(groupedStats.toJson))
     statsWriter.close()
 
     val totalStats = stats.toSummaryMap
     val summaryWriter = new PrintWriter(
-      new File(outputDir, "bamstats.summary.json"))
+      new File(cmdArgs.outputDir, "bamstats.summary.json"))
     summaryWriter.println(Json.stringify(conversions.mapToJson(totalStats)))
     summaryWriter.close()
 
     logger.info("Done")
+  }
+
+  def writeStatsToTsv(stats: GroupStats, outputDir: File): Unit = {
+    stats.flagstat.writeAsTsv(
+      new File(outputDir, "flagstats.tsv")
+    )
+
+    stats.insertSizeHistogram.writeFilesAndPlot(outputDir,
+                                                "insertsize",
+                                                "Insertsize",
+                                                "Reads",
+                                                "Insertsize distribution")
+
+    stats.mappingQualityHistogram.writeFilesAndPlot(
+      outputDir,
+      "mappingQuality",
+      "Mapping Quality",
+      "Reads",
+      "Mapping Quality distribution")
+
+    stats.clippingHistogram.writeFilesAndPlot(outputDir,
+                                              "clipping",
+                                              "CLipped bases",
+                                              "Reads",
+                                              "Clipping distribution")
+
+    stats.leftClippingHistogram.writeFilesAndPlot(outputDir,
+                                                  "left_clipping",
+                                                  "CLipped bases",
+                                                  "Reads",
+                                                  "Left Clipping distribution")
+
+    stats.rightClippingHistogram.writeFilesAndPlot(
+      outputDir,
+      "right_clipping",
+      "CLipped bases",
+      "Reads",
+      "Right Clipping distribution")
+
+    stats._3_ClippingHistogram.writeFilesAndPlot(
+      outputDir,
+      "3prime_clipping",
+      "CLipped bases",
+      "Reads",
+      "3 Prime Clipping distribution")
+
+    stats._5_ClippingHistogram.writeFilesAndPlot(
+      outputDir,
+      "5prime_clipping",
+      "CLipped bases",
+      "Reads",
+      "5 Prime Clipping distribution")
   }
 
   def descriptionText: String =
