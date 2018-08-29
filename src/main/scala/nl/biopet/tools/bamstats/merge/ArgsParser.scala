@@ -27,9 +27,19 @@ import nl.biopet.utils.tool.{AbstractOptParser, ToolCommand}
 
 class ArgsParser(toolCommand: ToolCommand[Args])
     extends AbstractOptParser[Args](toolCommand) {
+
   opt[File]('i', "inputFile")
     .required()
+    .unbounded()
     .valueName("<seqstat file>")
-    .action((x, c) => c.copy(inputFiles = Seq(x)))
-    .text("File to validate schema")
+    .action((x, c) => c.copy(inputFiles = x :: c.inputFiles))
+    .text("Files to merge into a single file")
+  opt[File]('o', "outputFile")
+    .valueName("<seqstat file>")
+    .action((x, c) => c.copy(outputFile = Some(x)))
+    .text("Output file")
+  opt[File]("combinedOutputFile")
+    .valueName("<seqstat file>")
+    .action((x, c) => c.copy(combineOutputFile = Some(x)))
+    .text("Combined output file")
 }
