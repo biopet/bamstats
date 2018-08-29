@@ -64,6 +64,8 @@ class GenerateTest extends ToolTest[Args] {
     bamstatsSummaryFile should exist
 
     BamstatsRoot.fromFile(bamstatsFile).validate()
+
+    // Some content testing here. Extensive testing should be done in FlagStatsTest
     val bamstatsContents = Source.fromFile(bamstatsFile).getLines.mkString
     bamstatsContents should include(testGroupID.sample)
     bamstatsContents should include(testGroupID.library)
@@ -80,6 +82,8 @@ class GenerateTest extends ToolTest[Args] {
     bamstatsContents should include("\"total\":14")
     bamstatsContents should include("\"mapped\":12")
     bamstatsContents should include("\"properPair\":12")
+
+    // Make sure TSVs are not produced.
     new File(outputDir, "flagstats.tsv") shouldNot exist
     new File(outputDir, "insertsize.stats.tsv") shouldNot exist
     new File(outputDir, "insertsize.histogram.tsv") shouldNot exist
