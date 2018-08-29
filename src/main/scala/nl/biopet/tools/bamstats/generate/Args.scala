@@ -30,6 +30,6 @@ case class Args(outputDir: File = null,
                 readgroup: String = null,
                 referenceFasta: Option[File] = None,
                 bedFile: Option[File] = None,
-                excludePartialReads: Boolean = false,
+                scatterMode: Boolean = false,
                 getUnmappedReads: Boolean = false,
                 tsvOutputs: Boolean = false)

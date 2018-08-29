@@ -59,7 +59,7 @@ object Generate extends ToolCommand[Args] {
       bamFile = cmdArgs.bamFile,
       bedFile = cmdArgs.bedFile,
       sequenceDict = sequenceDict,
-      excludePartialReads = cmdArgs.excludePartialReads,
+      scatterMode = cmdArgs.scatterMode,
       getUnmappedReads = cmdArgs.getUnmappedReads
     )
 
@@ -89,7 +89,7 @@ object Generate extends ToolCommand[Args] {
   def extractStats(bamFile: File,
                    bedFile: Option[File],
                    sequenceDict: SAMSequenceDictionary,
-                   excludePartialReads: Boolean = false,
+                   scatterMode: Boolean = false,
                    getUnmappedReads: Boolean = false): GroupStats = {
     val samReader: SamReader =
       SamReaderFactory.makeDefault().open(bamFile)
@@ -102,15 +102,12 @@ object Generate extends ToolCommand[Args] {
         BedRecordList.fromFile(bed).combineOverlap.validateContigs(sequenceDict)
       regions.allRecords.foreach { bedRecord =>
         val samRecordIterator: SAMRecordIterator =
-          // Is contained = excludePartialReads an option here?
-          // I think not, because this also excludes reads that originate within the region, but end
-          // in another region.
           samReader.query(bedRecord.chr, bedRecord.start, bedRecord.end, false)
         samRecordIterator.foreach { samRecord =>
           // Read based stats
-          // If excludePartialReads is false, continue.
-          // If excludePartialReads is true, determine whether the alignment start is within the region.
-          if (!excludePartialReads || samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
+          // If scatterMode is false, continue.
+          // If scatterMode is true, determine whether the alignment start is within the region.
+          if (!scatterMode || samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
             stats.loadRecord(samRecord)
           }
         }
