@@ -55,10 +55,13 @@ object Generate extends ToolCommand[Args] {
           getDictFromBam(cmdArgs.bamFile)
       }
 
-    val stats = extractStats(bamFile = cmdArgs.bamFile,
-                             bedFile = cmdArgs.bedFile,
-                             excludePartialReads = cmdArgs.excludePartialReads,
-                             getUnmappedReads = cmdArgs.getUnmappedReads)
+    val stats = extractStats(
+      bamFile = cmdArgs.bamFile,
+      bedFile = cmdArgs.bedFile,
+      sequenceDict = sequenceDict,
+      excludePartialReads = cmdArgs.excludePartialReads,
+      getUnmappedReads = cmdArgs.getUnmappedReads
+    )
 
     if (cmdArgs.tsvOutputs) {
       writeStatsToTsv(stats, outputDir = cmdArgs.outputDir)
@@ -85,6 +88,7 @@ object Generate extends ToolCommand[Args] {
 
   def extractStats(bamFile: File,
                    bedFile: Option[File],
+                   sequenceDict: SAMSequenceDictionary,
                    excludePartialReads: Boolean = false,
                    getUnmappedReads: Boolean = false): GroupStats = {
     val samReader: SamReader =
@@ -93,7 +97,9 @@ object Generate extends ToolCommand[Args] {
 
     // Read stats from regions
     bedFile.foreach { bed =>
-      val regions = BedRecordList.fromFile(bed).combineOverlap
+      // Combine overlap because we do not want the same reads to be counted twice
+      val regions =
+        BedRecordList.fromFile(bed).combineOverlap.validateContigs(sequenceDict)
       regions.allRecords.foreach { bedRecord =>
         val samRecordIterator: SAMRecordIterator =
           // Is contained = excludePartialReads an option here?
@@ -125,7 +131,6 @@ object Generate extends ToolCommand[Args] {
 
     stats
   }
-
 
   def writeStatsToTsv(stats: GroupStats, outputDir: File): Unit = {
     stats.flagstat.writeAsTsv(
