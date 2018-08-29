@@ -24,7 +24,7 @@ package nl.biopet.tools.bamstats.generate
 import java.io.{File, PrintWriter}
 
 import htsjdk.samtools._
-import nl.biopet.tools.bamstats.schema.Root
+import nl.biopet.tools.bamstats.schema.BamstatsRoot
 import nl.biopet.tools.bamstats.{GroupID, GroupStats}
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.bam._
@@ -67,7 +67,7 @@ object Generate extends ToolCommand[Args] {
       writeStatsToTsv(stats, outputDir = cmdArgs.outputDir)
     }
 
-    val groupedStats = Root.fromGroupStats(
+    val groupedStats = BamstatsRoot.fromGroupStats(
       GroupID(sample = cmdArgs.sample,
               library = cmdArgs.library,
               readgroup = cmdArgs.readgroup),

@@ -24,7 +24,7 @@ package nl.biopet.tools.bamstats.generate
 import java.io.File
 
 import com.google.common.io.Files
-import nl.biopet.tools.bamstats.schema.Root
+import nl.biopet.tools.bamstats.schema.BamstatsRoot
 import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
@@ -56,7 +56,7 @@ class GenerateTest extends ToolTest[Args] {
 
     new File(outputDir, "bamstats.json") should exist
     new File(outputDir, "bamstats.summary.json") should exist
-    Root.fromFile(new File(outputDir, "bamstats.json")).validate()
+    BamstatsRoot.fromFile(new File(outputDir, "bamstats.json")).validate()
     new File(outputDir, "flagstats.tsv") shouldNot exist
     new File(outputDir, "insertsize.stats.tsv") shouldNot exist
     new File(outputDir, "insertsize.histogram.tsv") shouldNot exist
@@ -89,7 +89,7 @@ class GenerateTest extends ToolTest[Args] {
 
     new File(outputDir, "bamstats.json") should exist
     new File(outputDir, "bamstats.summary.json") should exist
-    Root.fromFile(new File(outputDir, "bamstats.json")).validate()
+    BamstatsRoot.fromFile(new File(outputDir, "bamstats.json")).validate()
     new File(outputDir, "flagstats.tsv") should exist
     new File(outputDir, "insertsize.stats.tsv") should exist
     new File(outputDir, "insertsize.histogram.tsv") should exist

@@ -22,7 +22,7 @@
 package nl.biopet.tools.bamstats.validate
 
 import nl.biopet.tools.bamstats.BamStats
-import nl.biopet.tools.bamstats.schema.Root
+import nl.biopet.tools.bamstats.schema.BamstatsRoot
 import nl.biopet.utils.tool.{AbstractOptParser, ToolCommand}
 
 object Validate extends ToolCommand[Args] {
@@ -34,7 +34,7 @@ object Validate extends ToolCommand[Args] {
   def main(args: Array[String]): Unit = {
     val cmdArgs = cmdArrayToArgs(args)
 
-    Root.fromFile(cmdArgs.inputFile).validate()
+    BamstatsRoot.fromFile(cmdArgs.inputFile).validate()
 
     logger.info("Done")
   }
