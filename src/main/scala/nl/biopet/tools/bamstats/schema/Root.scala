@@ -76,7 +76,11 @@ object Root {
     fromJson(conversions.fileToJson(file))
   }
 
-  def fromGroupStats(groups: List[Stats]): Root = {
+  def fromGroupStats(groupID: GroupID, groupStats: GroupStats): Root = {
+    fromStats(List(Stats(groupID, groupStats)))
+  }
+
+  def fromStats(groups: List[Stats]): Root = {
     Root(
       groups.groupBy(_.groupID.sample).map {
         case (sampleID, sampleGroups) =>

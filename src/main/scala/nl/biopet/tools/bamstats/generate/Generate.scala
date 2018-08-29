@@ -23,21 +23,17 @@ package nl.biopet.tools.bamstats.generate
 
 import java.io.{File, PrintWriter}
 
-import htsjdk.samtools.{SAMRecord, SAMSequenceDictionary, SamReader, SamReaderFactory}
-import nl.biopet.tools.bamstats.GroupStats
+import htsjdk.samtools._
+import nl.biopet.tools.bamstats.schema.Root
+import nl.biopet.tools.bamstats.{GroupID, GroupStats}
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.bam._
-import nl.biopet.utils.ngs.intervals.{BedRecord, BedRecordList}
+import nl.biopet.utils.ngs.intervals.BedRecordList
 import nl.biopet.utils.tool.ToolCommand
 import play.api.libs.json.Json
 
 import scala.collection.JavaConversions._
-import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future, TimeoutException}
-import scala.io.Source
 
 object Generate extends ToolCommand[Args] {
   def emptyArgs: Args = Args()
@@ -57,45 +53,39 @@ object Generate extends ToolCommand[Args] {
           getDictFromBam(cmdArgs.bamFile)
       }
 
-    init(cmdArgs.outputDir,
-         cmdArgs.bamFile,
-         sequenceDict,
-         cmdArgs.bedFile,
-         cmdArgs.excludePartialReads,
-         cmdArgs.tsvOutputs)
+    val outputDir = cmdArgs.outputDir
 
-    logger.info("Done")
-  }
-
-  /**
-    * This is the main running function of [[Generate]]. This will start the threads and collect and write the results.
-    *
-    * @param outputDir All output files will be placed here
-    * @param bamFile Input bam file
-    * @param referenceDict Dict for scattering
-    * @param binSize stats binsize
-    * @param threadBinSize Thread binsize
-    */
-  def init(outputDir: File,
-           bamFile: File,
-           referenceDict: SAMSequenceDictionary,
-           bedFile: Option[File],
-           excludePartialReads: Boolean,
-           tsvOutput: Boolean): Unit = {
-
-    val regions = bedFile.map(BedRecordList.fromFile(_).combineOverlap)
-
-    val samReader: SamReader= SamReaderFactory.makeDefault().open(bamFile)
-    val records: Iterator[SAMRecord] = samReader.iterator().toIterator
+    val samReader: SamReader =
+      SamReaderFactory.makeDefault().open(cmdArgs.bamFile)
 
     val stats = GroupStats()
 
-    if (regions.isDefined) {
-
+    cmdArgs.bedFile match {
+      case Some(bedFile: File) =>
+        val regions = BedRecordList.fromFile(bedFile).combineOverlap
+        regions.allRecords.foreach { bedRecord =>
+          val samRecordIterator: SAMRecordIterator =
+            // Is contained = excludePartialReads an option here?
+            // I think not, because this also excludes reads that originate within the region, but end
+            // in another region.
+            samReader.query(bedRecord.chr,
+                            bedRecord.start,
+                            bedRecord.end,
+                            false)
+          samRecordIterator.foreach { samRecord =>
+            // Read based stats
+            // If excludePartialReads is false, continue.
+            // If excludePartialReads is true, determine whether the alignment start is within the region.
+            if (!cmdArgs.excludePartialReads || samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
+              stats.loadRecord(samRecord)
+            }
+          }
+        }
+      case _ =>
+        val records: Iterator[SAMRecord] = samReader.iterator().toIterator
+        records.foreach(stats.loadRecord)
     }
-    else records.foreach(stats.loadRecord)
-
-    if (tsvOutput) {
+    if (cmdArgs.tsvOutputs) {
       stats.flagstat.writeAsTsv(
         new File(outputDir, "flagstats.tsv")
       )
@@ -148,140 +138,37 @@ object Generate extends ToolCommand[Args] {
         "5 Prime Clipping distribution")
     }
 
+    val groupedStats = Root.fromGroupStats(
+      GroupID(sample = "", library = "", readgroup = ""),
+      stats)
     val statsWriter = new PrintWriter(new File(outputDir, "bamstats.json"))
-    val totalStats = stats.toSummaryMap
-    val statsMap = Map(
-      "total" -> totalStats,
-      "contigs" -> contigStats
-    )
-    statsWriter.println(Json.stringify(conversions.mapToJson(statsMap)))
+    statsWriter.println(Json.stringify(groupedStats.toJson))
     statsWriter.close()
 
+    val totalStats = stats.toSummaryMap
     val summaryWriter = new PrintWriter(
       new File(outputDir, "bamstats.summary.json"))
     summaryWriter.println(Json.stringify(conversions.mapToJson(totalStats)))
     summaryWriter.close()
+
+    logger.info("Done")
   }
 
   /**
-    * This method will wait when all futures are complete and collect a single [[GroupStats]] instance
+    * This is the main running function of [[Generate]]. This will start the threads and collect and write the results.
     *
-    * @param futures List of futures to monitor
-    * @param msg Optional message for logging
-    * @return Output stats
+    * @param outputDir All output files will be placed here
+    * @param bamFile Input bam file
+    * @param referenceDict Dict for scattering
+    * @param binSize stats binsize
+    * @param threadBinSize Thread binsize
     */
-  def waitOnFutures(
-      futures: List[Future[Map[BedRecord, GroupStats]]],
-      msg: Option[String] = None): (GroupStats, Map[String, GroupStats]) = {
-    msg.foreach(m =>
-      logger.info(s"Start monitoring jobs for '$m', ${futures.size} jobs"))
-    futures.foreach(_.onFailure { case t => throw new RuntimeException(t) })
-    val totalSize = futures.size
-    val totalStats = GroupStats()
-    val contigStats: mutable.Map[String, GroupStats] = mutable.Map()
-
-    def wait(todo: List[Future[Map[BedRecord, GroupStats]]]): Unit = {
-      try {
-        logger.info(s"${totalSize - todo.size}/$totalSize tasks done")
-        val completed = todo.groupBy(_.isCompleted)
-        completed.getOrElse(true, Nil).foreach { f =>
-          Await.result(f, Duration.Inf).foreach {
-            case (region, stats) =>
-              totalStats += stats
-              if (contigStats.contains(region.chr))
-                contigStats(region.chr) += stats
-              else contigStats(region.chr) = stats
-          }
-        }
-        if (completed.contains(false)) {
-          Thread.sleep(10000)
-          wait(completed(false))
-        }
-      } catch {
-        case _: TimeoutException =>
-          wait(todo)
-      }
-    }
-
-    wait(futures)
-
-    msg.foreach(m => logger.info(s"All jobs for '$m' are done"))
-    (totalStats, contigStats.toMap)
-  }
-
-  /**
-    * This method will process 1 thread bin
-    *
-    * @param scatters bins to check, there should be no gaps withing the scatters
-    * @param bamFile Input bamfile
-    * @return Output stats
-    */
-  def processThread(scatters: List[BedRecord],
-                    bamFile: File): Future[Map[BedRecord, GroupStats]] =
-    Future {
-      logger.debug(s"Start task on ${scatters.size} regions")
-      val samReader: SamReader = SamReaderFactory.makeDefault().open(bamFile)
-      val results = scatters.map { bedRecord =>
-        bedRecord -> processRegion(bedRecord, samReader)
-      }
-      samReader.close()
-
-      results.toMap
-    }
-
-  def processRegion(bedRecord: BedRecord, samReader: SamReader): GroupStats = {
-    //logger.debug(s"Start on $bedRecord")
-    val totalStats = GroupStats()
-    val it =
-      samReader.query(bedRecord.chr, bedRecord.start, bedRecord.end, false)
-    for (samRecord <- it) {
-
-      // Read based stats
-      if (samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
-        totalStats.loadRecord(samRecord)
-
-        //TODO: Bin Support
-      }
-
-      //TODO: bases counting
-    }
-    it.close()
-    totalStats
-  }
-
-  /**
-    * This method will only count the unmapped fragments
-    *
-    * @param bamFile Input bamfile
-    * @return Output stats
-    */
-  def processUnmappedReads(bamFile: File): Future[GroupStats] = Future {
-    val stats = GroupStats()
-    val samReader = SamReaderFactory.makeDefault().open(bamFile)
-    for (samRecord <- samReader.queryUnmapped()) {
-      stats.flagstat.loadRecord(samRecord)
-    }
-    samReader.close()
-    stats
-  }
-
-  def tsvToMap(tsvFile: File): Map[String, Array[Long]] = {
-    val reader = Source.fromFile(tsvFile)
-    val it = reader.getLines()
-    val header = it.next().split("\t")
-    val arrays =
-      header.zipWithIndex.map(x => x._2 -> (x._1 -> ArrayBuffer[Long]()))
-    for (line <- it) {
-      val values = line.split("\t")
-      require(values.size == header.size,
-              s"Line does not have the number of field as header: $line")
-      for (array <- arrays) {
-        array._2._2.append(values(array._1).toLong)
-      }
-    }
-    reader.close()
-    arrays.map(x => x._2._1 -> x._2._2.toArray).toMap
-  }
+  def init(outputDir: File,
+           bamFile: File,
+           referenceDict: SAMSequenceDictionary,
+           bedFile: Option[File],
+           excludePartialReads: Boolean,
+           tsvOutput: Boolean): Unit = {}
 
   def descriptionText: String =
     s"""
