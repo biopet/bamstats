@@ -139,7 +139,9 @@ object Generate extends ToolCommand[Args] {
     }
 
     val groupedStats = Root.fromGroupStats(
-      GroupID(sample = "", library = "", readgroup = ""),
+      GroupID(sample = cmdArgs.sample,
+              library = cmdArgs.library,
+              readgroup = cmdArgs.readgroup),
       stats)
     val statsWriter = new PrintWriter(new File(outputDir, "bamstats.json"))
     statsWriter.println(Json.stringify(groupedStats.toJson))
@@ -153,22 +155,6 @@ object Generate extends ToolCommand[Args] {
 
     logger.info("Done")
   }
-
-  /**
-    * This is the main running function of [[Generate]]. This will start the threads and collect and write the results.
-    *
-    * @param outputDir All output files will be placed here
-    * @param bamFile Input bam file
-    * @param referenceDict Dict for scattering
-    * @param binSize stats binsize
-    * @param threadBinSize Thread binsize
-    */
-  def init(outputDir: File,
-           bamFile: File,
-           referenceDict: SAMSequenceDictionary,
-           bedFile: Option[File],
-           excludePartialReads: Boolean,
-           tsvOutput: Boolean): Unit = {}
 
   def descriptionText: String =
     s"""
