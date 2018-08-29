@@ -89,7 +89,7 @@ class GenerateTest extends ToolTest[Args] {
 
     new File(outputDir, "bamstats.json") should exist
     new File(outputDir, "bamstats.summary.json") should exist
-
+    Root.fromFile(new File(outputDir, "bamstats.json")).validate()
     new File(outputDir, "flagstats.tsv") should exist
     new File(outputDir, "insertsize.stats.tsv") should exist
     new File(outputDir, "insertsize.histogram.tsv") should exist
