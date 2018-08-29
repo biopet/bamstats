@@ -37,13 +37,21 @@ class GenerateTest extends ToolTest[Args] {
   }
 
   val pairedBam01 = new File(resourcePath("/paired01.bam"))
+  val groupIdArgs: Array[String] = Array("--sample",
+                                         "sample",
+                                         "--library",
+                                         "library",
+                                         "--readgroup",
+                                         "readgroup")
 
   @Test
   def testMain(): Unit = {
     val outputDir = Files.createTempDir()
     outputDir.deleteOnExit()
-    Generate.main(
-      Array("-b", pairedBam01.getAbsolutePath, "-o", outputDir.getAbsolutePath))
+    Generate.main(Array("-b",
+                        pairedBam01.getAbsolutePath,
+                        "-o",
+                        outputDir.getAbsolutePath) ++ groupIdArgs)
 
     new File(outputDir, "bamstats.json") should exist
     new File(outputDir, "bamstats.summary.json") should exist
@@ -76,7 +84,7 @@ class GenerateTest extends ToolTest[Args] {
             pairedBam01.getAbsolutePath,
             "-o",
             outputDir.getAbsolutePath,
-            "--tsvOutputs"))
+            "--tsvOutputs") ++ groupIdArgs)
 
     new File(outputDir, "bamstats.json") should exist
     new File(outputDir, "bamstats.summary.json") should exist

@@ -201,21 +201,45 @@ object Generate extends ToolCommand[Args] {
 
   def exampleText: String =
     s"""
-         |To validate `file.bam`:
-         |${example("-b", "file.bam", "-o", "output_dir")}
+         |To generate stats from `file.bam`:
+         |${example("-b",
+                    "file.bam",
+                    "-o",
+                    "output_dir",
+                    "--sample",
+                    "patient0",
+                    "--library",
+                    "libI",
+                    "--readgroup",
+                    "RG1")}
          |
-       |To validate `file.bam` to `reference.fa` and output the result also as TSV, while setting
-         |bin size and thread bin size to 200:
+         |To generate stats from `file.bam`, and output the result also as TSV:
+         |${example("-o",
+                    "output_dir",
+                    "-b",
+                    "file.bam",
+                    "--sample",
+                    "patient0",
+                    "--library",
+                    "libI",
+                    "--readgroup",
+                    "RG1")}
+         |
+         |To generate stats from certain regions in `file.bam`,
+         |validate the regions and bam with `reference.fa` and also include unmapped reads:
          |${example("-R",
                     "reference.fa",
                     "-o",
                     "output_dir",
                     "-b",
                     "file.bam",
-                    "--binSize",
-                    "200",
-                    "--threadBinSize",
-                    "200",
-                    "--tsvOutputs")}
+                    "--bedFile",
+                    "regions.bed",
+                    "--sample",
+                    "patient0",
+                    "--library",
+                    "libI",
+                    "--readgroup",
+                    "RG1")}
      """.stripMargin
 }
