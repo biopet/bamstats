@@ -128,7 +128,7 @@ object Generate extends ToolCommand[Args] {
       val records: Iterator[SAMRecord] = samReader.iterator().toIterator
       records.foreach(stats.loadRecord)
     }
-
+    samReader.close()
     stats
   }
 
