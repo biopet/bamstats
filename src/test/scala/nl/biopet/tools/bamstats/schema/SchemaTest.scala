@@ -31,7 +31,8 @@ class SchemaTest extends BiopetTest {
 
   @Test
   def testRoot(): Unit = {
-    val root: BamstatsRoot = BamstatsRoot.fromFile(resourceFile("/json/bamstats.json"))
+    val root: BamstatsRoot =
+      BamstatsRoot.fromFile(resourceFile("/json/bamstats.json"))
     root.validate()
     root.readgroups.foreach {
       case (groupId, stats) =>
@@ -93,7 +94,8 @@ class SchemaTest extends BiopetTest {
   @Test
   def testCrosscountValidationError(): Unit = {
     val root: BamstatsRoot =
-      BamstatsRoot.fromFile(resourceFile("/json/bamstatsIncorrectCrosscountsKeys.json"))
+      BamstatsRoot.fromFile(
+        resourceFile("/json/bamstatsIncorrectCrosscountsKeys.json"))
     root.readgroups.headOption.foreach {
       case (_, data) =>
         val errorMessage = intercept[IllegalArgumentException] {

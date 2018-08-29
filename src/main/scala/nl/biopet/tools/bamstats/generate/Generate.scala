@@ -60,7 +60,7 @@ object Generate extends ToolCommand[Args] {
       bedFile = cmdArgs.bedFile,
       sequenceDict = sequenceDict,
       scatterMode = cmdArgs.scatterMode,
-      getUnmappedReads = cmdArgs.getUnmappedReads
+      includeUnmappedReadsWithRegions = cmdArgs.includeUnmappedReadsWithRegions
     )
 
     if (cmdArgs.tsvOutputs) {
@@ -86,11 +86,12 @@ object Generate extends ToolCommand[Args] {
     logger.info("Done")
   }
 
-  def extractStats(bamFile: File,
-                   bedFile: Option[File],
-                   sequenceDict: SAMSequenceDictionary,
-                   scatterMode: Boolean = false,
-                   getUnmappedReads: Boolean = false): GroupStats = {
+  def extractStats(
+      bamFile: File,
+      bedFile: Option[File],
+      sequenceDict: SAMSequenceDictionary,
+      scatterMode: Boolean = false,
+      includeUnmappedReadsWithRegions: Boolean = false): GroupStats = {
     val samReader: SamReader =
       SamReaderFactory.makeDefault().open(bamFile)
     val stats = GroupStats()
@@ -115,13 +116,13 @@ object Generate extends ToolCommand[Args] {
     }
 
     // Read stats from unmappedReads
-    if (getUnmappedReads) {
+    if (includeUnmappedReadsWithRegions) {
       samReader.queryUnmapped().foreach(stats.loadRecord)
     }
 
     // If no regions were specified, and no explicit instructions to get unmapped reads
     // read the entire file
-    if (bedFile.isEmpty && !getUnmappedReads) {
+    if (bedFile.isEmpty && !includeUnmappedReadsWithRegions) {
       val records: Iterator[SAMRecord] = samReader.iterator().toIterator
       records.foreach(stats.loadRecord)
     }

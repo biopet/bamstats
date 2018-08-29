@@ -47,7 +47,7 @@ class ArgsParser(toolCommand: ToolCommand[Args])
     "The files can be merged afterwards without duplicates."
   // How should this option be adequately named?
   opt[Unit]('u', "includeUnmappedReadsWithRegions")
-    .action((_, c) => c.copy(getUnmappedReads = true))
+    .action((_, c) => c.copy(includeUnmappedReadsWithRegions = true))
     .text(
       "If no BED file is given this option returns only the stats on the unmapped reads." +
         "If a BED file is given, this option returns the stats on the regions and on the unmapped reads. " +
