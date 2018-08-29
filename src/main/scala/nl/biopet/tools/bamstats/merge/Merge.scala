@@ -37,7 +37,7 @@ object Merge extends ToolCommand[Args] {
       cmdArgs.inputFiles.flatMap(Root.fromFile(_).asStats)
     val root = Root.fromStats(statsList)
 
-    cmdArgs.outputFile.foreach(root.writeFile(_))
+    cmdArgs.outputFile.foreach(root.writeFile)
   }
 
   def descriptionText: String =
