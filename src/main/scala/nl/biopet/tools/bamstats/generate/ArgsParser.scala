@@ -39,10 +39,16 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   } text "Input bam file"
   opt[File]("bedFile") valueName "<file>" action { (x, c) =>
     c.copy(bedFile = Some(x))
-  } text "Extract information for this region."
-  opt[File]("scatterBedFile") action { (_, c) =>
+  } text "Extract information for the regions specified in the bedfile."
+  opt[File]("excludePartialReads") action { (_, c) =>
     c.copy(excludePartialReads = true)
   } text "Exclude reads that originate from another region."
+  opt[Unit]('u',"includeUnmappedReadsWithRegions")
+    .action((_, c) => c.copy(getUnmappedReads = true))
+    .text("If no BED file is given this option returns only the stats on the unmapped reads." +
+      "If a BED file is given, this option returns the stats on the regions and on the unmapped reads. " +
+  "If this option is not specified and no BED file is given, " +
+    "all reads including unmapped are included in the stats. " )
   opt[Unit]("tsvOutputs") action { (_, c) =>
     c.copy(tsvOutputs = true)
   } text "Also output tsv files, default there is only a json"
