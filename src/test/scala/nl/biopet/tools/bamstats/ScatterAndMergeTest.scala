@@ -86,7 +86,9 @@ class ScatterAndMergeTest extends BiopetTest {
     val inputBamStats: Array[String] =
       bamStatsFiles.flatMap(file => Seq("-i", file.toString)).toArray
     println(inputBamStats.mkString("\n"))
-    BamStats.main(Array("merge") ++ inputBamStats ++ Array("-o", mergedBamstatsFile.toString))
+    BamStats.main(
+      Array("merge") ++ inputBamStats ++ Array("-o",
+                                               mergedBamstatsFile.toString))
 
     val completeBamstatsDir: File = new File(outputDir, "complete_bamstats.d")
     completeBamstatsDir.delete()
