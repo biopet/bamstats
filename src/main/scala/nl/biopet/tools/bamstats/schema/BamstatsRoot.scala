@@ -91,8 +91,8 @@ object BamstatsRoot {
                   libraryGroups.groupBy(_.groupID.readgroup).map {
                     case (readgroupID, readgroups) =>
                       val statsList: List[GroupStats] = readgroups.map(_.stats)
-                      val addedData: GroupStats = statsList.reduce(_ += _)
-                      readgroupID -> Readgroup(addedData.statsToData())
+                      val addedStats: GroupStats = statsList.reduce(_ += _)
+                      readgroupID -> Readgroup(addedStats.statsToData())
                   }
                 )
             }
