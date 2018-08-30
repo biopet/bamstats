@@ -46,13 +46,10 @@ class ArgsParser(toolCommand: ToolCommand[Args])
     "This is useful for running multiple instances of bamstats each on a different region. " +
     "The files can be merged afterwards without duplicates."
   // How should this option be adequately named?
-  opt[Unit]('u', "includeUnmappedReadsWithRegions")
-    .action((_, c) => c.copy(includeUnmappedReadsWithRegions = true))
+  opt[Unit]('u', "onlyUnmapped")
+    .action((_, c) => c.copy(onlyUnmapped = true))
     .text(
-      "If no BED file is given this option returns only the stats on the unmapped reads." +
-        "If a BED file is given, this option returns the stats on the regions and on the unmapped reads. " +
-        "If this option is not specified and no BED file is given, " +
-        "all reads including unmapped are included in the stats. ")
+      "Only returns stats on unmapped reads. (This is excluding singletons.")
   opt[Unit]("tsvOutputs") action { (_, c) =>
     c.copy(tsvOutputs = true)
   } text "Also output tsv files, default there is only a json"

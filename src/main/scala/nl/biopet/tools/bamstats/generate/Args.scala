@@ -31,5 +31,5 @@ case class Args(outputDir: File = null,
                 referenceFasta: Option[File] = None,
                 bedFile: Option[File] = None,
                 scatterMode: Boolean = false,
-                includeUnmappedReadsWithRegions: Boolean = false,
+                onlyUnmapped: Boolean = false,
                 tsvOutputs: Boolean = false)
