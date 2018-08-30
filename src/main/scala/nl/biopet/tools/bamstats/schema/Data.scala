@@ -58,21 +58,20 @@ case class Data(flagStats: FlagStatsData,
 
   def validate(): Unit = {
     val groupStats = asGroupStats
-    // The order of the doubleArrays does not matter. Correct key,value pairs do. Therefore toMap.
     require(
-      groupStats._3_ClippingHistogram.toDoubleArray.toMap == this._3_ClippingHistogram.toMap)
+      groupStats._3_ClippingHistogram.toDoubleArray == this._3_ClippingHistogram)
     require(
-      groupStats._5_ClippingHistogram.toDoubleArray.toMap == this._5_ClippingHistogram.toMap)
+      groupStats._5_ClippingHistogram.toDoubleArray == this._5_ClippingHistogram)
     require(
-      groupStats.clippingHistogram.toDoubleArray.toMap == this.clippingHistogram.toMap)
+      groupStats.clippingHistogram.toDoubleArray == this.clippingHistogram)
     require(
-      groupStats.insertSizeHistogram.toDoubleArray.toMap == this.insertSizeHistogram.toMap)
+      groupStats.insertSizeHistogram.toDoubleArray == this.insertSizeHistogram)
     require(
-      groupStats.leftClippingHistogram.toDoubleArray.toMap == this.leftClippingHistogram.toMap)
+      groupStats.leftClippingHistogram.toDoubleArray == this.leftClippingHistogram)
     require(
-      groupStats.rightClippingHistogram.toDoubleArray.toMap == this.rightClippingHistogram.toMap)
+      groupStats.rightClippingHistogram.toDoubleArray == this.rightClippingHistogram)
     require(
-      groupStats.mappingQualityHistogram.toDoubleArray.toMap == this.mappingQualityHistogram.toMap)
+      groupStats.mappingQualityHistogram.toDoubleArray == this.mappingQualityHistogram)
     require(
       FlagStats.fromFlagStatsData(flagStats).toFlagStatsData == this.flagStats)
   }
