@@ -23,10 +23,11 @@ package nl.biopet.tools.bamstats
 import nl.biopet.utils.tool.ToolCommand
 import nl.biopet.utils.tool.multi.MultiToolCommand
 import nl.biopet.tools.bamstats.generate.Generate
+import nl.biopet.tools.bamstats.merge.Merge
 
 object BamStats extends MultiToolCommand {
   def subTools: Map[String, List[ToolCommand[_]]] = Map(
-    "Mode" -> List(Generate)
+    "Mode" -> List(Generate, Merge)
   )
 
   def descriptionText: String =

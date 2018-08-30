@@ -69,7 +69,7 @@ class ScatterAndMergeTest extends BiopetTest {
     }
 
     // Get unmapped reads as well
-    val unmappedDir = new File(outputDir + "unmapped.d")
+    val unmappedDir = new File(outputDir, "unmapped.d")
     unmappedDir.delete()
     unmappedDir.mkdirs()
     BamStats.main(
@@ -82,8 +82,10 @@ class ScatterAndMergeTest extends BiopetTest {
       new File(unmappedDir, "bamstats.json"))
 
     val mergedBamstatsFile = new File(outputDir, "merged_bamstats.json")
+
     val inputBamStats: Array[String] =
       bamStatsFiles.flatMap(file => Seq("-i", file.toString)).toArray
+    println(inputBamStats.mkString("\n"))
     BamStats.main(Array("merge") ++ inputBamStats ++ Array("-o", mergedBamstatsFile.toString))
 
     val completeBamstatsDir: File = new File(outputDir, "complete_bamstats.d")
@@ -97,6 +99,7 @@ class ScatterAndMergeTest extends BiopetTest {
     val completeBamstats =
       Source.fromFile(completeBamstatsFile).getLines.mkString
     val mergedBamstats = Source.fromFile(mergedBamstatsFile).getLines.mkString
+    println(outputDir)
     completeBamstats shouldBe mergedBamstats
   }
 }
