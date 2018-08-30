@@ -25,7 +25,11 @@ import java.io.File
 
 case class Args(outputDir: File = null,
                 bamFile: File = null,
+                sample: String = null,
+                library: String = null,
+                readgroup: String = null,
                 referenceFasta: Option[File] = None,
-                binSize: Int = 10000,
-                threadBinSize: Int = 1000000,
+                bedFile: Option[File] = None,
+                scatterMode: Boolean = false,
+                onlyUnmapped: Boolean = false,
                 tsvOutputs: Boolean = false)

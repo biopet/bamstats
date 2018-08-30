@@ -23,6 +23,8 @@ package nl.biopet.tools.bamstats
 
 import java.io.File
 
+import htsjdk.samtools.SAMRecord
+import htsjdk.samtools.filter.SamRecordFilter
 import nl.biopet.tools.bamstats.schema._
 import nl.biopet.utils.Histogram
 
@@ -50,6 +52,34 @@ case class GroupStats(
     this._5_ClippingHistogram += other._5_ClippingHistogram
     this._3_ClippingHistogram += other._3_ClippingHistogram
     this
+  }
+
+  /**
+    * Load a record into the Groupstats, which updates the histograms and flagstats.
+    * @param samRecord
+    */
+  def loadRecord(samRecord: SAMRecord): Unit = {
+    flagstat.loadRecord(samRecord)
+    if (!samRecord.getReadUnmappedFlag) { // Mapped read
+      mappingQualityHistogram.add(samRecord.getMappingQuality)
+    }
+    if (samRecord.getReadPairedFlag && samRecord.getProperPairFlag && samRecord.getFirstOfPairFlag && !samRecord.getSecondOfPairFlag)
+      insertSizeHistogram.add(samRecord.getInferredInsertSize.abs)
+
+    val leftClipping = samRecord.getAlignmentStart - samRecord.getUnclippedStart
+    val rightClipping = samRecord.getUnclippedEnd - samRecord.getAlignmentEnd
+
+    clippingHistogram.add(leftClipping + rightClipping)
+    leftClippingHistogram.add(leftClipping)
+    rightClippingHistogram.add(rightClipping)
+
+    if (samRecord.getReadNegativeStrandFlag) {
+      _5_ClippingHistogram.add(leftClipping)
+      _3_ClippingHistogram.add(rightClipping)
+    } else {
+      _5_ClippingHistogram.add(rightClipping)
+      _3_ClippingHistogram.add(leftClipping)
+    }
   }
 
   def writeStatsToFiles(outputDir: File): Unit = {

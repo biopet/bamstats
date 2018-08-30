@@ -28,7 +28,7 @@ import nl.biopet.tools.bamstats.{GroupID, GroupStats, Stats}
 import nl.biopet.utils.{conversions, io}
 import play.api.libs.json._
 
-case class Root(samples: Map[String, Sample]) {
+case class BamstatsRoot(samples: Map[String, Sample]) {
   def readgroups: Map[GroupID, Readgroup] = {
     samples.flatMap {
       case (sampleId, sampleData) =>
@@ -63,21 +63,25 @@ case class Root(samples: Map[String, Sample]) {
   }
 
 }
-object Root {
-  def fromJson(json: JsValue): Root = {
-    Json.fromJson[Root](json) match {
-      case JsSuccess(root: Root, _) => root
+object BamstatsRoot {
+  def fromJson(json: JsValue): BamstatsRoot = {
+    Json.fromJson[BamstatsRoot](json) match {
+      case JsSuccess(root: BamstatsRoot, _) => root
       case e: JsError =>
         throw new IllegalStateException(e.errors.mkString("\n"))
     }
   }
 
-  def fromFile(file: File): Root = {
+  def fromFile(file: File): BamstatsRoot = {
     fromJson(conversions.fileToJson(file))
   }
 
-  def fromGroupStats(groups: List[Stats]): Root = {
-    Root(
+  def fromGroupStats(groupID: GroupID, groupStats: GroupStats): BamstatsRoot = {
+    fromStats(List(Stats(groupID, groupStats)))
+  }
+
+  def fromStats(groups: List[Stats]): BamstatsRoot = {
+    BamstatsRoot(
       groups.groupBy(_.groupID.sample).map {
         case (sampleID, sampleGroups) =>
           sampleID -> Sample(

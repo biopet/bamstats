@@ -37,13 +37,35 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   opt[File]('b', "bam") required () valueName "<file>" action { (x, c) =>
     c.copy(bamFile = x)
   } text "Input bam file"
-  opt[Int]("binSize") valueName "<int>" action { (x, c) =>
-    c.copy(binSize = x)
-  } text "Bin size of stats (beta)"
-  opt[Int]("threadBinSize") valueName "<int>" action { (x, c) =>
-    c.copy(threadBinSize = x)
-  } text "Size of region per thread"
+  opt[File]("bedFile") valueName "<file>" action { (x, c) =>
+    c.copy(bedFile = Some(x))
+  } text "Extract information for the regions specified in the bedfile."
+  opt[File]("scatterMode") action { (_, c) =>
+    c.copy(scatterMode = true)
+  } text "Exclude reads from which the start originates from another region. " +
+    "This is useful for running multiple instances of bamstats each on a different region. " +
+    "The files can be merged afterwards without duplicates."
+  // How should this option be adequately named?
+  opt[Unit]('u', "onlyUnmapped")
+    .action((_, c) => c.copy(onlyUnmapped = true))
+    .text(
+      "Only returns stats on unmapped reads. (This is excluding singletons.")
   opt[Unit]("tsvOutputs") action { (_, c) =>
     c.copy(tsvOutputs = true)
   } text "Also output tsv files, default there is only a json"
+  opt[String]("sample")
+    .valueName("<name>")
+    .required()
+    .action((x, c) => c.copy(sample = x))
+    .text("Sample name")
+  opt[String]("library")
+    .valueName("<name>")
+    .required()
+    .action((x, c) => c.copy(library = x))
+    .text("Library name")
+  opt[String]("readgroup")
+    .valueName("<name>")
+    .required()
+    .action((x, c) => c.copy(readgroup = x))
+    .text("Readgroup name")
 }
