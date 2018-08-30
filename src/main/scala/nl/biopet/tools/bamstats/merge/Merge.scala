@@ -44,6 +44,7 @@ object Merge extends ToolCommand[Args] {
   def descriptionText: String =
     """
       |This module will merge bamstats files together and keep the sample/library/readgroup structure.
+      |It will also validate the resulting file.
       """.stripMargin
 
   def manualText: String =
