@@ -33,7 +33,8 @@ class ScatterAndMergeTest extends BiopetTest {
     val outputDir = File.createTempFile("scatterAndMerge", ".d")
     outputDir.delete()
     outputDir.mkdirs()
-    val bamFile: File = resourceFile("/paired_valid.bam").getAbsoluteFile
+    val bamFile
+      : File = resourceFile("/fake_chrQ1000simreads.bam").getAbsoluteFile
     val referenceFile: File = resourceFile("/fake_chrQ.fa").getAbsoluteFile
 
     val scatterFiles = Seq("/scatter1.bed", "/scatter2.bed", "/scatter3.bed")
