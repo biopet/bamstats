@@ -26,6 +26,7 @@ import java.io.File
 import nl.biopet.test.BiopetTest
 import org.testng.annotations.Test
 
+import scala.io.Source
 class ScatterAndMergeTest extends BiopetTest {
   @Test
   def testScatterAndMergeTest(): Unit = {
@@ -37,26 +38,65 @@ class ScatterAndMergeTest extends BiopetTest {
 
     val scatterFiles = Seq("/scatter1.bed", "/scatter2.bed", "/scatter3.bed")
       .map(resourceFile(_).getAbsoluteFile)
-    val bamStatsGenerateArguments = Array[String]("generate",
-                                                  "-b",
-                                                  bamFile.toString,
-                                                  "--sample",
-                                                  "sample",
-                                                  "--library",
-                                                  "library",
-                                                  "--readgroup",
-                                                  "readgroup",
-                                                  "--reference",
-                                                  referenceFile.toString)
-    scatterFiles.foreach { bedFile =>
-      val bedOutputDir = new File(outputDir, s"${bedFile.getName}.d")
-      bedOutputDir.delete()
-      bedOutputDir.mkdir()
-      BamStats.main(
-        bamStatsGenerateArguments ++ Array("--bedFile",
-                                           bedFile.toString,
-                                           "--outputDir",
-                                           bedOutputDir.toString))
+    val bamStatsGenerateArguments = Array[String](
+      "generate",
+      "-b",
+      bamFile.toString,
+      "--sample",
+      "sample",
+      "--library",
+      "library",
+      "--readgroup",
+      "readgroup",
+      "--reference",
+      referenceFile.toString
+    )
+    val outputDirs =
+      scatterFiles.map(file => new File(outputDir, s"${file.getName}.d"))
+    outputDirs.foreach { dir =>
+      dir.delete()
+      dir.mkdirs()
     }
+
+    scatterFiles.zip(outputDirs).foreach {
+      case (bedFile, bedOutputDir) =>
+        BamStats.main(
+          bamStatsGenerateArguments ++ Array("--bedFile",
+                                             bedFile.toString,
+                                             "--outputDir",
+                                             bedOutputDir.toString,
+                                             "--scatterMode"))
+    }
+
+    // Get unmapped reads as well
+    val unmappedDir = new File(outputDir + "unmapped.d")
+    unmappedDir.delete()
+    unmappedDir.mkdirs()
+    BamStats.main(
+      bamStatsGenerateArguments ++ Array("--onlyUnmapped",
+                                         "--outputDir",
+                                         unmappedDir.toString))
+
+    val bamStatsFiles: Seq[File] = outputDirs.map(dir =>
+      new File(dir, "bamstats.json")) ++ Seq(
+      new File(unmappedDir, "bamstats.json"))
+
+    val mergedBamstatsFile = new File(outputDir, "merged_bamstats.json")
+    val inputBamStats: Array[String] =
+      bamStatsFiles.flatMap(file => Seq("-i", file.toString)).toArray
+    BamStats.main(Array("merge") ++ inputBamStats ++ Array("-o", mergedBamstatsFile.toString))
+
+    val completeBamstatsDir: File = new File(outputDir, "complete_bamstats.d")
+    completeBamstatsDir.delete()
+    completeBamstatsDir.mkdirs()
+    val completeBamstatsFile = new File(completeBamstatsDir, "bamstats.json")
+    BamStats.main(
+      bamStatsGenerateArguments ++ Array("--outputDir",
+                                         completeBamstatsDir.toString))
+
+    val completeBamstats =
+      Source.fromFile(completeBamstatsFile).getLines.mkString
+    val mergedBamstats = Source.fromFile(mergedBamstatsFile).getLines.mkString
+    completeBamstats shouldBe mergedBamstats
   }
 }

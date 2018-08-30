@@ -40,7 +40,7 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   opt[File]("bedFile") valueName "<file>" action { (x, c) =>
     c.copy(bedFile = Some(x))
   } text "Extract information for the regions specified in the bedfile."
-  opt[File]("scatterMode") action { (_, c) =>
+  opt[Unit]("scatterMode") action { (_, c) =>
     c.copy(scatterMode = true)
   } text "Exclude reads from which the start originates from another region. " +
     "This is useful for running multiple instances of bamstats each on a different region. " +
