@@ -22,7 +22,13 @@
 package nl.biopet.tools.bamstats
 
 import nl.biopet.test.BiopetTest
+import org.testng.annotations.Test
 
 class ScatterAndMergeTest extends BiopetTest {
-  def
+
+  @Test
+  def testScatterAndMergeTest(): Unit = {
+  val bamFile = resourceFile("/paired01.bam").getAbsoluteFile
+
+  }
 }
