@@ -389,6 +389,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="nl.biopet.tools.bamstats.generate.Generate">Generate</a> → ToolCommand</dd></dl></div>
+    </li><li name="nl.biopet.tools.bamstats.generate.Generate#extractStats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="extractStats(bamFile:java.io.File,bedFile:Option[java.io.File],sequenceDict:htsjdk.samtools.SAMSequenceDictionary,scatterMode:Boolean,onlyUnmapped:Boolean):nl.biopet.tools.bamstats.GroupStats"></a>
+      <a id="extractStats(File,Option[File],SAMSequenceDictionary,Boolean,Boolean):GroupStats"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">extractStats</span><span class="params">(<span name="bamFile">bamFile: <span class="extype" name="java.io.File">File</span></span>, <span name="bedFile">bedFile: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.io.File">File</span>]</span>, <span name="sequenceDict">sequenceDict: <span class="extype" name="htsjdk.samtools.SAMSequenceDictionary">SAMSequenceDictionary</span></span>, <span name="scatterMode">scatterMode: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="onlyUnmapped">onlyUnmapped: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@extractStats(bamFile:java.io.File,bedFile:Option[java.io.File],sequenceDict:htsjdk.samtools.SAMSequenceDictionary,scatterMode:Boolean,onlyUnmapped:Boolean):nl.biopet.tools.bamstats.GroupStats" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -480,24 +497,6 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.generate.Generate#init" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="init(outputDir:java.io.File,bamFile:java.io.File,referenceDict:htsjdk.samtools.SAMSequenceDictionary,binSize:Int,threadBinSize:Int,tsvOutput:Boolean):Unit"></a>
-      <a id="init(File,File,SAMSequenceDictionary,Int,Int,Boolean):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">init</span><span class="params">(<span name="outputDir">outputDir: <span class="extype" name="java.io.File">File</span></span>, <span name="bamFile">bamFile: <span class="extype" name="java.io.File">File</span></span>, <span name="referenceDict">referenceDict: <span class="extype" name="htsjdk.samtools.SAMSequenceDictionary">SAMSequenceDictionary</span></span>, <span name="binSize">binSize: <span class="extype" name="scala.Int">Int</span></span>, <span name="threadBinSize">threadBinSize: <span class="extype" name="scala.Int">Int</span></span>, <span name="tsvOutput">tsvOutput: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@init(outputDir:java.io.File,bamFile:java.io.File,referenceDict:htsjdk.samtools.SAMSequenceDictionary,binSize:Int,threadBinSize:Int,tsvOutput:Boolean):Unit" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">This is the main running function of <a href="" class="extype" name="nl.biopet.tools.bamstats.generate.Generate">Generate</a>.</p><div class="fullcomment"><div class="comment cmt"><p>This is the main running function of <a href="" class="extype" name="nl.biopet.tools.bamstats.generate.Generate">Generate</a>. This will start the threads and collect and write the results.
-</p></div><dl class="paramcmts block"><dt class="param">outputDir</dt><dd class="cmt"><p>All output files will be placed here</p></dd><dt class="param">bamFile</dt><dd class="cmt"><p>Input bam file</p></dd><dt class="param">referenceDict</dt><dd class="cmt"><p>Dict for scattering</p></dd><dt class="param">binSize</dt><dd class="cmt"><p>stats binsize</p></dd><dt class="param">threadBinSize</dt><dd class="cmt"><p>Thread binsize</p></dd></dl></div>
     </li><li name="nl.biopet.utils.tool.ToolCommand#installationText" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="installationText:String"></a>
       <a id="installationText:String"></a>
@@ -651,61 +650,6 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.generate.Generate#processRegion" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="processRegion(bedRecord:nl.biopet.utils.ngs.intervals.BedRecord,samReader:htsjdk.samtools.SamReader):nl.biopet.tools.bamstats.GroupStats"></a>
-      <a id="processRegion(BedRecord,SamReader):GroupStats"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">processRegion</span><span class="params">(<span name="bedRecord">bedRecord: <span class="extype" name="nl.biopet.utils.ngs.intervals.BedRecord">BedRecord</span></span>, <span name="samReader">samReader: <span class="extype" name="htsjdk.samtools.SamReader">SamReader</span></span>)</span><span class="result">: <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@processRegion(bedRecord:nl.biopet.utils.ngs.intervals.BedRecord,samReader:htsjdk.samtools.SamReader):nl.biopet.tools.bamstats.GroupStats" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
-    </li><li name="nl.biopet.tools.bamstats.generate.Generate#processThread" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="processThread(scatters:List[nl.biopet.utils.ngs.intervals.BedRecord],bamFile:java.io.File):scala.concurrent.Future[Map[nl.biopet.utils.ngs.intervals.BedRecord,nl.biopet.tools.bamstats.GroupStats]]"></a>
-      <a id="processThread(List[BedRecord],File):Future[Map[BedRecord,GroupStats]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">processThread</span><span class="params">(<span name="scatters">scatters: <span class="extype" name="scala.List">List</span>[<span class="extype" name="nl.biopet.utils.ngs.intervals.BedRecord">BedRecord</span>]</span>, <span name="bamFile">bamFile: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="nl.biopet.utils.ngs.intervals.BedRecord">BedRecord</span>, <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a>]]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@processThread(scatters:List[nl.biopet.utils.ngs.intervals.BedRecord],bamFile:java.io.File):scala.concurrent.Future[Map[nl.biopet.utils.ngs.intervals.BedRecord,nl.biopet.tools.bamstats.GroupStats]]" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">This method will process 1 thread bin
-</p><div class="fullcomment"><div class="comment cmt"><p>This method will process 1 thread bin
-</p></div><dl class="paramcmts block"><dt class="param">scatters</dt><dd class="cmt"><p>bins to check, there should be no gaps withing the scatters</p></dd><dt class="param">bamFile</dt><dd class="cmt"><p>Input bamfile</p></dd><dt>returns</dt><dd class="cmt"><p>Output stats</p></dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.generate.Generate#processUnmappedReads" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="processUnmappedReads(bamFile:java.io.File):scala.concurrent.Future[nl.biopet.tools.bamstats.GroupStats]"></a>
-      <a id="processUnmappedReads(File):Future[GroupStats]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">processUnmappedReads</span><span class="params">(<span name="bamFile">bamFile: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@processUnmappedReads(bamFile:java.io.File):scala.concurrent.Future[nl.biopet.tools.bamstats.GroupStats]" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">This method will only count the unmapped fragments
-</p><div class="fullcomment"><div class="comment cmt"><p>This method will only count the unmapped fragments
-</p></div><dl class="paramcmts block"><dt class="param">bamFile</dt><dd class="cmt"><p>Input bamfile</p></dd><dt>returns</dt><dd class="cmt"><p>Output stats</p></dd></dl></div>
     </li><li name="nl.biopet.utils.tool.ToolCommand#readmeContents" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="readmeContents:List[(String,String)]"></a>
       <a id="readmeContents:List[(String,String)]"></a>
@@ -808,23 +752,6 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ToolCommand</dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.generate.Generate#tsvToMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="tsvToMap(tsvFile:java.io.File):Map[String,Array[Long]]"></a>
-      <a id="tsvToMap(File):Map[String,Array[Long]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tsvToMap</span><span class="params">(<span name="tsvFile">tsvFile: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Long">Long</span>]]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@tsvToMap(tsvFile:java.io.File):Map[String,Array[Long]]" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
     </li><li name="nl.biopet.utils.tool.ToolCommand#unsafeExample" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="unsafeExample(args:String*):String"></a>
       <a id="unsafeExample(String*):String"></a>
@@ -1013,25 +940,23 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.generate.Generate#waitOnFutures" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="waitOnFutures(futures:List[scala.concurrent.Future[Map[nl.biopet.utils.ngs.intervals.BedRecord,nl.biopet.tools.bamstats.GroupStats]]],msg:Option[String]):(nl.biopet.tools.bamstats.GroupStats,Map[String,nl.biopet.tools.bamstats.GroupStats])"></a>
-      <a id="waitOnFutures(List[Future[Map[BedRecord,GroupStats]]],Option[String]):(GroupStats,Map[String,GroupStats])"></a>
+    </li><li name="nl.biopet.tools.bamstats.generate.Generate#writeStatsToTsv" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="writeStatsToTsv(stats:nl.biopet.tools.bamstats.GroupStats,outputDir:java.io.File):Unit"></a>
+      <a id="writeStatsToTsv(GroupStats,File):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">waitOnFutures</span><span class="params">(<span name="futures">futures: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="nl.biopet.utils.ngs.intervals.BedRecord">BedRecord</span>, <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a>]]]</span>, <span name="msg">msg: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result">: (<a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a>, <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a>])</span>
+        <span class="name">writeStatsToTsv</span><span class="params">(<span name="stats">stats: <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a></span>, <span name="outputDir">outputDir: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@waitOnFutures(futures:List[scala.concurrent.Future[Map[nl.biopet.utils.ngs.intervals.BedRecord,nl.biopet.tools.bamstats.GroupStats]]],msg:Option[String]):(nl.biopet.tools.bamstats.GroupStats,Map[String,nl.biopet.tools.bamstats.GroupStats])" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@writeStatsToTsv(stats:nl.biopet.tools.bamstats.GroupStats,outputDir:java.io.File):Unit" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">This method will wait when all futures are complete and collect a single <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a> instance
-</p><div class="fullcomment"><div class="comment cmt"><p>This method will wait when all futures are complete and collect a single <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a> instance
-</p></div><dl class="paramcmts block"><dt class="param">futures</dt><dd class="cmt"><p>List of futures to monitor</p></dd><dt class="param">msg</dt><dd class="cmt"><p>Optional message for logging</p></dd><dt>returns</dt><dd class="cmt"><p>Output stats</p></dd></dl></div>
+      
     </li></ol>
             </div>
 

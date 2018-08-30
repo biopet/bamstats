@@ -134,19 +134,30 @@
         <h2 id="example" class="section">Example</h2>
         
         <h4 id="mode---generate-2" class="section">Mode - Generate</h4>
-        <p>To validate <code>file.bam</code>:</p>
+        <p>To generate stats from <code>file.bam</code>:</p>
         <pre><code>java -jar &lt;Generate_jar&gt; \
 -b file.bam \
--o output_dir</code></pre>
-        <p>To validate <code>file.bam</code> to <code>reference.fa</code> and output the result also as TSV, while setting
-        bin size and thread bin size to 200:</p>
+-o output_dir \
+--sample patient0 \
+--library libI \
+--readgroup RG1</code></pre>
+        <p>To generate stats from <code>file.bam</code>, and output the result also as TSV:</p>
+        <pre><code>java -jar &lt;Generate_jar&gt; \
+-o output_dir \
+-b file.bam \
+--sample patient0 \
+--library libI \
+--readgroup RG1</code></pre>
+        <p>To generate stats from certain regions in <code>file.bam</code>,
+        validate the regions and bam with <code>reference.fa</code> and also include unmapped reads:</p>
         <pre><code>java -jar &lt;Generate_jar&gt; \
 -R reference.fa \
 -o output_dir \
 -b file.bam \
---binSize 200 \
---threadBinSize 200 \
---tsvOutputs</code></pre>
+--bedFile regions.bed \
+--sample patient0 \
+--library libI \
+--readgroup RG1</code></pre>
         
         <h2 id="usage" class="section">Usage</h2>
         <p>Usage for BamStats:</p>

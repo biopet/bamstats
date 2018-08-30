@@ -45,7 +45,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Args</span><span class="params">(<span name="outputDir">outputDir: <span class="extype" name="java.io.File">File</span> = <span class="symbol">null</span></span>, <span name="bamFile">bamFile: <span class="extype" name="java.io.File">File</span> = <span class="symbol">null</span></span>, <span name="referenceFasta">referenceFasta: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.io.File">File</span>] = <span class="symbol">None</span></span>, <span name="binSize">binSize: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">10000</span></span>, <span name="threadBinSize">threadBinSize: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">1000000</span></span>, <span name="tsvOutputs">tsvOutputs: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">Args</span><span class="params">(<span name="outputDir">outputDir: <span class="extype" name="java.io.File">File</span> = <span class="symbol">null</span></span>, <span name="bamFile">bamFile: <span class="extype" name="java.io.File">File</span> = <span class="symbol">null</span></span>, <span name="sample">sample: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>, <span name="library">library: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>, <span name="readgroup">readgroup: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>, <span name="referenceFasta">referenceFasta: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.io.File">File</span>] = <span class="symbol">None</span></span>, <span name="bedFile">bedFile: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.io.File">File</span>] = <span class="symbol">None</span></span>, <span name="scatterMode">scatterMode: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="onlyUnmapped">onlyUnmapped: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="tsvOutputs">tsvOutputs: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -89,7 +89,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="nl.biopet.tools.bamstats.generate.Args#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(outputDir:java.io.File,bamFile:java.io.File,referenceFasta:Option[java.io.File],binSize:Int,threadBinSize:Int,tsvOutputs:Boolean):nl.biopet.tools.bamstats.generate.Args"></a>
+      <a id="&lt;init&gt;(outputDir:java.io.File,bamFile:java.io.File,sample:String,library:String,readgroup:String,referenceFasta:Option[java.io.File],bedFile:Option[java.io.File],scatterMode:Boolean,onlyUnmapped:Boolean,tsvOutputs:Boolean):nl.biopet.tools.bamstats.generate.Args"></a>
       <a id="&lt;init&gt;:Args"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -97,10 +97,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Args</span><span class="params">(<span name="outputDir">outputDir: <span class="extype" name="java.io.File">File</span> = <span class="symbol">null</span></span>, <span name="bamFile">bamFile: <span class="extype" name="java.io.File">File</span> = <span class="symbol">null</span></span>, <span name="referenceFasta">referenceFasta: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.io.File">File</span>] = <span class="symbol">None</span></span>, <span name="binSize">binSize: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">10000</span></span>, <span name="threadBinSize">threadBinSize: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">1000000</span></span>, <span name="tsvOutputs">tsvOutputs: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span>
+        <span class="name">Args</span><span class="params">(<span name="outputDir">outputDir: <span class="extype" name="java.io.File">File</span> = <span class="symbol">null</span></span>, <span name="bamFile">bamFile: <span class="extype" name="java.io.File">File</span> = <span class="symbol">null</span></span>, <span name="sample">sample: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>, <span name="library">library: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>, <span name="readgroup">readgroup: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>, <span name="referenceFasta">referenceFasta: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.io.File">File</span>] = <span class="symbol">None</span></span>, <span name="bedFile">bedFile: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.io.File">File</span>] = <span class="symbol">None</span></span>, <span name="scatterMode">scatterMode: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="onlyUnmapped">onlyUnmapped: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="tsvOutputs">tsvOutputs: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@&lt;init&gt;(outputDir:java.io.File,bamFile:java.io.File,referenceFasta:Option[java.io.File],binSize:Int,threadBinSize:Int,tsvOutputs:Boolean):nl.biopet.tools.bamstats.generate.Args" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@&lt;init&gt;(outputDir:java.io.File,bamFile:java.io.File,sample:String,library:String,readgroup:String,referenceFasta:Option[java.io.File],bedFile:Option[java.io.File],scatterMode:Boolean,onlyUnmapped:Boolean,tsvOutputs:Boolean):nl.biopet.tools.bamstats.generate.Args" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -199,19 +199,19 @@
       </a>
     </span>
       
-    </li><li name="nl.biopet.tools.bamstats.generate.Args#binSize" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="binSize:Int"></a>
-      <a id="binSize:Int"></a>
+    </li><li name="nl.biopet.tools.bamstats.generate.Args#bedFile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bedFile:Option[java.io.File]"></a>
+      <a id="bedFile:Option[File]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">binSize</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">bedFile</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.io.File">File</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@binSize:Int" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@bedFile:Option[java.io.File]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -313,6 +313,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="nl.biopet.tools.bamstats.generate.Args#library" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="library:String"></a>
+      <a id="library:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">library</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@library:String" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -364,6 +381,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="nl.biopet.tools.bamstats.generate.Args#onlyUnmapped" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="onlyUnmapped:Boolean"></a>
+      <a id="onlyUnmapped:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onlyUnmapped</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@onlyUnmapped:Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="nl.biopet.tools.bamstats.generate.Args#outputDir" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="outputDir:java.io.File"></a>
       <a id="outputDir:File"></a>
@@ -377,6 +411,23 @@
       </span>
       </h4><span class="permalink">
       <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@outputDir:java.io.File" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="nl.biopet.tools.bamstats.generate.Args#readgroup" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="readgroup:String"></a>
+      <a id="readgroup:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readgroup</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@readgroup:String" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -398,6 +449,40 @@
       </a>
     </span>
       
+    </li><li name="nl.biopet.tools.bamstats.generate.Args#sample" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="sample:String"></a>
+      <a id="sample:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sample</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@sample:String" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="nl.biopet.tools.bamstats.generate.Args#scatterMode" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="scatterMode:Boolean"></a>
+      <a id="scatterMode:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scatterMode</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@scatterMode:Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -415,23 +500,6 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.generate.Args#threadBinSize" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="threadBinSize:Int"></a>
-      <a id="threadBinSize:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">threadBinSize</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Args@threadBinSize:Int" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
     </li><li name="nl.biopet.tools.bamstats.generate.Args#tsvOutputs" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="tsvOutputs:Boolean"></a>
       <a id="tsvOutputs:Boolean"></a>
