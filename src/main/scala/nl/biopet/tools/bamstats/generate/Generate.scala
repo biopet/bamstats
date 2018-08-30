@@ -24,7 +24,7 @@ package nl.biopet.tools.bamstats.generate
 import java.io.{File, PrintWriter}
 
 import htsjdk.samtools._
-import nl.biopet.tools.bamstats.schema.Root
+import nl.biopet.tools.bamstats.schema.BamstatsRoot
 import nl.biopet.tools.bamstats.{GroupID, GroupStats}
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.bam._
@@ -59,15 +59,15 @@ object Generate extends ToolCommand[Args] {
       bamFile = cmdArgs.bamFile,
       bedFile = cmdArgs.bedFile,
       sequenceDict = sequenceDict,
-      excludePartialReads = cmdArgs.excludePartialReads,
-      getUnmappedReads = cmdArgs.getUnmappedReads
+      scatterMode = cmdArgs.scatterMode,
+      onlyUnmapped = cmdArgs.onlyUnmapped
     )
 
     if (cmdArgs.tsvOutputs) {
       writeStatsToTsv(stats, outputDir = cmdArgs.outputDir)
     }
 
-    val groupedStats = Root.fromGroupStats(
+    val groupedStats = BamstatsRoot.fromGroupStats(
       GroupID(sample = cmdArgs.sample,
               library = cmdArgs.library,
               readgroup = cmdArgs.readgroup),
@@ -89,46 +89,47 @@ object Generate extends ToolCommand[Args] {
   def extractStats(bamFile: File,
                    bedFile: Option[File],
                    sequenceDict: SAMSequenceDictionary,
-                   excludePartialReads: Boolean = false,
-                   getUnmappedReads: Boolean = false): GroupStats = {
+                   scatterMode: Boolean = false,
+                   onlyUnmapped: Boolean = false): GroupStats = {
     val samReader: SamReader =
       SamReaderFactory.makeDefault().open(bamFile)
     val stats = GroupStats()
 
-    // Read stats from regions
-    bedFile.foreach { bed =>
-      // Combine overlap because we do not want the same reads to be counted twice
-      val regions =
-        BedRecordList.fromFile(bed).combineOverlap.validateContigs(sequenceDict)
-      regions.allRecords.foreach { bedRecord =>
-        val samRecordIterator: SAMRecordIterator =
-          // Is contained = excludePartialReads an option here?
-          // I think not, because this also excludes reads that originate within the region, but end
-          // in another region.
-          samReader.query(bedRecord.chr, bedRecord.start, bedRecord.end, false)
-        samRecordIterator.foreach { samRecord =>
-          // Read based stats
-          // If excludePartialReads is false, continue.
-          // If excludePartialReads is true, determine whether the alignment start is within the region.
-          if (!excludePartialReads || samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
-            stats.loadRecord(samRecord)
+    bedFile match {
+      case Some(bed: File) if onlyUnmapped =>
+        throw new IllegalArgumentException(
+          "Cannot extract stats from regions and unmapped regions at the same time")
+      // When a BED file is specified extract regions stats
+      case Some(bed: File) if !onlyUnmapped =>
+        val regions =
+          BedRecordList
+            .fromFile(bed)
+            .combineOverlap
+            .validateContigs(sequenceDict)
+        regions.allRecords.foreach { bedRecord =>
+          val samRecordIterator: SAMRecordIterator =
+            samReader.query(bedRecord.chr,
+                            bedRecord.start,
+                            bedRecord.end,
+                            false)
+          samRecordIterator.foreach { samRecord =>
+            // Read based stats
+            // If scatterMode is false, continue.
+            // If scatterMode is true, determine whether the alignment start is within the region.
+            if (!scatterMode || samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
+              stats.loadRecord(samRecord)
+            }
           }
         }
-      }
+      // If onlyUnmapped is set only get stats for unmapped reads.
+      case None if onlyUnmapped =>
+        samReader.queryUnmapped().foreach(stats.loadRecord)
+      // If no regions or unmapped files are set determine stats for all records
+      case None if !onlyUnmapped =>
+        val records: Iterator[SAMRecord] = samReader.iterator().toIterator
+        records.foreach(stats.loadRecord)
     }
-
-    // Read stats from unmappedReads
-    if (getUnmappedReads) {
-      samReader.queryUnmapped().foreach(stats.loadRecord)
-    }
-
-    // If no regions were specified, and no explicit instructions to get unmapped reads
-    // read the entire file
-    if (bedFile.isEmpty && !getUnmappedReads) {
-      val records: Iterator[SAMRecord] = samReader.iterator().toIterator
-      records.foreach(stats.loadRecord)
-    }
-
+    samReader.close()
     stats
   }
 

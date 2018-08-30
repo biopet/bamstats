@@ -24,9 +24,12 @@ package nl.biopet.tools.bamstats.generate
 import java.io.File
 
 import com.google.common.io.Files
-import nl.biopet.tools.bamstats.schema.Root
+import nl.biopet.tools.bamstats.GroupID
+import nl.biopet.tools.bamstats.schema.BamstatsRoot
 import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
+
+import scala.io.Source
 
 class GenerateTest extends ToolTest[Args] {
   def toolCommand: Generate.type = Generate
@@ -37,13 +40,14 @@ class GenerateTest extends ToolTest[Args] {
     }
   }
 
+  val testGroupID: GroupID = GroupID("xf33hai", "3rasdsq", "a7kac")
   val pairedBam01 = new File(resourcePath("/paired01.bam"))
   val groupIdArgs: Array[String] = Array("--sample",
-                                         "sample",
+                                         testGroupID.sample,
                                          "--library",
-                                         "library",
+                                         testGroupID.library,
                                          "--readgroup",
-                                         "readgroup")
+                                         testGroupID.readgroup)
 
   @Test
   def testMain(): Unit = {
@@ -54,9 +58,32 @@ class GenerateTest extends ToolTest[Args] {
                         "-o",
                         outputDir.getAbsolutePath) ++ groupIdArgs)
 
-    new File(outputDir, "bamstats.json") should exist
-    new File(outputDir, "bamstats.summary.json") should exist
-    Root.fromFile(new File(outputDir, "bamstats.json")).validate()
+    val bamstatsFile = new File(outputDir, "bamstats.json")
+    bamstatsFile should exist
+    val bamstatsSummaryFile = new File(outputDir, "bamstats.summary.json")
+    bamstatsSummaryFile should exist
+
+    BamstatsRoot.fromFile(bamstatsFile).validate()
+
+    // Some content testing here. Extensive testing should be done in FlagStatsTest
+    val bamstatsContents = Source.fromFile(bamstatsFile).getLines.mkString
+    bamstatsContents should include(testGroupID.sample)
+    bamstatsContents should include(testGroupID.library)
+    bamstatsContents should include(testGroupID.readgroup)
+    bamstatsContents should include("\"total\":14")
+    bamstatsContents should include("\"mapped\":12")
+    bamstatsContents should include("\"properPair\":12")
+    bamstatsContents should include("\"crossCounts\":{")
+    val summaryContents = Source.fromFile(bamstatsSummaryFile).getLines.mkString
+    summaryContents should not include "\"crossCounts\":{"
+    bamstatsContents should include(testGroupID.sample)
+    bamstatsContents should include(testGroupID.library)
+    bamstatsContents should include(testGroupID.readgroup)
+    bamstatsContents should include("\"total\":14")
+    bamstatsContents should include("\"mapped\":12")
+    bamstatsContents should include("\"properPair\":12")
+
+    // Make sure TSVs are not produced.
     new File(outputDir, "flagstats.tsv") shouldNot exist
     new File(outputDir, "insertsize.stats.tsv") shouldNot exist
     new File(outputDir, "insertsize.histogram.tsv") shouldNot exist
@@ -89,7 +116,7 @@ class GenerateTest extends ToolTest[Args] {
 
     new File(outputDir, "bamstats.json") should exist
     new File(outputDir, "bamstats.summary.json") should exist
-    Root.fromFile(new File(outputDir, "bamstats.json")).validate()
+    BamstatsRoot.fromFile(new File(outputDir, "bamstats.json")).validate()
     new File(outputDir, "flagstats.tsv") should exist
     new File(outputDir, "insertsize.stats.tsv") should exist
     new File(outputDir, "insertsize.histogram.tsv") should exist
