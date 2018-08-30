@@ -24,6 +24,7 @@ package nl.biopet.tools.bamstats
 import java.io.File
 
 import nl.biopet.test.BiopetTest
+import nl.biopet.tools.bamstats.schema.BamstatsRoot
 import org.testng.annotations.Test
 
 import scala.io.Source
@@ -99,10 +100,9 @@ class ScatterAndMergeTest extends BiopetTest {
       bamStatsGenerateArguments ++ Array("--outputDir",
                                          completeBamstatsDir.toString))
 
-    val completeBamstats =
-      Source.fromFile(completeBamstatsFile).getLines.mkString
-    val mergedBamstats = Source.fromFile(mergedBamstatsFile).getLines.mkString
-    println(outputDir)
-    completeBamstats shouldBe mergedBamstats
+    // Since doubleArrays do not have a fixed order, it is the stats which need to be compared.
+    val completeStats = BamstatsRoot.fromFile(completeBamstatsFile)
+    val mergedStats = BamstatsRoot.fromFile(mergedBamstatsFile)
+    mergedStats == completeStats shouldBe true
   }
 }
