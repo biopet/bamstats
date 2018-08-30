@@ -22,7 +22,7 @@
 package nl.biopet.tools.bamstats.merge
 
 import nl.biopet.tools.bamstats.{BamStats, Stats}
-import nl.biopet.tools.bamstats.schema.Root
+import nl.biopet.tools.bamstats.schema.BamstatsRoot
 import nl.biopet.utils.tool.{AbstractOptParser, ToolCommand}
 
 object Merge extends ToolCommand[Args] {
@@ -34,8 +34,8 @@ object Merge extends ToolCommand[Args] {
     val cmdArgs = cmdArrayToArgs(args)
 
     val statsList: List[Stats] =
-      cmdArgs.inputFiles.flatMap(Root.fromFile(_).asStats)
-    val root = Root.fromStats(statsList)
+      cmdArgs.inputFiles.flatMap(BamstatsRoot.fromFile(_).asStats)
+    val root = BamstatsRoot.fromStats(statsList)
     root.validate()
 
     cmdArgs.outputFile.foreach(root.writeFile)
