@@ -95,40 +95,39 @@ object Generate extends ToolCommand[Args] {
       SamReaderFactory.makeDefault().open(bamFile)
     val stats = GroupStats()
 
-    // The below logic makes sure that either the unmapped reads, reads from a region, or all reads are returned.
-    // Never a combination of the above.
-
-    // Read stats from unmappedReads.
-    if (onlyUnmapped) {
-      samReader.queryUnmapped().foreach(stats.loadRecord)
-    } else {
-      bedFile match {
-        case Some(bed: File) =>
-          val regions =
-            BedRecordList
-              .fromFile(bed)
-              .combineOverlap
-              .validateContigs(sequenceDict)
-          regions.allRecords.foreach { bedRecord =>
-            val samRecordIterator: SAMRecordIterator =
-              samReader.query(bedRecord.chr,
-                              bedRecord.start,
-                              bedRecord.end,
-                              false)
-            samRecordIterator.foreach { samRecord =>
-              // Read based stats
-              // If scatterMode is false, continue.
-              // If scatterMode is true, determine whether the alignment start is within the region.
-              if (!scatterMode || samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
-                stats.loadRecord(samRecord)
-              }
+    bedFile match {
+      case Some(bed: File) if onlyUnmapped =>
+        throw new IllegalArgumentException(
+          "Cannot extract stats from regions and unmapped regions at the same time")
+      // When a BED file is specified extract regions stats
+      case Some(bed: File) if !onlyUnmapped =>
+        val regions =
+          BedRecordList
+            .fromFile(bed)
+            .combineOverlap
+            .validateContigs(sequenceDict)
+        regions.allRecords.foreach { bedRecord =>
+          val samRecordIterator: SAMRecordIterator =
+            samReader.query(bedRecord.chr,
+                            bedRecord.start,
+                            bedRecord.end,
+                            false)
+          samRecordIterator.foreach { samRecord =>
+            // Read based stats
+            // If scatterMode is false, continue.
+            // If scatterMode is true, determine whether the alignment start is within the region.
+            if (!scatterMode || samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
+              stats.loadRecord(samRecord)
             }
           }
-        // If no bed file is given. Get stats for all reads.
-        case _ =>
-          val records: Iterator[SAMRecord] = samReader.iterator().toIterator
-          records.foreach(stats.loadRecord)
-      }
+        }
+      // If onlyUnmapped is set only get stats for unmapped reads.
+      case None if onlyUnmapped =>
+        samReader.queryUnmapped().foreach(stats.loadRecord)
+      // If no regions or unmapped files are set determine stats for all records
+      case None if !onlyUnmapped =>
+        val records: Iterator[SAMRecord] = samReader.iterator().toIterator
+        records.foreach(stats.loadRecord)
     }
     samReader.close()
     stats
