@@ -32,6 +32,18 @@ import org.testng.annotations.Test
 import scala.io.Source
 
 class GenerateTest extends ToolTest[Args] {
+
+  val testGroupID: GroupID = GroupID("xf33hai", "3rasdsq", "a7kac")
+  val pairedBam01: File = new File(resourcePath("/paired01.bam"))
+  val testBam: File = resourceFile("/fake_chrQ1000simreads.bam")
+  val referenceFile: File = resourceFile("/fake_chrQ.fa")
+  val groupIdArgs: Array[String] = Array("--sample",
+                                         testGroupID.sample,
+                                         "--library",
+                                         testGroupID.library,
+                                         "--readgroup",
+                                         testGroupID.readgroup)
+
   def toolCommand: Generate.type = Generate
   @Test
   def testNoArgs(): Unit = {
@@ -39,16 +51,6 @@ class GenerateTest extends ToolTest[Args] {
       Generate.main(Array())
     }
   }
-
-  val testGroupID: GroupID = GroupID("xf33hai", "3rasdsq", "a7kac")
-  val pairedBam01 = new File(resourcePath("/paired01.bam"))
-  val testBam = resourceFile("/fake_chrQ1000simreads.bam")
-  val groupIdArgs: Array[String] = Array("--sample",
-                                         testGroupID.sample,
-                                         "--library",
-                                         testGroupID.library,
-                                         "--readgroup",
-                                         testGroupID.readgroup)
 
   @Test
   def testMain(): Unit = {
@@ -140,11 +142,14 @@ class GenerateTest extends ToolTest[Args] {
   @Test
   def testRegion(): Unit = {
     val bedFile = resourceFile("/scatters/scatter-0.bed")
+
     val outputDir = Files.createTempDir()
     outputDir.deleteOnExit()
     Generate.main(
       Array("-b",
             testBam.getAbsolutePath,
+            "-R",
+            referenceFile.getAbsolutePath,
             "-o",
             outputDir.getAbsolutePath,
             "--bedFile",
@@ -180,10 +185,12 @@ class GenerateTest extends ToolTest[Args] {
               testBam.getAbsolutePath,
               "-o",
               outputDir.getAbsolutePath,
+              "-R",
+              referenceFile.getAbsolutePath,
               "--bedFile",
               bedFile.getAbsolutePath) ++ groupIdArgs)
     }
-  }.getMessage shouldBe "java.lang.IllegalArgumentException: " +
+  }.getMessage shouldBe
     "requirement failed: Contigs found in bed records " +
-    "but are not existing in reference: chrNoExists"
+      "but are not existing in reference: chrNoExists"
 }
