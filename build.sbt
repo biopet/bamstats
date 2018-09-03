@@ -21,6 +21,14 @@ developers := List(
             url = url("https://github.com/rhpvorderman"))
 )
 
+biocondaTestCommands := Seq(
+  s"$biocondaCommand merge --help",
+  s"$biocondaCommand merge --version",
+  s"$biocondaCommand validate --help",
+  s"$biocondaCommand validate --version",
+  s"$biocondaCommand generate --help",
+  s"$biocondaCommand generate --version"
+)
 scalaVersion := "2.11.12"
 
 libraryDependencies += "com.github.biopet" %% "common-utils" % "0.8-SNAPSHOT" changing ()
