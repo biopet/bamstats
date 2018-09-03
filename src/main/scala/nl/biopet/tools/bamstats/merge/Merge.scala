@@ -56,8 +56,8 @@ object Merge extends ToolCommand[Args] {
   def exampleText: String =
     s"""
        |Merging multiple file
-       |${BamStats.example("merge," +
-                             "-i",
+       |${BamStats.example("merge",
+                           "-i",
                            "<seqstat file>",
                            "-i",
                            "<seqstats file>",
