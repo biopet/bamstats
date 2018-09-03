@@ -25,8 +25,9 @@ import java.io.File
 
 import nl.biopet.test.BiopetTest
 import nl.biopet.tools.bamstats.schema.BamstatsRoot
+import nl.biopet.utils.ngs.intervals.BedRecordList
 import org.testng.annotations.{AfterClass, Test}
-
+import nl.biopet.tools.scatterregions.ScatterRegions.scatterRegions
 import scala.collection.mutable.ListBuffer
 
 class ScatterAndMergeTest extends BiopetTest {
@@ -69,14 +70,12 @@ class ScatterAndMergeTest extends BiopetTest {
     "--reference",
     referenceFile.toString
   )
-
-  val scatterFiles: Seq[File] =
-    Seq("/scatter1.bed", "/scatter2.bed", "/scatter3.bed")
-      .map(resourceFile(_).getAbsoluteFile)
-
   @Test
   def scattersWithBed(): Unit = {
     val outputDir = tempDir("scatterAndMerge", ".d")
+    val scattersDir = mkdir(new File(outputDir, "scatters"))
+    scatterRegions(referenceFile, scattersDir, scatterSize = 5000)
+    val scatterFiles = scattersDir.listFiles()
     val outputDirs =
       scatterFiles.map(file => new File(outputDir, s"${file.getName}.d"))
     outputDirs.foreach(mkdir)
