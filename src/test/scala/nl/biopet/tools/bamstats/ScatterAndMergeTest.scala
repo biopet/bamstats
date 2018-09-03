@@ -40,6 +40,12 @@ class ScatterAndMergeTest extends BiopetTest {
     dir
   }
 
+  def mkdir(file: File): File = {
+    file.delete()
+    file.mkdirs()
+    file
+  }
+
   @AfterClass
   def deleteTestDirs(): Unit = {
     testDirs.toList.foreach { dir =>
@@ -47,34 +53,33 @@ class ScatterAndMergeTest extends BiopetTest {
     }
   }
 
+  val bamFile: File = resourceFile("/fake_chrQ1000simreads.bam").getAbsoluteFile
+  val referenceFile: File = resourceFile("/fake_chrQ.fa").getAbsoluteFile
+
+  val bamStatsGenerateArguments: Array[String] = Array[String](
+    "generate",
+    "-b",
+    bamFile.toString,
+    "--sample",
+    "sample",
+    "--library",
+    "library",
+    "--readgroup",
+    "readgroup",
+    "--reference",
+    referenceFile.toString
+  )
+
+  val scatterFiles: Seq[File] =
+    Seq("/scatter1.bed", "/scatter2.bed", "/scatter3.bed")
+      .map(resourceFile(_).getAbsoluteFile)
+
   @Test
   def scattersWithBed(): Unit = {
     val outputDir = tempDir("scatterAndMerge", ".d")
-    val bamFile
-      : File = resourceFile("/fake_chrQ1000simreads.bam").getAbsoluteFile
-    val referenceFile: File = resourceFile("/fake_chrQ.fa").getAbsoluteFile
-
-    val scatterFiles = Seq("/scatter1.bed", "/scatter2.bed", "/scatter3.bed")
-      .map(resourceFile(_).getAbsoluteFile)
-    val bamStatsGenerateArguments = Array[String](
-      "generate",
-      "-b",
-      bamFile.toString,
-      "--sample",
-      "sample",
-      "--library",
-      "library",
-      "--readgroup",
-      "readgroup",
-      "--reference",
-      referenceFile.toString
-    )
     val outputDirs =
       scatterFiles.map(file => new File(outputDir, s"${file.getName}.d"))
-    outputDirs.foreach { dir =>
-      dir.delete()
-      dir.mkdirs()
-    }
+    outputDirs.foreach(mkdir)
 
     scatterFiles.zip(outputDirs).foreach {
       case (bedFile, bedOutputDir) =>
@@ -87,9 +92,7 @@ class ScatterAndMergeTest extends BiopetTest {
     }
 
     // Get unmapped reads as well
-    val unmappedDir = new File(outputDir, "unmapped.d")
-    unmappedDir.delete()
-    unmappedDir.mkdirs()
+    val unmappedDir = mkdir(new File(outputDir, "unmapped.d"))
     BamStats.main(
       bamStatsGenerateArguments ++ Array("--onlyUnmapped",
                                          "--outputDir",
@@ -108,9 +111,9 @@ class ScatterAndMergeTest extends BiopetTest {
       Array("merge") ++ inputBamStats ++ Array("-o",
                                                mergedBamstatsFile.toString))
 
-    val completeBamstatsDir: File = new File(outputDir, "complete_bamstats.d")
-    completeBamstatsDir.delete()
-    completeBamstatsDir.mkdirs()
+    val completeBamstatsDir: File = mkdir(
+      new File(outputDir, "complete_bamstats.d"))
+
     val completeBamstatsFile = new File(completeBamstatsDir, "bamstats.json")
     BamStats.main(
       bamStatsGenerateArguments ++ Array("--outputDir",
