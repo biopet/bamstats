@@ -77,10 +77,19 @@ object BamstatsRoot {
   }
 
   def fromGroupStats(groupID: GroupID, groupStats: GroupStats): BamstatsRoot = {
-    fromStats(List(Stats(groupID, groupStats)))
+    fromStats(Stats(groupID, groupStats))
   }
 
-  def fromStats(groups: List[Stats]): BamstatsRoot = {
+  def fromStats(stats: Stats): BamstatsRoot = {
+    BamstatsRoot(
+      Map(
+        stats.groupID.sample ->
+          Sample(
+            Map(stats.groupID.library ->
+              Library(Map(stats.groupID.readgroup ->
+                Readgroup(stats.stats.statsToData())))))))
+  }
+  def fromStatsList(groups: List[Stats]): BamstatsRoot = {
     BamstatsRoot(
       groups.groupBy(_.groupID.sample).map {
         case (sampleID, sampleGroups) =>
