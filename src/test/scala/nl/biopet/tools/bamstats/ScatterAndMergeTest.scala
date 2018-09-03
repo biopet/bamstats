@@ -23,12 +23,9 @@ package nl.biopet.tools.bamstats
 
 import java.io.File
 
+import htsjdk.samtools.SamReaderFactory
 import nl.biopet.test.BiopetTest
-import nl.biopet.tools.bamstats.generate.Generate.{
-  extractStats,
-  extractStatsRegion,
-  extractStatsUnmappedReads
-}
+import nl.biopet.tools.bamstats.generate.Generate.{extractStatsAll, extractStatsRegion, extractStatsUnmappedReads}
 import nl.biopet.utils.ngs.intervals.{BedRecord, BedRecordList}
 import org.testng.annotations.Test
 
@@ -38,16 +35,18 @@ class ScatterAndMergeTest extends BiopetTest {
     val bamFile
       : File = resourceFile("/fake_chrQ1000simreads.bam").getAbsoluteFile
     val referenceFile: File = resourceFile("/fake_chrQ.fa").getAbsoluteFile
+    val samReader = SamReaderFactory.makeDefault().open(bamFile)
     val regions: List[BedRecord] =
       BedRecordList.fromReference(referenceFile).scatter(5000).flatten
     val regionStats: List[GroupStats] = regions.map { region =>
-      extractStatsRegion(bamFile, region, scatterMode = true)
+      extractStatsRegion(samReader, region, scatterMode = true)
     }
-    val unmappedStats: GroupStats = extractStatsUnmappedReads(bamFile)
+    val unmappedStats: GroupStats = extractStatsUnmappedReads(samReader)
 
     val mergedStats: GroupStats =
       (regionStats ++ List(unmappedStats)).reduce(_ += _)
-    val totalStats: GroupStats = extractStats(bamFile)
+    val totalStats: GroupStats = extractStatsAll(samReader)
+    samReader.close()
     mergedStats shouldBe totalStats
   }
 }

@@ -54,7 +54,7 @@ object Generate extends ToolCommand[Args] {
             "Reference from BAM file not validated with external reference.")
           getDictFromBam(cmdArgs.bamFile)
       }
-
+    val samReader = SamReaderFactory.makeDefault().open(cmdArgs.bamFile)
     val stats: GroupStats = cmdArgs.bedFile match {
       case Some(bed: File) if cmdArgs.onlyUnmapped =>
         throw new IllegalArgumentException(
@@ -67,14 +67,15 @@ object Generate extends ToolCommand[Args] {
             .combineOverlap
             .validateContigs(sequenceDict)
         val regionStats = regions.allRecords.map { region =>
-          extractStatsRegion(cmdArgs.bamFile, region, cmdArgs.scatterMode)
+          extractStatsRegion(samReader, region, cmdArgs.scatterMode)
         }.toList
         // Add all regions stats together
         regionStats.reduce(_ += _)
       case None if cmdArgs.onlyUnmapped =>
-        extractStatsUnmappedReads(cmdArgs.bamFile)
-      case None if !cmdArgs.onlyUnmapped => extractStats(cmdArgs.bamFile)
+        extractStatsUnmappedReads(samReader)
+      case None if !cmdArgs.onlyUnmapped => extractStatsAll(samReader)
     }
+    samReader.close()
 
     if (cmdArgs.tsvOutputs) {
       writeStatsToTsv(stats, outputDir = cmdArgs.outputDir)
@@ -99,29 +100,23 @@ object Generate extends ToolCommand[Args] {
     logger.info("Done")
   }
 
-  def extractStats(bamFile: File): GroupStats = {
-    val samReader: SamReader =
-      SamReaderFactory.makeDefault().open(bamFile)
+  def extractStats(samRecordIterator: SAMRecordIterator): GroupStats = {
     val stats = GroupStats()
-    samReader.iterator().foreach(stats.loadRecord)
-    samReader.close()
+    samRecordIterator.foreach(stats.loadRecord)
     stats
   }
 
-  def extractStatsUnmappedReads(bamFile: File): GroupStats = {
-    val samReader: SamReader =
-      SamReaderFactory.makeDefault().open(bamFile)
-    val stats = GroupStats()
-    samReader.queryUnmapped().foreach(stats.loadRecord)
-    samReader.close()
-    stats
+  def extractStatsAll(samReader: SamReader): GroupStats = {
+    extractStats(samReader.iterator())
   }
 
-  def extractStatsRegion(bamFile: File,
+  def extractStatsUnmappedReads(samReader: SamReader): GroupStats = {
+    extractStats(samReader.queryUnmapped())
+  }
+
+  def extractStatsRegion(samReader: SamReader,
                          region: BedRecord,
                          scatterMode: Boolean = false): GroupStats = {
-    val samReader: SamReader =
-      SamReaderFactory.makeDefault().open(bamFile)
     val stats = GroupStats()
 
     val samRecordIterator: SAMRecordIterator =
@@ -134,7 +129,6 @@ object Generate extends ToolCommand[Args] {
         stats.loadRecord(samRecord)
       }
     }
-    samReader.close()
     stats
   }
 
