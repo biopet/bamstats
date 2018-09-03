@@ -189,8 +189,28 @@ class GenerateTest extends ToolTest[Args] {
               referenceFile.getAbsolutePath,
               "--bedFile",
               bedFile.getAbsolutePath) ++ groupIdArgs)
-    }
-  }.getMessage shouldBe
-    "requirement failed: Contigs found in bed records " +
-      "but are not existing in reference: chrNoExists"
+    }.getMessage shouldBe
+      "requirement failed: Contigs found in bed records " +
+        "but are not existing in reference: chrNoExists"
+  }
+
+  @Test
+  def testFaultyReference(): Unit = {
+    intercept[java.lang.AssertionError] {
+      val outputDir = Files.createTempDir()
+      outputDir.deleteOnExit()
+      Generate.main(
+        Array("-b",
+              pairedBam01.getAbsolutePath,
+              "-R",
+              referenceFile.getAbsolutePath,
+              "-o",
+              outputDir.getAbsolutePath,
+              "--tsvOutputs") ++ groupIdArgs)
+    }.getMessage shouldBe "SAM dictionaries are not the same: " +
+      "SAMSequenceRecord(name=chrQ,length=16571,dict_index=0,assembly=null) " +
+      "was found when " +
+      "SAMSequenceRecord(name=chrQ,length=10000,dict_index=0,assembly=null) " +
+      "was expected."
+  }
 }
