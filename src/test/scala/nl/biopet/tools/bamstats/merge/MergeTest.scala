@@ -10,5 +10,4 @@ class MergeTest extends BiopetTest {
     }
   }
 
-
 }

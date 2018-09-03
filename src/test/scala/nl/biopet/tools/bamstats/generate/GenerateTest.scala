@@ -42,6 +42,7 @@ class GenerateTest extends ToolTest[Args] {
 
   val testGroupID: GroupID = GroupID("xf33hai", "3rasdsq", "a7kac")
   val pairedBam01 = new File(resourcePath("/paired01.bam"))
+  val testBam = resourceFile("/fake_chrQ1000simreads.bam")
   val groupIdArgs: Array[String] = Array("--sample",
                                          testGroupID.sample,
                                          "--library",
@@ -136,4 +137,53 @@ class GenerateTest extends ToolTest[Args] {
     new File(outputDir, "3_prime_clipping.tsv") shouldNot exist
   }
 
+  @Test
+  def testRegion(): Unit = {
+    val bedFile = resourceFile("/scatters/scatter-0.bed")
+    val outputDir = Files.createTempDir()
+    outputDir.deleteOnExit()
+    Generate.main(
+      Array("-b",
+            testBam.getAbsolutePath,
+            "-o",
+            outputDir.getAbsolutePath,
+            "--bedFile",
+            bedFile.getAbsolutePath) ++ groupIdArgs)
+    new File(outputDir, "flagstats.tsv") shouldNot exist
+    new File(outputDir, "insertsize.stats.tsv") shouldNot exist
+    new File(outputDir, "insertsize.histogram.tsv") shouldNot exist
+    new File(outputDir, "mappingQuality.stats.tsv") shouldNot exist
+    new File(outputDir, "mappingQuality.histogram.tsv") shouldNot exist
+    new File(outputDir, "clipping.stats.tsv") shouldNot exist
+    new File(outputDir, "clipping.histogram.tsv") shouldNot exist
+
+    new File(outputDir, "flagstats") shouldNot exist
+    new File(outputDir, "flagstats.summary.json") shouldNot exist
+    new File(outputDir, "mapping_quality.tsv") shouldNot exist
+    new File(outputDir, "insert_size.tsv") shouldNot exist
+    new File(outputDir, "clipping.tsv") shouldNot exist
+    new File(outputDir, "left_clipping.tsv") shouldNot exist
+    new File(outputDir, "right_clipping.tsv") shouldNot exist
+    new File(outputDir, "5_prime_clipping.tsv") shouldNot exist
+    new File(outputDir, "3_prime_clipping.tsv") shouldNot exist
+  }
+
+  @Test
+  def testFaultyRegion(): Unit = {
+    val bedFile = resourceFile("/scatters/scatter-faulty.bed")
+
+    val outputDir = Files.createTempDir()
+    outputDir.deleteOnExit()
+    intercept[IllegalArgumentException] {
+      Generate.main(
+        Array("-b",
+              testBam.getAbsolutePath,
+              "-o",
+              outputDir.getAbsolutePath,
+              "--bedFile",
+              bedFile.getAbsolutePath) ++ groupIdArgs)
+    }
+  }.getMessage shouldBe "java.lang.IllegalArgumentException: " +
+    "requirement failed: Contigs found in bed records " +
+    "but are not existing in reference: chrNoExists"
 }
