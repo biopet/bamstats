@@ -25,15 +25,31 @@ import java.io.File
 
 import nl.biopet.test.BiopetTest
 import nl.biopet.tools.bamstats.schema.BamstatsRoot
-import org.testng.annotations.Test
+import org.testng.annotations.{AfterClass, Test}
 
-import scala.io.Source
+import scala.collection.mutable.ListBuffer
+
 class ScatterAndMergeTest extends BiopetTest {
+
+  val testDirs: ListBuffer[File] = ListBuffer()
+  def tempDir(prefix: String, suffix: String): File = {
+    val dir = File.createTempFile(prefix, suffix)
+    dir.delete()
+    dir.mkdirs()
+    testDirs += dir
+    dir
+  }
+
+  @AfterClass
+  def deleteTestDirs(): Unit = {
+    testDirs.toList.foreach { dir =>
+      dir.delete()
+    }
+  }
+
   @Test
-  def testScatterAndMergeTest(): Unit = {
-    val outputDir = File.createTempFile("scatterAndMerge", ".d")
-    outputDir.delete()
-    outputDir.mkdirs()
+  def scattersWithBed(): Unit = {
+    val outputDir = tempDir("scatterAndMerge", ".d")
     val bamFile
       : File = resourceFile("/fake_chrQ1000simreads.bam").getAbsoluteFile
     val referenceFile: File = resourceFile("/fake_chrQ.fa").getAbsoluteFile
