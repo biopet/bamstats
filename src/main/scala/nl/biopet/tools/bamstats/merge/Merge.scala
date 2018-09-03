@@ -21,8 +21,8 @@
 
 package nl.biopet.tools.bamstats.merge
 
-import nl.biopet.tools.bamstats.{BamStats, Stats}
-import nl.biopet.tools.bamstats.schema.BamstatsRoot
+import nl.biopet.tools.bamstats.BamStats
+import nl.biopet.tools.bamstats.schema.{BamstatsRoot, Stats}
 import nl.biopet.utils.tool.{AbstractOptParser, ToolCommand}
 
 object Merge extends ToolCommand[Args] {

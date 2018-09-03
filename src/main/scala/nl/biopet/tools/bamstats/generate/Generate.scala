@@ -24,8 +24,8 @@ package nl.biopet.tools.bamstats.generate
 import java.io.{File, PrintWriter}
 
 import htsjdk.samtools._
-import nl.biopet.tools.bamstats.schema.BamstatsRoot
-import nl.biopet.tools.bamstats.{GroupID, GroupStats}
+import nl.biopet.tools.bamstats.GroupStats
+import nl.biopet.tools.bamstats.schema.{BamstatsRoot, GroupID}
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.bam._
 import nl.biopet.utils.ngs.intervals.{BedRecord, BedRecordList}

@@ -24,7 +24,7 @@ package nl.biopet.tools.bamstats.schema
 import java.io.File
 
 import nl.biopet.test.BiopetTest
-import nl.biopet.tools.bamstats.{FlagMethods, GroupID}
+import nl.biopet.tools.bamstats.FlagMethods
 import org.testng.annotations.{DataProvider, Test}
 
 class SchemaTest extends BiopetTest {

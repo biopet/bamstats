@@ -26,6 +26,8 @@ package object schema {
   case class Sample(libraries: Map[String, Library])
   case class Library(readgroups: Map[String, Readgroup])
   case class Readgroup(data: Data)
+  case class GroupID(sample: String, library: String, readgroup: String)
+  case class Stats(groupID: GroupID, stats: GroupStats)
 
   val expectedKeys: Set[String] = FlagMethods.values.map(_.name)
 
@@ -52,7 +54,7 @@ package object schema {
     }
   }
   case class CrossCounts(keys: List[String], counts: List[List[Long]]) {
-    val totalIndex = keys.indexOf(FlagMethods.total.name)
+    val totalIndex: Int = keys.indexOf(FlagMethods.total.name)
     val totalNumberOfReads: Long = counts(totalIndex)(totalIndex)
     val totalsColumn: List[Long] = counts.map(_(totalIndex))
 
@@ -87,7 +89,7 @@ package object schema {
           require(
             row.length == numberOfMethods,
             // Added +1 to the index because the fifth row is "5" for humans, not "4".
-            s"Number of columns (${row.length}) not equal to number of methods (${numberOfMethods}) on row ${index + 1}"
+            s"Number of columns (${row.length}) not equal to number of methods ($numberOfMethods) on row ${index + 1}"
           )
       }
 

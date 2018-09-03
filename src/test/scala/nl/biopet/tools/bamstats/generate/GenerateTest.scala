@@ -24,8 +24,7 @@ package nl.biopet.tools.bamstats.generate
 import java.io.File
 
 import com.google.common.io.Files
-import nl.biopet.tools.bamstats.GroupID
-import nl.biopet.tools.bamstats.schema.BamstatsRoot
+import nl.biopet.tools.bamstats.schema.{BamstatsRoot, GroupID}
 import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
