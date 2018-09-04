@@ -19,9 +19,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package nl.biopet.tools
+package nl.biopet.tools.bamstats.validate
 
-package object bamstats {
-  case class GroupID(sample: String, library: String, readgroup: String)
-  case class Stats(groupID: GroupID, stats: GroupStats)
+import nl.biopet.test.BiopetTest
+import org.testng.annotations.Test
+
+class ValidateTest extends BiopetTest {
+
+  @Test
+  def testMain(): Unit = {
+    Validate.main(Array("-i", resourcePath("/stats/complete/bamstats.json")))
+  }
+
+  @Test
+  def testCorrupted(): Unit = {
+    intercept[IllegalArgumentException] {
+      Validate.main(Array("-i", resourcePath("/stats/corrupted/bamstats.json")))
+    }.getMessage shouldBe
+      "requirement failed: Internally corrupt FlagStatsData. " +
+        "The CrossCounts table totals do not equal the flagstats."
+  }
 }

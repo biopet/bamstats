@@ -126,6 +126,8 @@ class FlagStats {
     * @param other another FlagStats instance
     */
   def +=(other: FlagStats): Unit = {
+    require(this.orderedMethods == other.orderedMethods,
+            "FlagMethods of two flagstat objects do not match. Cannot merge")
     orderedKeys.foreach { key =>
       this.flagStats(key) += other.flagStats(key)
       orderedKeys.foreach { innerKey =>

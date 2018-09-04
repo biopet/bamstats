@@ -24,11 +24,11 @@ package nl.biopet.tools.bamstats.generate
 import java.io.{File, PrintWriter}
 
 import htsjdk.samtools._
-import nl.biopet.tools.bamstats.schema.BamstatsRoot
-import nl.biopet.tools.bamstats.{GroupID, GroupStats}
+import nl.biopet.tools.bamstats.GroupStats
+import nl.biopet.tools.bamstats.schema.{BamstatsRoot, GroupID}
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.bam._
-import nl.biopet.utils.ngs.intervals.BedRecordList
+import nl.biopet.utils.ngs.intervals.{BedRecord, BedRecordList}
 import nl.biopet.utils.tool.ToolCommand
 import play.api.libs.json.Json
 
@@ -54,14 +54,31 @@ object Generate extends ToolCommand[Args] {
             "Reference from BAM file not validated with external reference.")
           getDictFromBam(cmdArgs.bamFile)
       }
-
-    val stats = extractStats(
-      bamFile = cmdArgs.bamFile,
-      bedFile = cmdArgs.bedFile,
-      sequenceDict = sequenceDict,
-      scatterMode = cmdArgs.scatterMode,
-      onlyUnmapped = cmdArgs.onlyUnmapped
-    )
+    val samReader = SamReaderFactory.makeDefault().open(cmdArgs.bamFile)
+    val stats: GroupStats = cmdArgs.bedFile match {
+      case Some(bed: File) if cmdArgs.onlyUnmapped =>
+        throw new IllegalArgumentException(
+          "Cannot extract stats from regions and unmapped regions at the same time")
+      // When a BED file is specified extract regions stats
+      case Some(bed: File) if !cmdArgs.onlyUnmapped =>
+        val regions: Iterator[BedRecord] =
+          BedRecordList
+            .fromFile(bed)
+            .combineOverlap
+            .validateContigs(sequenceDict)
+            .allRecords
+            .toIterator
+        //Get groupstats for each region
+        val regionStats: Iterator[GroupStats] = regions.map { region =>
+          extractStatsRegion(samReader, region, cmdArgs.scatterMode)
+        }
+        // Add all regions stats together
+        regionStats.reduce(_ += _)
+      case None if cmdArgs.onlyUnmapped =>
+        extractStatsUnmappedReads(samReader)
+      case None if !cmdArgs.onlyUnmapped => extractStatsAll(samReader)
+    }
+    samReader.close()
 
     if (cmdArgs.tsvOutputs) {
       writeStatsToTsv(stats, outputDir = cmdArgs.outputDir)
@@ -86,53 +103,73 @@ object Generate extends ToolCommand[Args] {
     logger.info("Done")
   }
 
-  def extractStats(bamFile: File,
-                   bedFile: Option[File],
-                   sequenceDict: SAMSequenceDictionary,
-                   scatterMode: Boolean = false,
-                   onlyUnmapped: Boolean = false): GroupStats = {
-    val samReader: SamReader =
-      SamReaderFactory.makeDefault().open(bamFile)
+  /**
+    * This method iterates over all SAMrecords in the iterator and returns the groupstats
+    * The SAMRecordIterator is closed in this method.
+    * @param samRecordIterator A samrecord iterator containing all the reads you are interested in.
+    *                          (I.e after a SAMReader.query)
+    * @return A GroupStats object with al the stats from the samrecords
+    */
+  def extractStats(samRecordIterator: SAMRecordIterator): GroupStats = {
     val stats = GroupStats()
-
-    bedFile match {
-      case Some(bed: File) if onlyUnmapped =>
-        throw new IllegalArgumentException(
-          "Cannot extract stats from regions and unmapped regions at the same time")
-      // When a BED file is specified extract regions stats
-      case Some(bed: File) if !onlyUnmapped =>
-        val regions =
-          BedRecordList
-            .fromFile(bed)
-            .combineOverlap
-            .validateContigs(sequenceDict)
-        regions.allRecords.foreach { bedRecord =>
-          val samRecordIterator: SAMRecordIterator =
-            samReader.query(bedRecord.chr,
-                            bedRecord.start,
-                            bedRecord.end,
-                            false)
-          samRecordIterator.foreach { samRecord =>
-            // Read based stats
-            // If scatterMode is false, continue.
-            // If scatterMode is true, determine whether the alignment start is within the region.
-            if (!scatterMode || samRecord.getAlignmentStart > bedRecord.start && samRecord.getAlignmentStart <= bedRecord.end) {
-              stats.loadRecord(samRecord)
-            }
-          }
-        }
-      // If onlyUnmapped is set only get stats for unmapped reads.
-      case None if onlyUnmapped =>
-        samReader.queryUnmapped().foreach(stats.loadRecord)
-      // If no regions or unmapped files are set determine stats for all records
-      case None if !onlyUnmapped =>
-        val records: Iterator[SAMRecord] = samReader.iterator().toIterator
-        records.foreach(stats.loadRecord)
-    }
-    samReader.close()
+    samRecordIterator.foreach(stats.loadRecord)
+    samRecordIterator.close()
     stats
   }
 
+  /**
+    * This methods reads the stats for all records in the SamReader.
+    * The samReader is not closed afterwards, so it can be reused.
+    * @param samReader A SamReader
+    * @return GroupStats for all records in the SamReader.
+    */
+  def extractStatsAll(samReader: SamReader): GroupStats = {
+    extractStats(samReader.iterator())
+  }
+
+  /**
+    * Takes a samReader and returns all the stats for all unmapped reads.
+    * @param samReader a samReader
+    * @return GroupStats for all unmapped reads
+    */
+  def extractStatsUnmappedReads(samReader: SamReader): GroupStats = {
+    extractStats(samReader.queryUnmapped())
+  }
+
+  /**
+    * Takes a samReader and retunrs the GroupStats for all reads in the described region
+    * @param samReader a SamReader
+    * @param region a BedRecord describing the region
+    * @param scatterMode if True, only reads that originate (i.e. have their start position) in the
+    *                    region are counted.
+    *                    This is useful when scattering over regions to make sure that reads are not counted
+    *                    twice. One time when the start position is in the region, and one time when
+    *                    the end position is in the region.
+    * @return
+    */
+  def extractStatsRegion(samReader: SamReader,
+                         region: BedRecord,
+                         scatterMode: Boolean = false): GroupStats = {
+    val stats = GroupStats()
+    val samRecordIterator: SAMRecordIterator =
+      samReader.query(region.chr, region.start, region.end, false)
+    samRecordIterator.foreach { samRecord =>
+      // Read based stats
+      // If scatterMode is false, continue.
+      // If scatterMode is true, determine whether the alignment start is within the region.
+      if (!scatterMode || samRecord.getAlignmentStart > region.start && samRecord.getAlignmentStart <= region.end) {
+        stats.loadRecord(samRecord)
+      }
+    }
+    samRecordIterator.close()
+    stats
+  }
+
+  /**
+    * Write GroupStats to tsv files
+    * @param stats a GroupStats object
+    * @param outputDir the directory where the tsv files are written.
+    */
   def writeStatsToTsv(stats: GroupStats, outputDir: File): Unit = {
     stats.flagstat.writeAsTsv(
       new File(outputDir, "flagstats.tsv")

@@ -144,6 +144,7 @@ case class GroupStats(
 object GroupStats {
   def statsFromData(data: Data): GroupStats =
     new GroupStats(
+      flagstat = FlagStats.fromFlagStatsData(data.flagStats),
       mappingQualityHistogram =
         Histogram.fromDoubleArray(data.mappingQualityHistogram),
       insertSizeHistogram = Histogram.fromDoubleArray(data.insertSizeHistogram),

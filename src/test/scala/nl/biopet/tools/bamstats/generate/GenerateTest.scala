@@ -24,14 +24,25 @@ package nl.biopet.tools.bamstats.generate
 import java.io.File
 
 import com.google.common.io.Files
-import nl.biopet.tools.bamstats.GroupID
-import nl.biopet.tools.bamstats.schema.BamstatsRoot
+import nl.biopet.tools.bamstats.schema.{BamstatsRoot, GroupID}
 import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
 import scala.io.Source
 
 class GenerateTest extends ToolTest[Args] {
+
+  val testGroupID: GroupID = GroupID("xf33hai", "3rasdsq", "a7kac")
+  val pairedBam01: File = new File(resourcePath("/paired01.bam"))
+  val testBam: File = resourceFile("/fake_chrQ1000simreads.bam")
+  val referenceFile: File = resourceFile("/fake_chrQ.fa")
+  val groupIdArgs: Array[String] = Array("--sample",
+                                         testGroupID.sample,
+                                         "--library",
+                                         testGroupID.library,
+                                         "--readgroup",
+                                         testGroupID.readgroup)
+
   def toolCommand: Generate.type = Generate
   @Test
   def testNoArgs(): Unit = {
@@ -39,15 +50,6 @@ class GenerateTest extends ToolTest[Args] {
       Generate.main(Array())
     }
   }
-
-  val testGroupID: GroupID = GroupID("xf33hai", "3rasdsq", "a7kac")
-  val pairedBam01 = new File(resourcePath("/paired01.bam"))
-  val groupIdArgs: Array[String] = Array("--sample",
-                                         testGroupID.sample,
-                                         "--library",
-                                         testGroupID.library,
-                                         "--readgroup",
-                                         testGroupID.readgroup)
 
   @Test
   def testMain(): Unit = {
@@ -136,4 +138,78 @@ class GenerateTest extends ToolTest[Args] {
     new File(outputDir, "3_prime_clipping.tsv") shouldNot exist
   }
 
+  @Test
+  def testRegion(): Unit = {
+    val bedFile = resourceFile("/scatters/scatter-0.bed")
+
+    val outputDir = Files.createTempDir()
+    outputDir.deleteOnExit()
+    Generate.main(
+      Array("-b",
+            testBam.getAbsolutePath,
+            "-R",
+            referenceFile.getAbsolutePath,
+            "-o",
+            outputDir.getAbsolutePath,
+            "--bedFile",
+            bedFile.getAbsolutePath) ++ groupIdArgs)
+    new File(outputDir, "flagstats.tsv") shouldNot exist
+    new File(outputDir, "insertsize.stats.tsv") shouldNot exist
+    new File(outputDir, "insertsize.histogram.tsv") shouldNot exist
+    new File(outputDir, "mappingQuality.stats.tsv") shouldNot exist
+    new File(outputDir, "mappingQuality.histogram.tsv") shouldNot exist
+    new File(outputDir, "clipping.stats.tsv") shouldNot exist
+    new File(outputDir, "clipping.histogram.tsv") shouldNot exist
+
+    new File(outputDir, "flagstats") shouldNot exist
+    new File(outputDir, "flagstats.summary.json") shouldNot exist
+    new File(outputDir, "mapping_quality.tsv") shouldNot exist
+    new File(outputDir, "insert_size.tsv") shouldNot exist
+    new File(outputDir, "clipping.tsv") shouldNot exist
+    new File(outputDir, "left_clipping.tsv") shouldNot exist
+    new File(outputDir, "right_clipping.tsv") shouldNot exist
+    new File(outputDir, "5_prime_clipping.tsv") shouldNot exist
+    new File(outputDir, "3_prime_clipping.tsv") shouldNot exist
+  }
+
+  @Test
+  def testFaultyRegion(): Unit = {
+    val bedFile = resourceFile("/scatters/scatter-faulty.bed")
+
+    val outputDir = Files.createTempDir()
+    outputDir.deleteOnExit()
+    intercept[IllegalArgumentException] {
+      Generate.main(
+        Array("-b",
+              testBam.getAbsolutePath,
+              "-o",
+              outputDir.getAbsolutePath,
+              "-R",
+              referenceFile.getAbsolutePath,
+              "--bedFile",
+              bedFile.getAbsolutePath) ++ groupIdArgs)
+    }.getMessage shouldBe
+      "requirement failed: Contigs found in bed records " +
+        "but are not existing in reference: chrNoExists"
+  }
+
+  @Test
+  def testFaultyReference(): Unit = {
+    intercept[java.lang.AssertionError] {
+      val outputDir = Files.createTempDir()
+      outputDir.deleteOnExit()
+      Generate.main(
+        Array("-b",
+              pairedBam01.getAbsolutePath,
+              "-R",
+              referenceFile.getAbsolutePath,
+              "-o",
+              outputDir.getAbsolutePath,
+              "--tsvOutputs") ++ groupIdArgs)
+    }.getMessage shouldBe "SAM dictionaries are not the same: " +
+      "SAMSequenceRecord(name=chrQ,length=16571,dict_index=0,assembly=null) " +
+      "was found when " +
+      "SAMSequenceRecord(name=chrQ,length=10000,dict_index=0,assembly=null) " +
+      "was expected."
+  }
 }

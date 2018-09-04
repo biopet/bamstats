@@ -23,19 +23,24 @@ package nl.biopet.tools.bamstats.schema
 
 import java.io.File
 
+import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.tools.bamstats.schema.Implicits._
-import nl.biopet.tools.bamstats.{GroupID, GroupStats, Stats}
 import nl.biopet.utils.{conversions, io}
 import play.api.libs.json._
 
 case class BamstatsRoot(samples: Map[String, Sample]) {
+
+  /**
+    * Flattens the BamstatsRoot object into a map of GroupIDs and ReadgroupData
+    * @return a Map[GroupID, Readgroup]
+    */
   def readgroups: Map[GroupID, Readgroup] = {
     samples.flatMap {
-      case (sampleId, sampleData) =>
+      case (sampleId: String, sampleData: Sample) =>
         sampleData.libraries.flatMap {
-          case (libraryId, libraryData) =>
+          case (libraryId: String, libraryData: Library) =>
             libraryData.readgroups.map {
-              case (readgroupID, readgroupData) =>
+              case (readgroupID: String, readgroupData: Readgroup) =>
                 GroupID(sampleId, libraryId, readgroupID) -> readgroupData
             }
         }
@@ -43,27 +48,48 @@ case class BamstatsRoot(samples: Map[String, Sample]) {
     }
   }
 
+  /**
+    * Converts  this object to json
+    * @return a JSvalue representing this object.
+    */
   def toJson: JsValue = {
     Json.toJson(this)
   }
 
+  /**
+    * Write this object to a Json file
+    * @param file the output file.
+    */
   def writeFile(file: File): Unit = {
     io.writeLinesToFile(file, Json.stringify(toJson) :: Nil)
   }
 
-  def asStats: List[Stats] = {
+  /**
+    * Convert this object to a list of stats grouped by readgroup.
+    * @return
+    */
+  def asStatsList: List[Stats] = {
     readgroups.map {
-      case (readgroupID, readgroupData) =>
+      case (readgroupID: GroupID, readgroupData: Readgroup) =>
         Stats(readgroupID, GroupStats.statsFromData(readgroupData.data))
     }
   }.toList
 
+  /**
+    * validate this object.
+    */
   def validate(): Unit = readgroups foreach {
     case (_, rg) => rg.data.validate()
   }
-
 }
+
 object BamstatsRoot {
+
+  /**
+    * Create a new BamstatsRoot from json
+    * @param json the JsValue containing the json information
+    * @return A BamstatsRoot object
+    */
   def fromJson(json: JsValue): BamstatsRoot = {
     Json.fromJson[BamstatsRoot](json) match {
       case JsSuccess(root: BamstatsRoot, _) => root
@@ -72,15 +98,47 @@ object BamstatsRoot {
     }
   }
 
+  /**
+    * Create a new BamstatsRoot from a json file.
+    * @param file a file in json format
+    * @return a BamstatsRoot object
+    */
   def fromFile(file: File): BamstatsRoot = {
     fromJson(conversions.fileToJson(file))
   }
 
+  /**
+    * Uses a groupID and groupstats to create a new BamstatsRoot
+    * @param groupID the unique identifier consisting of a sample, library and readgroup ID.
+    * @param groupStats the stats for the readgroup
+    * @return a BamstatsRoot object
+    */
   def fromGroupStats(groupID: GroupID, groupStats: GroupStats): BamstatsRoot = {
-    fromStats(List(Stats(groupID, groupStats)))
+    fromStats(Stats(groupID, groupStats))
   }
 
-  def fromStats(groups: List[Stats]): BamstatsRoot = {
+  /**
+    * Converts a stats object into a BamstatsRoot object
+    * @param stats a Stats object containing a group ID and readgroupData
+    * @return a BamstatsRoot object
+    */
+  def fromStats(stats: Stats): BamstatsRoot = {
+    BamstatsRoot(
+      Map(
+        stats.groupID.sample ->
+          Sample(
+            Map(stats.groupID.library ->
+              Library(Map(stats.groupID.readgroup ->
+                Readgroup(stats.stats.statsToData())))))))
+  }
+
+  /**
+    * Converts a list of stats to a bamstatsRoots object. Merges stats from the
+    * same readgroup
+    * @param groups A list of stats objects
+    * @return a BamstatsRoot object
+    */
+  def fromStatsList(groups: List[Stats]): BamstatsRoot = {
     BamstatsRoot(
       groups.groupBy(_.groupID.sample).map {
         case (sampleID, sampleGroups) =>
@@ -90,8 +148,9 @@ object BamstatsRoot {
                 libraryID -> Library(
                   libraryGroups.groupBy(_.groupID.readgroup).map {
                     case (readgroupID, readgroups) =>
-                      readgroupID -> Readgroup(
-                        readgroups.map(_.stats).reduce(_ += _).statsToData())
+                      val statsList: List[GroupStats] = readgroups.map(_.stats)
+                      val addedStats: GroupStats = statsList.reduce(_ += _)
+                      readgroupID -> Readgroup(addedStats.statsToData())
                   }
                 )
             }

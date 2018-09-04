@@ -19,26 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package nl.biopet.tools.bamstats
-import nl.biopet.utils.tool.ToolCommand
-import nl.biopet.utils.tool.multi.MultiToolCommand
-import nl.biopet.tools.bamstats.generate.Generate
-import nl.biopet.tools.bamstats.merge.Merge
-import nl.biopet.tools.bamstats.validate.Validate
+package nl.biopet.tools.bamstats.merge
 
-object BamStats extends MultiToolCommand {
-  def subTools: Map[String, List[ToolCommand[_]]] = Map(
-    "Mode" -> List(Generate, Merge, Validate)
-  )
+import java.io.File
 
-  def descriptionText: String =
-    s"""$toolName is a package that contains tools
-       |to generate stats from a BAM file,
-       |merge those stats for multiple samples,
-       |and validate the generated stats files.
-       |
-     """.stripMargin + extendedDescriptionText
-  def manualText: String = extendedManualText
-
-  def exampleText: String = extendedExampleText
-}
+case class Args(inputFiles: List[File] = Nil, outputFile: Option[File] = None)

@@ -19,26 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package nl.biopet.tools.bamstats
-import nl.biopet.utils.tool.ToolCommand
-import nl.biopet.utils.tool.multi.MultiToolCommand
-import nl.biopet.tools.bamstats.generate.Generate
-import nl.biopet.tools.bamstats.merge.Merge
-import nl.biopet.tools.bamstats.validate.Validate
+package nl.biopet.tools.bamstats.merge
 
-object BamStats extends MultiToolCommand {
-  def subTools: Map[String, List[ToolCommand[_]]] = Map(
-    "Mode" -> List(Generate, Merge, Validate)
-  )
+import java.io.File
 
-  def descriptionText: String =
-    s"""$toolName is a package that contains tools
-       |to generate stats from a BAM file,
-       |merge those stats for multiple samples,
-       |and validate the generated stats files.
-       |
-     """.stripMargin + extendedDescriptionText
-  def manualText: String = extendedManualText
+import nl.biopet.utils.tool.{AbstractOptParser, ToolCommand}
 
-  def exampleText: String = extendedExampleText
+class ArgsParser(toolCommand: ToolCommand[Args])
+    extends AbstractOptParser[Args](toolCommand) {
+
+  opt[File]('i', "inputFile")
+    .required()
+    .unbounded()
+    .valueName("<seqstat file>")
+    .action((x, c) => c.copy(inputFiles = x :: c.inputFiles))
+    .text("Files to merge into a single file")
+  opt[File]('o', "outputFile")
+    .valueName("<seqstat file>")
+    .action((x, c) => c.copy(outputFile = Some(x)))
+    .text("Output file")
 }

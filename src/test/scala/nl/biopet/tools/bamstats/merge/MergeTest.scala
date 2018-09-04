@@ -19,26 +19,42 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package nl.biopet.tools.bamstats
-import nl.biopet.utils.tool.ToolCommand
-import nl.biopet.utils.tool.multi.MultiToolCommand
-import nl.biopet.tools.bamstats.generate.Generate
-import nl.biopet.tools.bamstats.merge.Merge
-import nl.biopet.tools.bamstats.validate.Validate
+package nl.biopet.tools.bamstats.merge
 
-object BamStats extends MultiToolCommand {
-  def subTools: Map[String, List[ToolCommand[_]]] = Map(
-    "Mode" -> List(Generate, Merge, Validate)
-  )
+import java.io.File
 
-  def descriptionText: String =
-    s"""$toolName is a package that contains tools
-       |to generate stats from a BAM file,
-       |merge those stats for multiple samples,
-       |and validate the generated stats files.
-       |
-     """.stripMargin + extendedDescriptionText
-  def manualText: String = extendedManualText
+import nl.biopet.test.BiopetTest
+import nl.biopet.tools.bamstats.schema.BamstatsRoot
+import org.testng.annotations.Test
 
-  def exampleText: String = extendedExampleText
+class MergeTest extends BiopetTest {
+
+  @Test
+  def testNoArgs(): Unit = {
+    intercept[IllegalArgumentException] {
+      Merge.main(Array())
+    }
+  }
+
+  @Test
+  def testMergeFile(): Unit = {
+    val scatteredStats = List(
+      resourceFile("/stats/scatter-0/bamstats.json"),
+      resourceFile("/stats/scatter-1/bamstats.json"),
+      resourceFile("/stats/scatter-2/bamstats.json"),
+      resourceFile("/stats/unmapped/bamstats.json")
+    )
+
+    val totalStatsFile = resourceFile("/stats/complete/bamstats.json")
+    val mergedOutputFile = File.createTempFile("mergedStats", ".json")
+
+    val inputStats: Array[String] = scatteredStats
+      .flatMap(statsFile => Array("-i", statsFile.getAbsolutePath))
+      .toArray
+
+    Merge.main(inputStats ++ Array("-o", mergedOutputFile.getAbsolutePath))
+
+    BamstatsRoot.fromFile(mergedOutputFile) == BamstatsRoot.fromFile(
+      totalStatsFile) shouldBe true
+  }
 }

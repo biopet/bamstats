@@ -13,6 +13,21 @@ a JSON file, but can optionally also output in TSV format.
      
         
 
+#### Mode - Merge
+
+This module will merge bamstats files together and keep the sample/library/readgroup structure.
+It will also validate the resulting file.
+      
+        
+
+#### Mode - Validate
+
+Validates a BamStats file.
+If aggregation values can not be regenerated the file is considered corrupt.
+This should only happen when the file has been manually edited.
+     
+        
+
 # Documentation
 
 For documentation and manuals visit our [github.io page](https://biopet.github.io/bamstats).

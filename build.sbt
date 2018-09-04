@@ -21,11 +21,19 @@ developers := List(
             url = url("https://github.com/rhpvorderman"))
 )
 
+biocondaTestCommands := Seq(
+  s"$biocondaCommand merge --help",
+  s"$biocondaCommand merge --version",
+  s"$biocondaCommand validate --help",
+  s"$biocondaCommand validate --version",
+  s"$biocondaCommand generate --help",
+  s"$biocondaCommand generate --version"
+)
 scalaVersion := "2.11.12"
 
-libraryDependencies += "com.github.biopet" %% "common-utils" % "0.7-SNAPSHOT" changing ()
-libraryDependencies += "com.github.biopet" %% "tool-utils" % "0.5-SNAPSHOT" changing ()
-libraryDependencies += "com.github.biopet" %% "ngs-utils" % "0.5-SNAPSHOT" changing ()
+libraryDependencies += "com.github.biopet" %% "common-utils" % "0.8-SNAPSHOT" changing ()
+libraryDependencies += "com.github.biopet" %% "tool-utils" % "0.6-SNAPSHOT" changing ()
+libraryDependencies += "com.github.biopet" %% "ngs-utils" % "0.6-SNAPSHOT" changing ()
 libraryDependencies += "com.github.biopet" %% "tool-test-utils" % "0.3-SNAPSHOT" % Test changing ()
 libraryDependencies += "com.github.biopet" %% "test-utils" % "0.4" % Test
 libraryDependencies += "com.google.guava" % "guava" % "18.0" % Test
