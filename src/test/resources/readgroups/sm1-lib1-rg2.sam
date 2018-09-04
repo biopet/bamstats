@@ -1,7 +1,7 @@
 @HD	VN:1.4	SO:coordinate
 @RG	ID:sm1-lib1-rg2	LB:lib1	SM:sm1
 @SQ	SN:chrQ	LN:16571	M5:94445ec460a68206ae9781f71697d3db
-chrQ	99	alpha	1	40	35M	=	66	100	AAAA	*	NM:i:0	RG:Z:sm1-lib1-rg2
-chrQ	99	alpha	1	40	35M	=	66	100	AAAA	*	NM:i:0	RG:Z:sm1-lib1-rg2
-chrQ	147	alpha	66	40	35M	=	1	-100	TTTT	*	NM:i:0	RG:Z:sm1-lib1-rg2
-chrQ	147	alpha	66	40	35M	=	1	-100	TTTT	*	NM:i:0	RG:Z:sm1-lib1-rg2
+readname	99	chrQ	1	40	35M	=	66	100	AAAA	*	NM:i:0	RG:Z:sm1-lib1-rg2
+readname	99	chrQ	1	40	35M	=	66	100	AAAA	*	NM:i:0	RG:Z:sm1-lib1-rg2
+readname	147	chrQ	66	40	35M	=	1	-100	TTTT	*	NM:i:0	RG:Z:sm1-lib1-rg2
+readname	147	chrQ	66	40	35M	=	1	-100	TTTT	*	NM:i:0	RG:Z:sm1-lib1-rg2
