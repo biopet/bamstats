@@ -184,23 +184,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.schema.BamstatsRoot#asStats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="asStats:List[nl.biopet.tools.bamstats.Stats]"></a>
-      <a id="asStats:List[Stats]"></a>
+    </li><li name="nl.biopet.tools.bamstats.schema.BamstatsRoot#asStatsList" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="asStatsList:List[nl.biopet.tools.bamstats.schema.Stats]"></a>
+      <a id="asStatsList:List[Stats]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">asStats</span><span class="result">: <span class="extype" name="scala.List">List</span>[<a href="../package$$Stats.html" class="extype" name="nl.biopet.tools.bamstats.Stats">Stats</a>]</span>
+        <span class="name">asStatsList</span><span class="result">: <span class="extype" name="scala.List">List</span>[<a href="package$$Stats.html" class="extype" name="nl.biopet.tools.bamstats.schema.Stats">Stats</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.BamstatsRoot@asStats:List[nl.biopet.tools.bamstats.Stats]" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.BamstatsRoot@asStatsList:List[nl.biopet.tools.bamstats.schema.Stats]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Convert this object to a list of stats grouped by readgroup.</p>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -349,8 +349,8 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.schema.BamstatsRoot#readgroups" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="readgroups:Map[nl.biopet.tools.bamstats.GroupID,nl.biopet.tools.bamstats.schema.Readgroup]"></a>
+    </li><li name="nl.biopet.tools.bamstats.schema.BamstatsRoot#readgroups" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="readgroups:Map[nl.biopet.tools.bamstats.schema.GroupID,nl.biopet.tools.bamstats.schema.Readgroup]"></a>
       <a id="readgroups:Map[GroupID,Readgroup]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -358,14 +358,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">readgroups</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<a href="../package$$GroupID.html" class="extype" name="nl.biopet.tools.bamstats.GroupID">GroupID</a>, <a href="package$$Readgroup.html" class="extype" name="nl.biopet.tools.bamstats.schema.Readgroup">Readgroup</a>]</span>
+        <span class="name">readgroups</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<a href="package$$GroupID.html" class="extype" name="nl.biopet.tools.bamstats.schema.GroupID">GroupID</a>, <a href="package$$Readgroup.html" class="extype" name="nl.biopet.tools.bamstats.schema.Readgroup">Readgroup</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.BamstatsRoot@readgroups:Map[nl.biopet.tools.bamstats.GroupID,nl.biopet.tools.bamstats.schema.Readgroup]" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.schema.BamstatsRoot@readgroups:Map[nl.biopet.tools.bamstats.schema.GroupID,nl.biopet.tools.bamstats.schema.Readgroup]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Flattens the BamstatsRoot object into a map of GroupIDs and ReadgroupData</p><div class="fullcomment"><div class="comment cmt"><p>Flattens the BamstatsRoot object into a map of GroupIDs and ReadgroupData</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a Map[GroupID, Readgroup]</p></dd></dl></div>
     </li><li name="nl.biopet.tools.bamstats.schema.BamstatsRoot#samples" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="samples:Map[String,nl.biopet.tools.bamstats.schema.Sample]"></a>
       <a id="samples:Map[String,Sample]"></a>
@@ -400,7 +400,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.schema.BamstatsRoot#toJson" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="nl.biopet.tools.bamstats.schema.BamstatsRoot#toJson" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toJson:play.api.libs.json.JsValue"></a>
       <a id="toJson:JsValue"></a>
       <h4 class="signature">
@@ -416,7 +416,7 @@
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Converts  this object to json</p><div class="fullcomment"><div class="comment cmt"><p>Converts  this object to json</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a JSvalue representing this object.</p></dd></dl></div>
     </li><li name="nl.biopet.tools.bamstats.schema.BamstatsRoot#validate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="validate():Unit"></a>
       <a id="validate():Unit"></a>
@@ -433,7 +433,7 @@
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">validate this object.</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -503,7 +503,7 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="nl.biopet.tools.bamstats.schema.BamstatsRoot#writeFile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="nl.biopet.tools.bamstats.schema.BamstatsRoot#writeFile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="writeFile(file:java.io.File):Unit"></a>
       <a id="writeFile(File):Unit"></a>
       <h4 class="signature">
@@ -519,7 +519,7 @@
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Write this object to a Json file</p><div class="fullcomment"><div class="comment cmt"><p>Write this object to a Json file</p></div><dl class="paramcmts block"><dt class="param">file</dt><dd class="cmt"><p>the output file.</p></dd></dl></div>
     </li></ol>
             </div>
 

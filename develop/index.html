@@ -115,6 +115,15 @@
         <p>Generate reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
         a JSON file, but can optionally also output in TSV format.</p>
         
+        <h4 id="mode---merge" class="section">Mode - Merge</h4>
+        <p>This module will merge bamstats files together and keep the sample/library/readgroup structure.
+        It will also validate the resulting file.</p>
+        
+        <h4 id="mode---validate" class="section">Mode - Validate</h4>
+        <p>Validates a BamStats file.
+        If aggregation values can not be regenerated the file is considered corrupt.
+        This should only happen when the file has been manually edited.</p>
+        
         <h1 id="installation" class="section">Installation</h1>
         <p>BamStats requires Java 8 to be installed on your device. Download Java 8
         <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html">here</a>
@@ -130,6 +139,13 @@
         Optionally a reference fasta file can be added against which the BAM file will be validated.
         There are also fllags to set the binsize of stats, the size of the region per thread, and whether
         to also output in TSV format.</p>
+        
+        <h4 id="mode---merge-1" class="section">Mode - Merge</h4>
+        <p>When merging the files BamStats will validate the input files and the output files.
+        If aggregation values can not be regenerated the file is considered corrupt.</p>
+        
+        <h4 id="mode---validate-1" class="section">Mode - Validate</h4>
+        <p>See example.</p>
         
         <h2 id="example" class="section">Example</h2>
         
@@ -158,6 +174,18 @@
 --sample patient0 \
 --library libI \
 --readgroup RG1</code></pre>
+        
+        <h4 id="mode---merge-2" class="section">Mode - Merge</h4>
+        <p>Merging multiple file</p>
+        <pre><code>java -jar &lt;BamStats_jar&gt; merge \
+-i &lt;seqstat file&gt; \
+-i &lt;seqstats file&gt; \
+-o &lt;output file&gt;</code></pre>
+        
+        <h4 id="mode---validate-2" class="section">Mode - Validate</h4>
+        <p>Default:</p>
+        <pre><code>java -jar &lt;BamStats_jar&gt; validate \
+-i &lt;input file&gt;</code></pre>
         
         <h2 id="usage" class="section">Usage</h2>
         <p>Usage for BamStats:</p>
