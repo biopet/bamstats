@@ -114,21 +114,33 @@ object Generate extends ToolCommand[Args] {
     * @return A GroupStats object with al the stats from the samrecords
     */
   def extractStats(samRecordIterator: SAMRecordIterator,
-                   readgroups: Seq[SAMReadGroupRecord]): BamstatsRoot = {
-    val stats = newStatsMap(readgroups.map(_.getId))
+                   readgroups: Seq[SAMReadGroupRecord],
+                   condition: SAMRecord => Boolean): BamstatsRoot = {
+    val readGroupIds = readgroups
+      .map(readgroup => readgroup.getId -> GroupID.fromSamReadGroup(readgroup))
+      .toMap
+    val stats = newStatsMap(readGroupIds.keys.toSeq)
     samRecordIterator.foreach { record =>
-      val rgId = Option(record.getAttribute("RG"))
-        .map(_.toString).getOrElse(throw new IllegalStateException(s"No readgroup found on read $record"))
-      stats
-        .getOrElse(rgId, throw new IllegalStateException(s"readgroup found on record but not in header: $rgId, record: $record"))
-        .loadRecord(record)
+      if (condition(record)) {
+        val rgId = Option(record.getAttribute("RG"))
+          .map(_.toString)
+          .getOrElse(throw new IllegalStateException(
+            s"No readgroup found on read $record"))
+        stats
+          .getOrElse(
+            rgId,
+            throw new IllegalStateException(
+              s"readgroup found on record but not in header: $rgId, record: $record"))
+          .loadRecord(record)
+      }
     }
     samRecordIterator.close()
-    stats.map {
-      case (groupID: GroupID, groupStats: GroupStats) =>
-        Stats(groupID, groupStats)
+    val bamStatsRoots = stats.map {
+      case (rgId: String, groupStats: GroupStats) =>
+        BamstatsRoot.fromGroupStats(readGroupIds(rgId), groupStats)
     }
-  }.toIterator
+    bamStatsRoots.reduce(_ + _)
+  }
 
   /**
     * This methods reads the stats for all records in the SamReader.
@@ -136,8 +148,10 @@ object Generate extends ToolCommand[Args] {
     * @param samReader A SamReader
     * @return GroupStats for all records in the SamReader.
     */
-  def extractStatsAll(samReader: SamReader): Iterator[Stats] = {
-    extractStats(samReader.iterator(), samReader)
+  def extractStatsAll(samReader: SamReader): BamstatsRoot = {
+    extractStats(samReader.iterator(),
+                 samReader.getFileHeader.getReadGroups,
+                 _ => true)
   }
 
   /**
@@ -145,8 +159,10 @@ object Generate extends ToolCommand[Args] {
     * @param samReader a samReader
     * @return GroupStats for all unmapped reads
     */
-  def extractStatsUnmappedReads(samReader: SamReader): Iterator[Stats] = {
-    extractStats(samReader.queryUnmapped(), samReader)
+  def extractStatsUnmappedReads(samReader: SamReader): BamstatsRoot = {
+    extractStats(samReader.queryUnmapped(),
+                 samReader.getFileHeader.getReadGroups,
+                 _ => true)
   }
 
   /**
@@ -162,24 +178,15 @@ object Generate extends ToolCommand[Args] {
     */
   def extractStatsRegion(samReader: SamReader,
                          region: BedRecord,
-                         scatterMode: Boolean = false): Iterator[Stats] = {
-    val statsMap = newStatsMap(samReader)
+                         scatterMode: Boolean = false): BamstatsRoot = {
     val samRecordIterator: SAMRecordIterator =
       samReader.query(region.chr, region.start, region.end, false)
-    samRecordIterator.foreach { samRecord =>
-      val groupID = GroupID.fromSamReadGroup(samRecord.getReadGroup)
-      // Read based stats
-      // If scatterMode is false, continue.
-      // If scatterMode is true, determine whether the alignment start is within the region.
-      if (!scatterMode || samRecord.getAlignmentStart > region.start && samRecord.getAlignmentStart <= region.end) {
-        statsMap(groupID).loadRecord(samRecord)
-      }
+    def recordInInterval(samRecord: SAMRecord): Boolean = {
+      (!scatterMode || samRecord.getAlignmentStart > region.start && samRecord.getAlignmentStart <= region.end)
     }
-    samRecordIterator.close()
-    statsMap.map {
-      case (groupID: GroupID, groupStats: GroupStats) =>
-        Stats(groupID, groupStats)
-    }.toIterator
+    extractStats(samRecordIterator,
+                 samReader.getFileHeader.getReadGroups,
+                 recordInInterval)
   }
 
   /**

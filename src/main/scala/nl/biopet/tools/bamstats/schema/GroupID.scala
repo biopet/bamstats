@@ -11,10 +11,16 @@ object GroupID {
     * @return a GroupID object
     */
   def fromSamReadGroup(readgroup: SAMReadGroupRecord): GroupID = {
-    GroupID(sample = Option(readgroup.getSample)
-      .getOrElse(throw new IllegalArgumentException(s"Sample not found on readgroup: $readgroup")),
-            library = Option(readgroup.getLibrary)
-              .getOrElse(throw new IllegalArgumentException(s"Library not found on readgroup: $readgroup")),
-            readgroup = readgroup.getReadGroupId)
+    GroupID(
+      sample = Option(readgroup.getSample)
+        .getOrElse(
+          throw new IllegalArgumentException(
+            s"Sample not found on readgroup: $readgroup")),
+      library = Option(readgroup.getLibrary)
+        .getOrElse(
+          throw new IllegalArgumentException(
+            s"Library not found on readgroup: $readgroup")),
+      readgroup = readgroup.getReadGroupId
+    )
   }
 }
