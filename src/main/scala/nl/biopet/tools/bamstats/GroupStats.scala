@@ -24,7 +24,6 @@ package nl.biopet.tools.bamstats
 import java.io.File
 
 import htsjdk.samtools.SAMRecord
-import htsjdk.samtools.filter.SamRecordFilter
 import nl.biopet.tools.bamstats.schema._
 import nl.biopet.utils.Histogram
 

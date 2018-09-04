@@ -25,7 +25,7 @@ import java.io.{File, PrintWriter}
 
 import htsjdk.samtools._
 import nl.biopet.tools.bamstats.GroupStats
-import nl.biopet.tools.bamstats.schema.{BamstatsRoot, GroupID, Stats}
+import nl.biopet.tools.bamstats.schema.{BamstatsRoot, GroupID}
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.bam._
 import nl.biopet.utils.ngs.intervals.{BedRecord, BedRecordList}
@@ -56,7 +56,7 @@ object Generate extends ToolCommand[Args] {
       }
     val samReader = SamReaderFactory.makeDefault().open(cmdArgs.bamFile)
     val root: BamstatsRoot = cmdArgs.bedFile match {
-      case Some(bed: File) if cmdArgs.onlyUnmapped =>
+      case Some(_) if cmdArgs.onlyUnmapped =>
         throw new IllegalArgumentException(
           "Cannot extract stats from regions and unmapped regions at the same time")
       // When a BED file is specified extract regions stats
@@ -85,7 +85,7 @@ object Generate extends ToolCommand[Args] {
 
     val statsWriter = new PrintWriter(
       new File(cmdArgs.outputDir, "bamstats.json"))
-    statsWriter.println(Json.stringify(groupedStats.toJson))
+    statsWriter.println(Json.stringify(root.toJson))
     statsWriter.close()
 
     val totalStats = combinedStats.toSummaryMap
@@ -181,7 +181,7 @@ object Generate extends ToolCommand[Args] {
     val samRecordIterator: SAMRecordIterator =
       samReader.query(region.chr, region.start, region.end, false)
     def recordInInterval(samRecord: SAMRecord): Boolean = {
-      (!scatterMode || samRecord.getAlignmentStart > region.start && samRecord.getAlignmentStart <= region.end)
+      !scatterMode || samRecord.getAlignmentStart > region.start && samRecord.getAlignmentStart <= region.end
     }
     extractStats(samRecordIterator,
                  samReader.getFileHeader.getReadGroups,

@@ -23,8 +23,7 @@ package nl.biopet.tools.bamstats.schema
 
 import java.io.File
 
-import htsjdk.samtools.SAMReadGroupRecord
-import nl.biopet.tools.bamstats.{BamStats, GroupStats}
+import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.tools.bamstats.schema.Implicits._
 import nl.biopet.utils.{conversions, io}
 import play.api.libs.json._
@@ -87,6 +86,10 @@ case class BamstatsRoot(samples: Map[String, Sample]) {
     BamstatsRoot.fromStatsList(this.asStatsList ++ other.asStatsList)
   }
 
+  /**
+    * Returns the combined groupStats for the whole bamstats root.
+    * @return groupstats
+    */
   def combinedStats: GroupStats = {
     val groupStatsIterator = samples.valuesIterator.flatMap {
       _.libraries.valuesIterator.flatMap {
