@@ -25,7 +25,7 @@ import java.io.{File, PrintWriter}
 
 import htsjdk.samtools._
 import nl.biopet.tools.bamstats.GroupStats
-import nl.biopet.tools.bamstats.schema.{BamstatsRoot, GroupID}
+import nl.biopet.tools.bamstats.schema.{BamstatsRoot, GroupID, Stats}
 import nl.biopet.utils.conversions
 import nl.biopet.utils.ngs.bam._
 import nl.biopet.utils.ngs.intervals.{BedRecord, BedRecordList}
@@ -55,7 +55,7 @@ object Generate extends ToolCommand[Args] {
           getDictFromBam(cmdArgs.bamFile)
       }
     val samReader = SamReaderFactory.makeDefault().open(cmdArgs.bamFile)
-    val stats: GroupStats = cmdArgs.bedFile match {
+    val stats: Iterator[Stats] = cmdArgs.bedFile match {
       case Some(bed: File) if cmdArgs.onlyUnmapped =>
         throw new IllegalArgumentException(
           "Cannot extract stats from regions and unmapped regions at the same time")
@@ -69,38 +69,41 @@ object Generate extends ToolCommand[Args] {
             .allRecords
             .toIterator
         //Get groupstats for each region
-        val regionStats: Iterator[GroupStats] = regions.map { region =>
+        val regionStats = regions.map { region =>
           extractStatsRegion(samReader, region, cmdArgs.scatterMode)
         }
-        // Add all regions stats together
-        regionStats.reduce(_ += _)
+        regionStats.reduce(_ ++ _)
       case None if cmdArgs.onlyUnmapped =>
         extractStatsUnmappedReads(samReader)
       case None if !cmdArgs.onlyUnmapped => extractStatsAll(samReader)
     }
     samReader.close()
-
+    val groupedStats = BamstatsRoot.fromStatsList(stats.toList)
+    val combinedStats = stats.map(_.stats).reduce(_ += _)
     if (cmdArgs.tsvOutputs) {
-      writeStatsToTsv(stats, outputDir = cmdArgs.outputDir)
+      writeStatsToTsv(combinedStats, outputDir = cmdArgs.outputDir)
     }
 
-    val groupedStats = BamstatsRoot.fromGroupStats(
-      GroupID(sample = cmdArgs.sample,
-              library = cmdArgs.library,
-              readgroup = cmdArgs.readgroup),
-      stats)
     val statsWriter = new PrintWriter(
       new File(cmdArgs.outputDir, "bamstats.json"))
     statsWriter.println(Json.stringify(groupedStats.toJson))
     statsWriter.close()
 
-    val totalStats = stats.toSummaryMap
+    val totalStats = combinedStats.toSummaryMap
     val summaryWriter = new PrintWriter(
       new File(cmdArgs.outputDir, "bamstats.summary.json"))
     summaryWriter.println(Json.stringify(conversions.mapToJson(totalStats)))
     summaryWriter.close()
 
     logger.info("Done")
+  }
+
+  def getGroupIdList(samReader: SamReader): List[GroupID] = {
+    samReader.getFileHeader.getReadGroups.map(GroupID.fromSamReadGroup)
+  }.toList
+
+  def newStatsMap(samReader: SamReader): Map[GroupID, GroupStats] = {
+    getGroupIdList(samReader).map(_ -> GroupStats()).toMap
   }
 
   /**
@@ -110,12 +113,19 @@ object Generate extends ToolCommand[Args] {
     *                          (I.e after a SAMReader.query)
     * @return A GroupStats object with al the stats from the samrecords
     */
-  def extractStats(samRecordIterator: SAMRecordIterator): GroupStats = {
-    val stats = GroupStats()
-    samRecordIterator.foreach(stats.loadRecord)
+  def extractStats(samRecordIterator: SAMRecordIterator,
+                   samReader: SamReader): Iterator[Stats] = {
+    val stats = newStatsMap(samReader)
+    samRecordIterator.foreach { record =>
+      val groupID: GroupID = GroupID.fromSamReadGroup(record.getReadGroup)
+      stats(groupID).loadRecord(record)
+    }
     samRecordIterator.close()
-    stats
-  }
+    stats.map {
+      case (groupID: GroupID, groupStats: GroupStats) =>
+        Stats(groupID, groupStats)
+    }
+  }.toIterator
 
   /**
     * This methods reads the stats for all records in the SamReader.
@@ -123,8 +133,8 @@ object Generate extends ToolCommand[Args] {
     * @param samReader A SamReader
     * @return GroupStats for all records in the SamReader.
     */
-  def extractStatsAll(samReader: SamReader): GroupStats = {
-    extractStats(samReader.iterator())
+  def extractStatsAll(samReader: SamReader): Iterator[Stats] = {
+    extractStats(samReader.iterator(), samReader)
   }
 
   /**
@@ -132,8 +142,8 @@ object Generate extends ToolCommand[Args] {
     * @param samReader a samReader
     * @return GroupStats for all unmapped reads
     */
-  def extractStatsUnmappedReads(samReader: SamReader): GroupStats = {
-    extractStats(samReader.queryUnmapped())
+  def extractStatsUnmappedReads(samReader: SamReader): Iterator[Stats] = {
+    extractStats(samReader.queryUnmapped(), samReader)
   }
 
   /**
@@ -149,20 +159,24 @@ object Generate extends ToolCommand[Args] {
     */
   def extractStatsRegion(samReader: SamReader,
                          region: BedRecord,
-                         scatterMode: Boolean = false): GroupStats = {
-    val stats = GroupStats()
+                         scatterMode: Boolean = false): Iterator[Stats] = {
+    val statsMap = newStatsMap(samReader)
     val samRecordIterator: SAMRecordIterator =
       samReader.query(region.chr, region.start, region.end, false)
     samRecordIterator.foreach { samRecord =>
+      val groupID = GroupID.fromSamReadGroup(samRecord.getReadGroup)
       // Read based stats
       // If scatterMode is false, continue.
       // If scatterMode is true, determine whether the alignment start is within the region.
       if (!scatterMode || samRecord.getAlignmentStart > region.start && samRecord.getAlignmentStart <= region.end) {
-        stats.loadRecord(samRecord)
+        statsMap(groupID).loadRecord(samRecord)
       }
     }
     samRecordIterator.close()
-    stats
+    statsMap.map {
+      case (groupID: GroupID, groupStats: GroupStats) =>
+        Stats(groupID, groupStats)
+    }.toIterator
   }
 
   /**
