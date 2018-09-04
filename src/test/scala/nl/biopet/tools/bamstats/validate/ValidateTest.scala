@@ -33,7 +33,7 @@ class ValidateTest extends BiopetTest {
 
   @Test
   def testCorrupted(): Unit = {
-    intercept[java.lang.IllegalArgumentException] {
+    intercept[IllegalArgumentException] {
       Validate.main(Array("-i", resourcePath("/stats/corrupted/bamstats.json")))
     }.getMessage shouldBe
       "requirement failed: Internally corrupt FlagStatsData. " +
