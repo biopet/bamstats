@@ -98,7 +98,7 @@ object Generate extends ToolCommand[Args] {
   }
 
   def getGroupIdList(samReader: SamReader): List[GroupID] = {
-    samReader.getFileHeader.getReadGroups.map(GroupID.fromSamReadGroup)
+    samReader.getFileHeader.getReadGroups.map(GroupID.fromSamReadGroup(_))
   }.toList
 
   def newStatsMap(readgroups: Seq[String]): Map[String, GroupStats] = {
