@@ -61,14 +61,17 @@ object Generate extends ToolCommand[Args] {
           "Cannot extract stats from regions and unmapped regions at the same time")
       // When a BED file is specified extract regions stats
       case Some(bed: File) if !cmdArgs.onlyUnmapped =>
-        val regions =
+        val regions: Iterator[BedRecord] =
           BedRecordList
             .fromFile(bed)
             .combineOverlap
             .validateContigs(sequenceDict)
-        val regionStats = regions.allRecords.map { region =>
+            .allRecords
+            .toIterator
+        //Get groupstats for each region
+        val regionStats: Iterator[GroupStats] = regions.map { region =>
           extractStatsRegion(samReader, region, cmdArgs.scatterMode)
-        }.toList
+        }
         // Add all regions stats together
         regionStats.reduce(_ += _)
       case None if cmdArgs.onlyUnmapped =>
