@@ -7,12 +7,14 @@ object GroupID {
 
   /**
     * Method to get a GroupID from a SAMReadgroupRecord
-    * @param record the SAMReadGroupRecord
+    * @param readgroup the SAMReadGroupRecord
     * @return a GroupID object
     */
-  def fromSamReadGroup(record: SAMReadGroupRecord): GroupID = {
-    GroupID(sample = record.getSample,
-            library = record.getLibrary,
-            readgroup = record.getReadGroupId)
+  def fromSamReadGroup(readgroup: SAMReadGroupRecord): GroupID = {
+    GroupID(sample = Option(readgroup.getSample)
+      .getOrElse(throw new IllegalArgumentException(s"Sample not found on readgroup: $readgroup")),
+            library = Option(readgroup.getLibrary)
+              .getOrElse(throw new IllegalArgumentException(s"Library not found on readgroup: $readgroup")),
+            readgroup = readgroup.getReadGroupId)
   }
 }

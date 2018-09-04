@@ -23,6 +23,7 @@ package nl.biopet.tools.bamstats.schema
 
 import java.io.File
 
+import htsjdk.samtools.SAMReadGroupRecord
 import nl.biopet.tools.bamstats.GroupStats
 import nl.biopet.tools.bamstats.schema.Implicits._
 import nl.biopet.utils.{conversions, io}
@@ -80,6 +81,10 @@ case class BamstatsRoot(samples: Map[String, Sample]) {
     */
   def validate(): Unit = readgroups foreach {
     case (_, rg) => rg.data.validate()
+  }
+
+  def +(other: BamstatsRoot): BamstatsRoot = {
+    ???
   }
 }
 

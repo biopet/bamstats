@@ -102,8 +102,8 @@ object Generate extends ToolCommand[Args] {
     samReader.getFileHeader.getReadGroups.map(GroupID.fromSamReadGroup)
   }.toList
 
-  def newStatsMap(samReader: SamReader): Map[GroupID, GroupStats] = {
-    getGroupIdList(samReader).map(_ -> GroupStats()).toMap
+  def newStatsMap(readgroups: Seq[String]): Map[String, GroupStats] = {
+    readgroups.map(_ -> GroupStats()).toMap
   }
 
   /**
@@ -114,11 +114,14 @@ object Generate extends ToolCommand[Args] {
     * @return A GroupStats object with al the stats from the samrecords
     */
   def extractStats(samRecordIterator: SAMRecordIterator,
-                   samReader: SamReader): Iterator[Stats] = {
-    val stats = newStatsMap(samReader)
+                   readgroups: Seq[SAMReadGroupRecord]): BamstatsRoot = {
+    val stats = newStatsMap(readgroups.map(_.getId))
     samRecordIterator.foreach { record =>
-      val groupID: GroupID = GroupID.fromSamReadGroup(record.getReadGroup)
-      stats(groupID).loadRecord(record)
+      val rgId = Option(record.getAttribute("RG"))
+        .map(_.toString).getOrElse(throw new IllegalStateException(s"No readgroup found on read $record"))
+      stats
+        .getOrElse(rgId, throw new IllegalStateException(s"readgroup found on record but not in header: $rgId, record: $record"))
+        .loadRecord(record)
     }
     samRecordIterator.close()
     stats.map {
