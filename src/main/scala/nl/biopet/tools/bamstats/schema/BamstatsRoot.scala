@@ -86,6 +86,15 @@ case class BamstatsRoot(samples: Map[String, Sample]) {
   def +(other: BamstatsRoot): BamstatsRoot = {
     ???
   }
+
+  def combinedStats: GroupStats = {
+    val groupStatsIterator = samples.valuesIterator.flatMap {
+      _.libraries.valuesIterator.flatMap {
+        _.readgroups.valuesIterator.map { _.data.asGroupStats }
+      }
+    }
+    groupStatsIterator.reduce(_ += _)
+  }
 }
 
 object BamstatsRoot {

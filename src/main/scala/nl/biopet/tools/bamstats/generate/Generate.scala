@@ -55,7 +55,7 @@ object Generate extends ToolCommand[Args] {
           getDictFromBam(cmdArgs.bamFile)
       }
     val samReader = SamReaderFactory.makeDefault().open(cmdArgs.bamFile)
-    val stats: Iterator[Stats] = cmdArgs.bedFile match {
+    val root: BamstatsRoot = cmdArgs.bedFile match {
       case Some(bed: File) if cmdArgs.onlyUnmapped =>
         throw new IllegalArgumentException(
           "Cannot extract stats from regions and unmapped regions at the same time")
@@ -72,14 +72,13 @@ object Generate extends ToolCommand[Args] {
         val regionStats = regions.map { region =>
           extractStatsRegion(samReader, region, cmdArgs.scatterMode)
         }
-        regionStats.reduce(_ ++ _)
+        regionStats.reduce(_ + _)
       case None if cmdArgs.onlyUnmapped =>
         extractStatsUnmappedReads(samReader)
       case None if !cmdArgs.onlyUnmapped => extractStatsAll(samReader)
     }
     samReader.close()
-    val groupedStats = BamstatsRoot.fromStatsList(stats.toList)
-    val combinedStats = stats.map(_.stats).reduce(_ += _)
+    val combinedStats: GroupStats = root.combinedStats
     if (cmdArgs.tsvOutputs) {
       writeStatsToTsv(combinedStats, outputDir = cmdArgs.outputDir)
     }
