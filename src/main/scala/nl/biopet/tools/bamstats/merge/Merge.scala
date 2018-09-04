@@ -34,7 +34,7 @@ object Merge extends ToolCommand[Args] {
     val cmdArgs = cmdArrayToArgs(args)
 
     val statsList: List[Stats] =
-      cmdArgs.inputFiles.flatMap(BamstatsRoot.fromFile(_).asStats)
+      cmdArgs.inputFiles.flatMap(BamstatsRoot.fromFile(_).asStatsList)
     val root = BamstatsRoot.fromStatsList(statsList)
     root.validate()
 

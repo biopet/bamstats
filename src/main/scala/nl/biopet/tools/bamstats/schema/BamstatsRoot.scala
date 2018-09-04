@@ -51,9 +51,9 @@ case class BamstatsRoot(samples: Map[String, Sample]) {
     io.writeLinesToFile(file, Json.stringify(toJson) :: Nil)
   }
 
-  def asStats: List[Stats] = {
+  def asStatsList: List[Stats] = {
     readgroups.map {
-      case (readgroupID, readgroupData) =>
+      case (readgroupID: GroupID, readgroupData: Readgroup) =>
         Stats(readgroupID, GroupStats.statsFromData(readgroupData.data))
     }
   }.toList
