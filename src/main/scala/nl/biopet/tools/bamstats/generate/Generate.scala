@@ -100,6 +100,13 @@ object Generate extends ToolCommand[Args] {
     logger.info("Done")
   }
 
+  /**
+    * This method iterates over all SAMrecords in the iterator and returns the groupstats
+    * The SAMRecordIterator is closed in this method.
+    * @param samRecordIterator A samrecord iterator containing all the reads you are interested in.
+    *                          (I.e after a SAMReader.query)
+    * @return A GroupStats object with al the stats from the samrecords
+    */
   def extractStats(samRecordIterator: SAMRecordIterator): GroupStats = {
     val stats = GroupStats()
     samRecordIterator.foreach(stats.loadRecord)
@@ -107,14 +114,36 @@ object Generate extends ToolCommand[Args] {
     stats
   }
 
+  /**
+    * This methods reads the stats for all records in the SamReader.
+    * The samReader is not closed afterwards, so it can be reused.
+    * @param samReader A SamReader
+    * @return GroupStats for all records in the SamReader.
+    */
   def extractStatsAll(samReader: SamReader): GroupStats = {
     extractStats(samReader.iterator())
   }
 
+  /**
+    * Takes a samReader and returns all the stats for all unmapped reads.
+    * @param samReader a samReader
+    * @return GroupStats for all unmapped reads
+    */
   def extractStatsUnmappedReads(samReader: SamReader): GroupStats = {
     extractStats(samReader.queryUnmapped())
   }
 
+  /**
+    * Takes a samReader and retunrs the GroupStats for all reads in the described region
+    * @param samReader a SamReader
+    * @param region a BedRecord describing the region
+    * @param scatterMode if True, only reads that originate (i.e. have their start position) in the
+    *                    region are counted.
+    *                    This is useful when scattering over regions to make sure that reads are not counted
+    *                    twice. One time when the start position is in the region, and one time when
+    *                    the end position is in the region.
+    * @return
+    */
   def extractStatsRegion(samReader: SamReader,
                          region: BedRecord,
                          scatterMode: Boolean = false): GroupStats = {
@@ -133,6 +162,11 @@ object Generate extends ToolCommand[Args] {
     stats
   }
 
+  /**
+    * Write GroupStats to tsv files
+    * @param stats a GroupStats object
+    * @param outputDir the directory where the tsv files are written.
+    */
   def writeStatsToTsv(stats: GroupStats, outputDir: File): Unit = {
     stats.flagstat.writeAsTsv(
       new File(outputDir, "flagstats.tsv")
