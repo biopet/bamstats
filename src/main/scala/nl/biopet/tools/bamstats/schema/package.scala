@@ -26,7 +26,6 @@ package object schema {
   case class Sample(libraries: Map[String, Library])
   case class Library(readgroups: Map[String, Readgroup])
   case class Readgroup(data: Data)
-  case class GroupID(sample: String, library: String, readgroup: String)
   case class Stats(groupID: GroupID, stats: GroupStats)
 
   val expectedKeys: Set[String] = FlagMethods.values.map(_.name)
