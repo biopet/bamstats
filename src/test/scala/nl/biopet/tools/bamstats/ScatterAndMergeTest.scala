@@ -25,7 +25,11 @@ import java.io.File
 
 import htsjdk.samtools.SamReaderFactory
 import nl.biopet.test.BiopetTest
-import nl.biopet.tools.bamstats.generate.Generate.{extractStatsAll, extractStatsRegion, extractStatsUnmappedReads}
+import nl.biopet.tools.bamstats.generate.Generate.{
+  extractStatsAll,
+  extractStatsRegion,
+  extractStatsUnmappedReads
+}
 import nl.biopet.utils.ngs.intervals.{BedRecord, BedRecordList}
 import org.testng.annotations.Test
 

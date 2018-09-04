@@ -103,6 +103,7 @@ object Generate extends ToolCommand[Args] {
   def extractStats(samRecordIterator: SAMRecordIterator): GroupStats = {
     val stats = GroupStats()
     samRecordIterator.foreach(stats.loadRecord)
+    samRecordIterator.close()
     stats
   }
 
@@ -128,6 +129,7 @@ object Generate extends ToolCommand[Args] {
       if (!scatterMode || samRecord.getAlignmentStart > region.start && samRecord.getAlignmentStart <= region.end) {
         stats.loadRecord(samRecord)
       }
+      samRecordIterator.close()
     }
     stats
   }
