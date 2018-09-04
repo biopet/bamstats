@@ -119,7 +119,6 @@ object Generate extends ToolCommand[Args] {
                          region: BedRecord,
                          scatterMode: Boolean = false): GroupStats = {
     val stats = GroupStats()
-
     val samRecordIterator: SAMRecordIterator =
       samReader.query(region.chr, region.start, region.end, false)
     samRecordIterator.foreach { samRecord =>
@@ -129,8 +128,8 @@ object Generate extends ToolCommand[Args] {
       if (!scatterMode || samRecord.getAlignmentStart > region.start && samRecord.getAlignmentStart <= region.end) {
         stats.loadRecord(samRecord)
       }
-      samRecordIterator.close()
     }
+    samRecordIterator.close()
     stats
   }
 
