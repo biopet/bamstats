@@ -289,28 +289,10 @@ object Generate extends ToolCommand[Args] {
   def exampleText: String =
     s"""
          |To generate stats from `file.bam`:
-         |${example("-b",
-                    "file.bam",
-                    "-o",
-                    "output_dir",
-                    "--sample",
-                    "patient0",
-                    "--library",
-                    "libI",
-                    "--readgroup",
-                    "RG1")}
+         |${example("-b", "file.bam", "-o", "output_dir")}
          |
          |To generate stats from `file.bam`, and output the result also as TSV:
-         |${example("-o",
-                    "output_dir",
-                    "-b",
-                    "file.bam",
-                    "--sample",
-                    "patient0",
-                    "--library",
-                    "libI",
-                    "--readgroup",
-                    "RG1")}
+         |${example("-o", "output_dir", "-b", "file.bam", "--tsvOutputs")}
          |
          |To generate stats from certain regions in `file.bam`,
          |validate the regions and bam with `reference.fa` and also include unmapped reads:
@@ -321,12 +303,6 @@ object Generate extends ToolCommand[Args] {
                     "-b",
                     "file.bam",
                     "--bedFile",
-                    "regions.bed",
-                    "--sample",
-                    "patient0",
-                    "--library",
-                    "libI",
-                    "--readgroup",
-                    "RG1")}
+                    "regions.bed")}
      """.stripMargin
 }

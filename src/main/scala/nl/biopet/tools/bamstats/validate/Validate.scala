@@ -54,7 +54,7 @@ object Validate extends ToolCommand[Args] {
 
   def exampleText: String =
     s"""
-       |Default:
+       |To validate a `bamstats.json` file:
        |${BamStats.example("validate", "-i", "<input file>")}
      """.stripMargin
 }
