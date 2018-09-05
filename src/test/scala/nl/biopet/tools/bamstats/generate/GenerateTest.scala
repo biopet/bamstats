@@ -32,17 +32,12 @@ import scala.io.Source
 
 class GenerateTest extends ToolTest[Args] {
 
-  val testGroupID: GroupID = GroupID("xf33hai", "3rasdsq", "a7kac")
+  val testGroupID: GroupID = GroupID("WipeReadsTestCase", "3rasdsq", "a7kac")
   val pairedBam01: File = new File(resourcePath("/paired01.bam"))
   val testBam: File = resourceFile("/fake_chrQ1000simreads.bam")
   val referenceFile: File = resourceFile("/fake_chrQ.fa")
-  val groupIdArgs: Array[String] = Array("--sample",
-                                         testGroupID.sample,
-                                         "--library",
-                                         testGroupID.library,
-                                         "--readgroup",
-                                         testGroupID.readgroup)
-
+  val groupIdArgs: Array[String] =
+    Array("--defaultLibrary", testGroupID.library)
   def toolCommand: Generate.type = Generate
   @Test
   def testNoArgs(): Unit = {
@@ -71,7 +66,6 @@ class GenerateTest extends ToolTest[Args] {
     val bamstatsContents = Source.fromFile(bamstatsFile).getLines.mkString
     bamstatsContents should include(testGroupID.sample)
     bamstatsContents should include(testGroupID.library)
-    bamstatsContents should include(testGroupID.readgroup)
     bamstatsContents should include("\"total\":14")
     bamstatsContents should include("\"mapped\":12")
     bamstatsContents should include("\"properPair\":12")
@@ -80,7 +74,6 @@ class GenerateTest extends ToolTest[Args] {
     summaryContents should not include "\"crossCounts\":{"
     bamstatsContents should include(testGroupID.sample)
     bamstatsContents should include(testGroupID.library)
-    bamstatsContents should include(testGroupID.readgroup)
     bamstatsContents should include("\"total\":14")
     bamstatsContents should include("\"mapped\":12")
     bamstatsContents should include("\"properPair\":12")
