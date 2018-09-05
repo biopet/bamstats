@@ -26,7 +26,8 @@ import java.io.File
 import htsjdk.samtools.SamReaderFactory
 import nl.biopet.test.BiopetTest
 import nl.biopet.tools.bamstats.generate.Generate
-import org.testng.annotations.Test
+import nl.biopet.tools.bamstats.schema.BamstatsRoot
+import org.testng.annotations.{DataProvider, Test}
 
 class MultiSampleBamTest extends BiopetTest {
 
@@ -41,38 +42,60 @@ class MultiSampleBamTest extends BiopetTest {
   val sm2lib1rg1Sam
     : File = resourceFile("/readgroups/sm2-lib1-rg1.sam").getAbsoluteFile
 
+  def samToRoot(samFile: File): BamstatsRoot = {
+    val samReader = SamReaderFactory.makeDefault().open(samFile)
+    val root = Generate.extractStatsAll(samReader)
+    samReader.close()
+    root
+  }
+  val totalsRoot: BamstatsRoot = samToRoot(multiSampleSam)
+
   @Test
   def multiSampleSamRead(): Unit = {
-    val samReader = SamReaderFactory.makeDefault().open(multiSampleSam)
-    val root = Generate.extractStatsAll(samReader)
-    root.samples.keySet shouldBe Set("sm1", "sm2")
-    root.samples("sm1").libraries.keySet shouldBe Set("lib1", "lib2")
-    root.samples("sm2").libraries.keySet shouldBe Set("lib1")
-    root.samples("sm1").libraries("lib1").readgroups.keySet shouldBe Set(
+    totalsRoot.samples.keySet shouldBe Set("sm1", "sm2")
+    totalsRoot.samples("sm1").libraries.keySet shouldBe Set("lib1", "lib2")
+    totalsRoot.samples("sm2").libraries.keySet shouldBe Set("lib1")
+    totalsRoot.samples("sm1").libraries("lib1").readgroups.keySet shouldBe Set(
       "sm1-lib1-rg1",
       "sm1-lib1-rg2")
-    root.samples("sm1").libraries("lib2").readgroups.keySet shouldBe Set(
+    totalsRoot.samples("sm1").libraries("lib2").readgroups.keySet shouldBe Set(
       "sm1-lib2-rg1")
-    root.samples("sm2").libraries("lib1").readgroups.keySet shouldBe Set(
+    totalsRoot.samples("sm2").libraries("lib1").readgroups.keySet shouldBe Set(
       "sm2-lib1-rg1")
   }
 
   @Test
   def multiSampleMerge(): Unit = {
-    val mergedRoot = {
-      val samReader = SamReaderFactory.makeDefault().open(multiSampleSam)
-      Generate.extractStatsAll(samReader)
-    }
     val rgBams: Seq[File] = List(
       sm1lib1rg1Sam,
       sm1lib1rg2Sam,
       sm1lib2rg1Sam,
       sm2lib1rg1Sam
     )
-    val rgRoots = rgBams.map { bamFile =>
-      val samReader = SamReaderFactory.makeDefault().open(bamFile)
-      Generate.extractStatsAll(samReader)
-    }
-    rgRoots.reduce(_ + _) shouldBe mergedRoot
+    val rgRoots = rgBams.map(samToRoot)
+    rgRoots.reduce(_ + _) shouldBe totalsRoot
+  }
+
+  @DataProvider(name = "singleRgSams")
+  def provider(): Array[Array[Any]] = {
+    Array(
+      Array(sm1lib1rg1Sam, "sm1", "lib1", "sm1-lib1-rg1"),
+      Array(sm1lib1rg1Sam, "sm1", "lib1", "sm1-lib1-rg2"),
+      Array(sm1lib1rg1Sam, "sm1", "lib2", "sm1-lib1-rg1"),
+      Array(sm1lib1rg1Sam, "sm2", "lib1", "sm1-lib1-rg1")
+    )
+  }
+
+  @Test(dataProvider = "singleRgSams")
+  def checkResultsMatch(samFile: File,
+                        sample: String,
+                        library: String,
+                        readgroup: String): Unit = {
+    totalsRoot
+      .samples(sample)
+      .libraries(library)
+      .readgroups(readgroup)
+      .data
+      .asGroupStats shouldBe samToRoot(samFile).combinedStats
   }
 }
