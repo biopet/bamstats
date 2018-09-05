@@ -16,6 +16,7 @@ a JSON file, but can optionally also output in TSV format.
 #### Mode - Merge
 
 This module will merge bamstats files together and keep the sample/library/readgroup structure.
+Values for the same readgroups will be added.
 It will also validate the resulting file.
       
         
