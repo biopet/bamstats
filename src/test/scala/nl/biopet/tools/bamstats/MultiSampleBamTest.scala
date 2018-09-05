@@ -81,8 +81,8 @@ class MultiSampleBamTest extends BiopetTest {
     Array(
       Array(sm1lib1rg1Sam, "sm1", "lib1", "sm1-lib1-rg1"),
       Array(sm1lib1rg1Sam, "sm1", "lib1", "sm1-lib1-rg2"),
-      Array(sm1lib1rg1Sam, "sm1", "lib2", "sm1-lib1-rg1"),
-      Array(sm1lib1rg1Sam, "sm2", "lib1", "sm1-lib1-rg1")
+      Array(sm1lib1rg1Sam, "sm1", "lib2", "sm1-lib2-rg1"),
+      Array(sm1lib1rg1Sam, "sm2", "lib1", "sm2-lib1-rg1")
     )
   }
 
@@ -96,6 +96,43 @@ class MultiSampleBamTest extends BiopetTest {
       .libraries(library)
       .readgroups(readgroup)
       .data
-      .asGroupStats shouldBe samToRoot(samFile).combinedStats
+      .asGroupStats == samToRoot(samFile).combinedStats shouldBe true
+  }
+
+  @Test
+  def testTotalsResults(): Unit = {
+    println(totalsRoot.samples("sm1").libraries("lib1").readgroups.keySet)
+    totalsRoot
+      .samples("sm1")
+      .libraries("lib1")
+      .readgroups("sm1-lib1-rg1")
+      .data
+      .asGroupStats
+      .flagstat
+      .totalReads shouldBe 2
+    totalsRoot
+      .samples("sm1")
+      .libraries("lib1")
+      .readgroups("sm1-lib1-rg2")
+      .data
+      .asGroupStats
+      .flagstat
+      .totalReads shouldBe 4
+    totalsRoot
+      .samples("sm1")
+      .libraries("lib2")
+      .readgroups("sm1-lib2-rg1")
+      .data
+      .asGroupStats
+      .flagstat
+      .totalReads shouldBe 6
+    totalsRoot
+      .samples("sm2")
+      .libraries("lib1")
+      .readgroups("sm2-lib1-rg1")
+      .data
+      .asGroupStats
+      .flagstat
+      .totalReads shouldBe 8
   }
 }
