@@ -23,11 +23,13 @@ package nl.biopet.tools.bamstats.merge
 
 import java.io.File
 
-import nl.biopet.test.BiopetTest
 import nl.biopet.tools.bamstats.schema.BamstatsRoot
+import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
-class MergeTest extends BiopetTest {
+class MergeTest extends ToolTest[Args] {
+
+  def toolCommand: Merge.type = Merge
 
   @Test
   def testNoArgs(): Unit = {

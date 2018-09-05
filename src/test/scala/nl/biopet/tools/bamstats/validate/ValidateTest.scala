@@ -21,10 +21,12 @@
 
 package nl.biopet.tools.bamstats.validate
 
-import nl.biopet.test.BiopetTest
+import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
-class ValidateTest extends BiopetTest {
+class ValidateTest extends ToolTest[Args] {
+
+  def toolCommand: Validate.type = Validate
 
   @Test
   def testMain(): Unit = {
