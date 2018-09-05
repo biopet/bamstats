@@ -36,4 +36,22 @@ class MultiSampleBamTest extends BiopetTest {
       "sm2-lib1-rg1")
   }
 
+  @Test
+  def multiSampleMerge(): Unit = {
+    val mergedRoot = {
+      val samReader = SamReaderFactory.makeDefault().open(multiSampleSam)
+      Generate.extractStatsAll(samReader)
+    }
+    val rgBams: Seq[File] = List(
+      sm1lib1rg1Sam,
+      sm1lib1rg2Sam,
+      sm1lib2rg1Sam,
+      sm2lib1rg1Sam
+    )
+    val rgRoots = rgBams.map { bamFile =>
+      val samReader = SamReaderFactory.makeDefault().open(bamFile)
+      Generate.extractStatsAll(samReader)
+    }
+    rgRoots.reduce(_ + _) shouldBe mergedRoot
+  }
 }
