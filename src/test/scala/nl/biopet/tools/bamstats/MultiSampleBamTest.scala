@@ -80,9 +80,9 @@ class MultiSampleBamTest extends BiopetTest {
   def provider(): Array[Array[Any]] = {
     Array(
       Array(sm1lib1rg1Sam, "sm1", "lib1", "sm1-lib1-rg1"),
-      Array(sm1lib1rg1Sam, "sm1", "lib1", "sm1-lib1-rg2"),
-      Array(sm1lib1rg1Sam, "sm1", "lib2", "sm1-lib2-rg1"),
-      Array(sm1lib1rg1Sam, "sm2", "lib1", "sm2-lib1-rg1")
+      Array(sm1lib1rg2Sam, "sm1", "lib1", "sm1-lib1-rg2"),
+      Array(sm1lib2rg1Sam, "sm1", "lib2", "sm1-lib2-rg1"),
+      Array(sm2lib1rg1Sam, "sm2", "lib1", "sm2-lib1-rg1")
     )
   }
 
