@@ -390,18 +390,18 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="nl.biopet.tools.bamstats.generate.Generate">Generate</a> → ToolCommand</dd></dl></div>
     </li><li name="nl.biopet.tools.bamstats.generate.Generate#extractStats" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="extractStats(samRecordIterator:htsjdk.samtools.SAMRecordIterator):nl.biopet.tools.bamstats.GroupStats"></a>
-      <a id="extractStats(SAMRecordIterator):GroupStats"></a>
+      <a id="extractStats(samRecordIterator:htsjdk.samtools.SAMRecordIterator,readgroupsMap:Map[String,nl.biopet.tools.bamstats.schema.GroupID],condition:htsjdk.samtools.SAMRecord=&gt;Boolean):nl.biopet.tools.bamstats.schema.BamstatsRoot"></a>
+      <a id="extractStats(SAMRecordIterator,Map[String,GroupID],(SAMRecord)⇒Boolean):BamstatsRoot"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">extractStats</span><span class="params">(<span name="samRecordIterator">samRecordIterator: <span class="extype" name="htsjdk.samtools.SAMRecordIterator">SAMRecordIterator</span></span>)</span><span class="result">: <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a></span>
+        <span class="name">extractStats</span><span class="params">(<span name="samRecordIterator">samRecordIterator: <span class="extype" name="htsjdk.samtools.SAMRecordIterator">SAMRecordIterator</span></span>, <span name="readgroupsMap">readgroupsMap: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="../schema/GroupID.html" class="extype" name="nl.biopet.tools.bamstats.schema.GroupID">GroupID</a>]</span>, <span name="condition">condition: (<span class="extype" name="htsjdk.samtools.SAMRecord">SAMRecord</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="../schema/BamstatsRoot.html" class="extype" name="nl.biopet.tools.bamstats.schema.BamstatsRoot">BamstatsRoot</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@extractStats(samRecordIterator:htsjdk.samtools.SAMRecordIterator):nl.biopet.tools.bamstats.GroupStats" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@extractStats(samRecordIterator:htsjdk.samtools.SAMRecordIterator,readgroupsMap:Map[String,nl.biopet.tools.bamstats.schema.GroupID],condition:htsjdk.samtools.SAMRecord=&gt;Boolean):nl.biopet.tools.bamstats.schema.BamstatsRoot" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -410,36 +410,36 @@ The SAMRecordIterator is closed in this method.</p><div class="fullcomment"><div
 The SAMRecordIterator is closed in this method.</p></div><dl class="paramcmts block"><dt class="param">samRecordIterator</dt><dd class="cmt"><p>A samrecord iterator containing all the reads you are interested in.
                          (I.e after a SAMReader.query)</p></dd><dt>returns</dt><dd class="cmt"><p>A GroupStats object with al the stats from the samrecords</p></dd></dl></div>
     </li><li name="nl.biopet.tools.bamstats.generate.Generate#extractStatsAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="extractStatsAll(samReader:htsjdk.samtools.SamReader):nl.biopet.tools.bamstats.GroupStats"></a>
-      <a id="extractStatsAll(SamReader):GroupStats"></a>
+      <a id="extractStatsAll(samReader:htsjdk.samtools.SamReader,readgroupsMap:Option[Map[String,nl.biopet.tools.bamstats.schema.GroupID]]):nl.biopet.tools.bamstats.schema.BamstatsRoot"></a>
+      <a id="extractStatsAll(SamReader,Option[Map[String,GroupID]]):BamstatsRoot"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">extractStatsAll</span><span class="params">(<span name="samReader">samReader: <span class="extype" name="htsjdk.samtools.SamReader">SamReader</span></span>)</span><span class="result">: <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a></span>
+        <span class="name">extractStatsAll</span><span class="params">(<span name="samReader">samReader: <span class="extype" name="htsjdk.samtools.SamReader">SamReader</span></span>, <span name="readgroupsMap">readgroupsMap: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="../schema/GroupID.html" class="extype" name="nl.biopet.tools.bamstats.schema.GroupID">GroupID</a>]] = <span class="symbol">None</span></span>)</span><span class="result">: <a href="../schema/BamstatsRoot.html" class="extype" name="nl.biopet.tools.bamstats.schema.BamstatsRoot">BamstatsRoot</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@extractStatsAll(samReader:htsjdk.samtools.SamReader):nl.biopet.tools.bamstats.GroupStats" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@extractStatsAll(samReader:htsjdk.samtools.SamReader,readgroupsMap:Option[Map[String,nl.biopet.tools.bamstats.schema.GroupID]]):nl.biopet.tools.bamstats.schema.BamstatsRoot" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <p class="shortcomment cmt">This methods reads the stats for all records in the SamReader.</p><div class="fullcomment"><div class="comment cmt"><p>This methods reads the stats for all records in the SamReader.
 The samReader is not closed afterwards, so it can be reused.</p></div><dl class="paramcmts block"><dt class="param">samReader</dt><dd class="cmt"><p>A SamReader</p></dd><dt>returns</dt><dd class="cmt"><p>GroupStats for all records in the SamReader.</p></dd></dl></div>
     </li><li name="nl.biopet.tools.bamstats.generate.Generate#extractStatsRegion" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="extractStatsRegion(samReader:htsjdk.samtools.SamReader,region:nl.biopet.utils.ngs.intervals.BedRecord,scatterMode:Boolean):nl.biopet.tools.bamstats.GroupStats"></a>
-      <a id="extractStatsRegion(SamReader,BedRecord,Boolean):GroupStats"></a>
+      <a id="extractStatsRegion(samReader:htsjdk.samtools.SamReader,region:nl.biopet.utils.ngs.intervals.BedRecord,readgroupsMap:Option[Map[String,nl.biopet.tools.bamstats.schema.GroupID]],scatterMode:Boolean):nl.biopet.tools.bamstats.schema.BamstatsRoot"></a>
+      <a id="extractStatsRegion(SamReader,BedRecord,Option[Map[String,GroupID]],Boolean):BamstatsRoot"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">extractStatsRegion</span><span class="params">(<span name="samReader">samReader: <span class="extype" name="htsjdk.samtools.SamReader">SamReader</span></span>, <span name="region">region: <span class="extype" name="nl.biopet.utils.ngs.intervals.BedRecord">BedRecord</span></span>, <span name="scatterMode">scatterMode: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a></span>
+        <span class="name">extractStatsRegion</span><span class="params">(<span name="samReader">samReader: <span class="extype" name="htsjdk.samtools.SamReader">SamReader</span></span>, <span name="region">region: <span class="extype" name="nl.biopet.utils.ngs.intervals.BedRecord">BedRecord</span></span>, <span name="readgroupsMap">readgroupsMap: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="../schema/GroupID.html" class="extype" name="nl.biopet.tools.bamstats.schema.GroupID">GroupID</a>]] = <span class="symbol">None</span></span>, <span name="scatterMode">scatterMode: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <a href="../schema/BamstatsRoot.html" class="extype" name="nl.biopet.tools.bamstats.schema.BamstatsRoot">BamstatsRoot</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@extractStatsRegion(samReader:htsjdk.samtools.SamReader,region:nl.biopet.utils.ngs.intervals.BedRecord,scatterMode:Boolean):nl.biopet.tools.bamstats.GroupStats" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@extractStatsRegion(samReader:htsjdk.samtools.SamReader,region:nl.biopet.utils.ngs.intervals.BedRecord,readgroupsMap:Option[Map[String,nl.biopet.tools.bamstats.schema.GroupID]],scatterMode:Boolean):nl.biopet.tools.bamstats.schema.BamstatsRoot" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -449,18 +449,18 @@ The samReader is not closed afterwards, so it can be reused.</p></div><dl class=
                    twice. One time when the start position is in the region, and one time when
                    the end position is in the region.</p></dd></dl></div>
     </li><li name="nl.biopet.tools.bamstats.generate.Generate#extractStatsUnmappedReads" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="extractStatsUnmappedReads(samReader:htsjdk.samtools.SamReader):nl.biopet.tools.bamstats.GroupStats"></a>
-      <a id="extractStatsUnmappedReads(SamReader):GroupStats"></a>
+      <a id="extractStatsUnmappedReads(samReader:htsjdk.samtools.SamReader,readgroupsMap:Option[Map[String,nl.biopet.tools.bamstats.schema.GroupID]]):nl.biopet.tools.bamstats.schema.BamstatsRoot"></a>
+      <a id="extractStatsUnmappedReads(SamReader,Option[Map[String,GroupID]]):BamstatsRoot"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">extractStatsUnmappedReads</span><span class="params">(<span name="samReader">samReader: <span class="extype" name="htsjdk.samtools.SamReader">SamReader</span></span>)</span><span class="result">: <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a></span>
+        <span class="name">extractStatsUnmappedReads</span><span class="params">(<span name="samReader">samReader: <span class="extype" name="htsjdk.samtools.SamReader">SamReader</span></span>, <span name="readgroupsMap">readgroupsMap: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="../schema/GroupID.html" class="extype" name="nl.biopet.tools.bamstats.schema.GroupID">GroupID</a>]] = <span class="symbol">None</span></span>)</span><span class="result">: <a href="../schema/BamstatsRoot.html" class="extype" name="nl.biopet.tools.bamstats.schema.BamstatsRoot">BamstatsRoot</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@extractStatsUnmappedReads(samReader:htsjdk.samtools.SamReader):nl.biopet.tools.bamstats.GroupStats" title="Permalink" target="_top">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@extractStatsUnmappedReads(samReader:htsjdk.samtools.SamReader,readgroupsMap:Option[Map[String,nl.biopet.tools.bamstats.schema.GroupID]]):nl.biopet.tools.bamstats.schema.BamstatsRoot" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -539,6 +539,23 @@ The samReader is not closed afterwards, so it can be reused.</p></div><dl class=
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="nl.biopet.tools.bamstats.generate.Generate#getReadGroupsMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getReadGroupsMap(samReader:htsjdk.samtools.SamReader):Map[String,nl.biopet.tools.bamstats.schema.GroupID]"></a>
+      <a id="getReadGroupsMap(SamReader):Map[String,GroupID]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getReadGroupsMap</span><span class="params">(<span name="samReader">samReader: <span class="extype" name="htsjdk.samtools.SamReader">SamReader</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="../schema/GroupID.html" class="extype" name="nl.biopet.tools.bamstats.schema.GroupID">GroupID</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@getReadGroupsMap(samReader:htsjdk.samtools.SamReader):Map[String,nl.biopet.tools.bamstats.schema.GroupID]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -675,6 +692,23 @@ The samReader is not closed afterwards, so it can be reused.</p></div><dl class=
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="nl.biopet.tools.bamstats.generate.Generate#newStatsMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="newStatsMap(readgroups:Seq[String]):Map[String,nl.biopet.tools.bamstats.GroupStats]"></a>
+      <a id="newStatsMap(Seq[String]):Map[String,GroupStats]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">newStatsMap</span><span class="params">(<span name="readgroups">readgroups: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="../GroupStats.html" class="extype" name="nl.biopet.tools.bamstats.GroupStats">GroupStats</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#nl.biopet.tools.bamstats.generate.Generate$@newStatsMap(readgroups:Seq[String]):Map[String,nl.biopet.tools.bamstats.GroupStats]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <a id="notify():Unit"></a>
