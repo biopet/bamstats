@@ -32,7 +32,7 @@ import scala.io.Source
 
 class GenerateTest extends ToolTest[Args] {
 
-  val testGroupID: GroupID = GroupID("WipeReadsTestCase", "3rasdsq", "a7kac")
+  val testGroupID: GroupID = GroupID("WipeReadsTestCase", "testLib", "001")
   val pairedBam01: File = new File(resourcePath("/paired01.bam"))
   val testBam: File = resourceFile("/fake_chrQ1000simreads.bam")
   val referenceFile: File = resourceFile("/fake_chrQ.fa")
