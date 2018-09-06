@@ -59,9 +59,9 @@ object Merge extends ToolCommand[Args] {
        |Merging multiple files and writing the results to an output file.
        |${BamStats.example("merge",
                            "-i",
-                           "<seqstat file>",
+                           "<bamstats file>",
                            "-i",
-                           "<seqstats file>",
+                           "<bamstats file>",
                            "-o",
                            "<output file>")}
      """.stripMargin
