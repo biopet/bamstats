@@ -48,10 +48,8 @@ class GenerateTest extends ToolTest[Args] {
   def testMain(): Unit = {
     val outputDir = Files.createTempDir()
     outputDir.deleteOnExit()
-    Generate.main(Array("-b",
-                        pairedBam01.getAbsolutePath,
-                        "-o",
-                        outputDir.getAbsolutePath))
+    Generate.main(
+      Array("-b", pairedBam01.getAbsolutePath, "-o", outputDir.getAbsolutePath))
 
     val bamstatsFile = new File(outputDir, "bamstats.json")
     bamstatsFile should exist

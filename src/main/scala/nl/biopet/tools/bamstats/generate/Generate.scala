@@ -256,16 +256,21 @@ object Generate extends ToolCommand[Args] {
     s"""
          |$toolName reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
          |a JSON file, but can optionally also output in TSV format.
+         |
+         |The output of the JSON file is organized in a sample - library - readgroup tree structure.
+         |If readgroups in the BAM file are not annotated with sample (`SM`) and library (`LB`) tags
+         |an error will be thrown.
+         |This can be fixed by using `samtools addreplacerg` or `picard AddOrReplaceReadGroups`.
      """.stripMargin
 
   def manualText: String =
     s"""
          |$toolName requires a BAM file and an output directory for its stats.
          |Optionally a reference fasta file can be added against which the BAM file will be validated.
-         |There are also fllags to set the binsize of stats, the size of the region per thread, and whether
-         |to also output in TSV format.
+         |There is a flag to also output in TSV format.
          |
-     """.stripMargin
+         |$toolName requires BAM files that have all the `@RG` groups annotated with `ID`, `SM` and `LB` otherwise
+         |an error is thrown.""".stripMargin
 
   def exampleText: String =
     s"""
