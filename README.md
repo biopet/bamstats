@@ -10,6 +10,11 @@ and validate the generated stats files.
 
 Generate reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
 a JSON file, but can optionally also output in TSV format.
+
+The output of the JSON file is organized in a sample - library - readgroup tree structure.
+If readgroups in the BAM file are not annotated with sample (`SM`) and library (`LB`) tags
+an error will be thrown.
+This can be fixed by using `samtools addreplacerg` or `picard AddOrReplaceReadGroups`.
      
         
 
