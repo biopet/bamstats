@@ -99,40 +99,27 @@ class MultiSampleBamTest extends BiopetTest {
       .asGroupStats == samToRoot(samFile).combinedStats shouldBe true
   }
 
-  @Test
-  def testTotalsResults(): Unit = {
-    println(totalsRoot.samples("sm1").libraries("lib1").readgroups.keySet)
+  @DataProvider(name = "Totals")
+  def providerTotals: Array[Array[Any]] =
+    Array(
+      Array("sm1", "lib1", "sm1-lib1-rg1", 2),
+      Array("sm1", "lib1", "sm1-lib1-rg2", 4),
+      Array("sm1", "lib2", "sm1-lib2-rg1", 6),
+      Array("sm2", "lib1", "sm2-lib1-rg1", 8)
+    )
+
+  @Test(dataProvider = "Totals")
+  def testTotalsResults(sample: String,
+                        library: String,
+                        readgroup: String,
+                        total: Long): Unit = {
     totalsRoot
-      .samples("sm1")
-      .libraries("lib1")
-      .readgroups("sm1-lib1-rg1")
+      .samples(sample)
+      .libraries(library)
+      .readgroups(readgroup)
       .data
       .asGroupStats
       .flagstat
-      .totalReads shouldBe 2
-    totalsRoot
-      .samples("sm1")
-      .libraries("lib1")
-      .readgroups("sm1-lib1-rg2")
-      .data
-      .asGroupStats
-      .flagstat
-      .totalReads shouldBe 4
-    totalsRoot
-      .samples("sm1")
-      .libraries("lib2")
-      .readgroups("sm1-lib2-rg1")
-      .data
-      .asGroupStats
-      .flagstat
-      .totalReads shouldBe 6
-    totalsRoot
-      .samples("sm2")
-      .libraries("lib1")
-      .readgroups("sm2-lib1-rg1")
-      .data
-      .asGroupStats
-      .flagstat
-      .totalReads shouldBe 8
+      .totalReads shouldBe total
   }
 }
