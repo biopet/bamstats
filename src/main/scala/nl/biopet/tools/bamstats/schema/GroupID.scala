@@ -19,15 +19,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package nl.biopet.tools.bamstats
+package nl.biopet.tools.bamstats.schema
 
-package object schema {
+import htsjdk.samtools.SAMReadGroupRecord
 
-  case class Sample(libraries: Map[String, Library])
-  case class Library(readgroups: Map[String, Readgroup])
-  case class Readgroup(data: Data)
-  case class Stats(groupID: GroupID, stats: GroupStats)
+case class GroupID(sample: String, library: String, readgroup: String)
+object GroupID {
 
-  val expectedKeys: Set[String] = FlagMethods.values.map(_.name)
-
+  /**
+    * Method to get a GroupID from a SAMReadgroupRecord
+    * @param readgroup the SAMReadGroupRecord
+    * @return a GroupID object
+    */
+  def fromSamReadGroup(readgroup: SAMReadGroupRecord): GroupID = {
+    GroupID(
+      sample = Option(readgroup.getSample)
+        .getOrElse(
+          throw new IllegalArgumentException(
+            s"Sample not found on readgroup: $readgroup")),
+      library = Option(readgroup.getLibrary)
+        .getOrElse(
+          throw new IllegalArgumentException(
+            s"Library not found on readgroup: $readgroup")),
+      readgroup = readgroup.getReadGroupId
+    )
+  }
 }

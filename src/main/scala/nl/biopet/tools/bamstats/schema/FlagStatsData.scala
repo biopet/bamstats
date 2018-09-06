@@ -19,15 +19,27 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package nl.biopet.tools.bamstats
+package nl.biopet.tools.bamstats.schema
 
-package object schema {
+case class FlagStatsData(flagStats: Map[String, Long],
+                         crossCounts: CrossCounts) {
 
-  case class Sample(libraries: Map[String, Library])
-  case class Library(readgroups: Map[String, Readgroup])
-  case class Readgroup(data: Data)
-  case class Stats(groupID: GroupID, stats: GroupStats)
+  def validate(): Unit = {
+    require(
+      flagStats.keySet == expectedKeys,
+      "FlagStatsData incompatible. Missing and/or unknown names in flagstats.\n" +
+        s"Missing: ${(expectedKeys -- flagStats.keySet).mkString(",")}\n" +
+        s"Unknown: ${(flagStats.keySet -- expectedKeys).mkString(",")}"
+    )
+    require(
+      crossCounts.keys.toSet == flagStats.keySet,
+      "FlagStatsData incompatible. Internally corrupt. CrossCount keys do not match flagstats keys.")
+    crossCounts.validate()
 
-  val expectedKeys: Set[String] = FlagMethods.values.map(_.name)
-
+    // This requirement should be evaluated last. Otherwise it will mask other errors,
+    // which will lead to confusion.
+    require(
+      crossCounts.toFlagStatsMap == flagStats,
+      "Internally corrupt FlagStatsData. The CrossCounts table totals do not equal the flagstats.")
+  }
 }

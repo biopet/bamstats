@@ -81,6 +81,23 @@ case class BamstatsRoot(samples: Map[String, Sample]) {
   def validate(): Unit = readgroups foreach {
     case (_, rg) => rg.data.validate()
   }
+
+  def +(other: BamstatsRoot): BamstatsRoot = {
+    BamstatsRoot.fromStatsList(this.asStatsList ++ other.asStatsList)
+  }
+
+  /**
+    * Returns the combined groupStats for the whole bamstats root.
+    * @return groupstats
+    */
+  def combinedStats: GroupStats = {
+    val groupStatsIterator = samples.valuesIterator.flatMap {
+      _.libraries.valuesIterator.flatMap {
+        _.readgroups.valuesIterator.map { _.data.asGroupStats }
+      }
+    }
+    groupStatsIterator.reduce(_ += _)
+  }
 }
 
 object BamstatsRoot {

@@ -21,10 +21,17 @@
 
 package nl.biopet.tools.bamstats.validate
 
-import nl.biopet.test.BiopetTest
+import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
-class ValidateTest extends BiopetTest {
+class ValidateTest extends ToolTest[Args] {
+
+  def toolCommand: Validate.type = Validate
+
+  override def minExampleWords: Int =
+    10 //A big example does not make sense for a tool with only one input.
+  override def minManualWords: Int =
+    0 // A manual does not make sense for such a small tool. The usage says it all.
 
   @Test
   def testMain(): Unit = {

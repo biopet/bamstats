@@ -30,6 +30,7 @@ import nl.biopet.tools.bamstats.generate.Generate.{
   extractStatsRegion,
   extractStatsUnmappedReads
 }
+import nl.biopet.tools.bamstats.schema.BamstatsRoot
 import nl.biopet.utils.ngs.intervals.{BedRecord, BedRecordList}
 import org.testng.annotations.Test
 
@@ -42,14 +43,14 @@ class ScatterAndMergeTest extends BiopetTest {
     val samReader = SamReaderFactory.makeDefault().open(bamFile)
     val regions: List[BedRecord] =
       BedRecordList.fromReference(referenceFile).scatter(5000).flatten
-    val regionStats: List[GroupStats] = regions.map { region =>
+    val regionStats: List[BamstatsRoot] = regions.map { region =>
       extractStatsRegion(samReader, region, scatterMode = true)
     }
-    val unmappedStats: GroupStats = extractStatsUnmappedReads(samReader)
+    val unmappedStats: BamstatsRoot = extractStatsUnmappedReads(samReader)
 
-    val mergedStats: GroupStats =
-      (regionStats ++ List(unmappedStats)).reduce(_ += _)
-    val totalStats: GroupStats = extractStatsAll(samReader)
+    val mergedStats: BamstatsRoot =
+      (regionStats ++ List(unmappedStats)).reduce(_ + _)
+    val totalStats: BamstatsRoot = extractStatsAll(samReader)
     samReader.close()
     mergedStats shouldBe totalStats
   }

@@ -44,6 +44,7 @@ object Merge extends ToolCommand[Args] {
   def descriptionText: String =
     """
       |This module will merge bamstats files together and keep the sample/library/readgroup structure.
+      |Values for the same readgroups will be added.
       |It will also validate the resulting file.
       """.stripMargin
 
@@ -55,12 +56,12 @@ object Merge extends ToolCommand[Args] {
 
   def exampleText: String =
     s"""
-       |Merging multiple file
+       |Merging multiple files and writing the results to an output file.
        |${BamStats.example("merge",
                            "-i",
-                           "<seqstat file>",
+                           "<bamstats file>",
                            "-i",
-                           "<seqstats file>",
+                           "<bamstats file>",
                            "-o",
                            "<output file>")}
      """.stripMargin

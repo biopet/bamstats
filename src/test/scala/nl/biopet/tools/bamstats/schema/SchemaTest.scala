@@ -23,6 +23,7 @@ package nl.biopet.tools.bamstats.schema
 
 import java.io.File
 
+import htsjdk.samtools.SAMReadGroupRecord
 import nl.biopet.test.BiopetTest
 import nl.biopet.tools.bamstats.FlagMethods
 import org.testng.annotations.{DataProvider, Test}
@@ -109,4 +110,36 @@ class SchemaTest extends BiopetTest {
     }
   }
 
+  @DataProvider(name = "incompleteSamReadGroups")
+  def rgProvider(): Array[Array[Any]] = {
+    val missingSample = new SAMReadGroupRecord("bla")
+    missingSample.setLibrary("bla")
+    val missingLibrary = new SAMReadGroupRecord("bla")
+    missingLibrary.setSample("bla")
+    val missingSampleAndLibrary = new SAMReadGroupRecord("bla")
+    Array(
+      Array(missingSample, "Sample not found on readgroup"),
+      Array(missingLibrary, "Library not found on readgroup"),
+      Array(missingSampleAndLibrary, "Sample not found on readgroup")
+    )
+  }
+  new SAMReadGroupRecord("bla")
+  @Test(dataProvider = "incompleteSamReadGroups")
+  def testGroupIdFromSamFail(samReadGroupRecord: SAMReadGroupRecord,
+                             message: String): Unit = {
+    intercept[IllegalArgumentException] {
+      GroupID.fromSamReadGroup(samReadGroupRecord)
+    }.getMessage should include(message)
+  }
+
+  @Test
+  def testGroupId(): Unit = {
+    val samReadGroupRecord: SAMReadGroupRecord = new SAMReadGroupRecord(
+      "testrg")
+    samReadGroupRecord.setLibrary("testlib")
+    samReadGroupRecord.setSample("testsam")
+    GroupID.fromSamReadGroup(samReadGroupRecord) shouldBe GroupID("testsam",
+                                                                  "testlib",
+                                                                  "testrg")
+  }
 }

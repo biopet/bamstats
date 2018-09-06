@@ -55,8 +55,9 @@ object Generate extends ToolCommand[Args] {
           getDictFromBam(cmdArgs.bamFile)
       }
     val samReader = SamReaderFactory.makeDefault().open(cmdArgs.bamFile)
-    val stats: GroupStats = cmdArgs.bedFile match {
-      case Some(bed: File) if cmdArgs.onlyUnmapped =>
+    val readgroupsMap = Some(getReadGroupsMap(samReader))
+    val root: BamstatsRoot = cmdArgs.bedFile match {
+      case Some(_) if cmdArgs.onlyUnmapped =>
         throw new IllegalArgumentException(
           "Cannot extract stats from regions and unmapped regions at the same time")
       // When a BED file is specified extract regions stats
@@ -69,38 +70,50 @@ object Generate extends ToolCommand[Args] {
             .allRecords
             .toIterator
         //Get groupstats for each region
-        val regionStats: Iterator[GroupStats] = regions.map { region =>
-          extractStatsRegion(samReader, region, cmdArgs.scatterMode)
+        val regionStats = regions.map { region =>
+          extractStatsRegion(samReader,
+                             region,
+                             readgroupsMap,
+                             cmdArgs.scatterMode)
         }
-        // Add all regions stats together
-        regionStats.reduce(_ += _)
+        regionStats.reduce(_ + _)
       case None if cmdArgs.onlyUnmapped =>
-        extractStatsUnmappedReads(samReader)
-      case None if !cmdArgs.onlyUnmapped => extractStatsAll(samReader)
+        extractStatsUnmappedReads(samReader, readgroupsMap)
+      case None if !cmdArgs.onlyUnmapped =>
+        extractStatsAll(samReader, readgroupsMap)
     }
     samReader.close()
-
+    val combinedStats: GroupStats = root.combinedStats
     if (cmdArgs.tsvOutputs) {
-      writeStatsToTsv(stats, outputDir = cmdArgs.outputDir)
+      writeStatsToTsv(combinedStats, outputDir = cmdArgs.outputDir)
     }
 
-    val groupedStats = BamstatsRoot.fromGroupStats(
-      GroupID(sample = cmdArgs.sample,
-              library = cmdArgs.library,
-              readgroup = cmdArgs.readgroup),
-      stats)
     val statsWriter = new PrintWriter(
       new File(cmdArgs.outputDir, "bamstats.json"))
-    statsWriter.println(Json.stringify(groupedStats.toJson))
+    statsWriter.println(Json.stringify(root.toJson))
     statsWriter.close()
 
-    val totalStats = stats.toSummaryMap
+    val totalStats = combinedStats.toSummaryMap
     val summaryWriter = new PrintWriter(
       new File(cmdArgs.outputDir, "bamstats.summary.json"))
     summaryWriter.println(Json.stringify(conversions.mapToJson(totalStats)))
     summaryWriter.close()
 
     logger.info("Done")
+  }
+
+  def getReadGroupsMap(samReader: SamReader): Map[String, GroupID] = {
+
+    samReader.getFileHeader.getReadGroups
+      .map(
+        readgroup =>
+          readgroup.getId -> GroupID
+            .fromSamReadGroup(readgroup))
+      .toMap
+  }
+
+  def newStatsMap(readgroups: Seq[String]): Map[String, GroupStats] = {
+    readgroups.map(_ -> GroupStats()).toMap
   }
 
   /**
@@ -110,11 +123,30 @@ object Generate extends ToolCommand[Args] {
     *                          (I.e after a SAMReader.query)
     * @return A GroupStats object with al the stats from the samrecords
     */
-  def extractStats(samRecordIterator: SAMRecordIterator): GroupStats = {
-    val stats = GroupStats()
-    samRecordIterator.foreach(stats.loadRecord)
+  def extractStats(samRecordIterator: SAMRecordIterator,
+                   readgroupsMap: Map[String, GroupID],
+                   condition: SAMRecord => Boolean): BamstatsRoot = {
+    val stats = newStatsMap(readgroupsMap.keys.toSeq)
+    samRecordIterator.foreach { record =>
+      if (condition(record)) {
+        val rgId = Option(record.getAttribute("RG"))
+          .map(_.toString)
+          .getOrElse(throw new IllegalStateException(
+            s"No readgroup found on read $record"))
+        stats
+          .getOrElse(
+            rgId,
+            throw new IllegalStateException(
+              s"readgroup found on record but not in header: $rgId, record: $record"))
+          .loadRecord(record)
+      }
+    }
     samRecordIterator.close()
-    stats
+    val bamStatsRoots = stats.map {
+      case (rgId: String, groupStats: GroupStats) =>
+        BamstatsRoot.fromGroupStats(readgroupsMap(rgId), groupStats)
+    }
+    bamStatsRoots.reduce(_ + _)
   }
 
   /**
@@ -123,8 +155,12 @@ object Generate extends ToolCommand[Args] {
     * @param samReader A SamReader
     * @return GroupStats for all records in the SamReader.
     */
-  def extractStatsAll(samReader: SamReader): GroupStats = {
-    extractStats(samReader.iterator())
+  def extractStatsAll(
+      samReader: SamReader,
+      readgroupsMap: Option[Map[String, GroupID]] = None): BamstatsRoot = {
+    extractStats(samReader.iterator(),
+                 readgroupsMap.getOrElse(getReadGroupsMap(samReader)),
+                 _ => true)
   }
 
   /**
@@ -132,8 +168,12 @@ object Generate extends ToolCommand[Args] {
     * @param samReader a samReader
     * @return GroupStats for all unmapped reads
     */
-  def extractStatsUnmappedReads(samReader: SamReader): GroupStats = {
-    extractStats(samReader.queryUnmapped())
+  def extractStatsUnmappedReads(samReader: SamReader,
+                                readgroupsMap: Option[Map[String, GroupID]] =
+                                  None): BamstatsRoot = {
+    extractStats(samReader.queryUnmapped(),
+                 readgroupsMap.getOrElse(getReadGroupsMap(samReader)),
+                 _ => true)
   }
 
   /**
@@ -149,20 +189,16 @@ object Generate extends ToolCommand[Args] {
     */
   def extractStatsRegion(samReader: SamReader,
                          region: BedRecord,
-                         scatterMode: Boolean = false): GroupStats = {
-    val stats = GroupStats()
+                         readgroupsMap: Option[Map[String, GroupID]] = None,
+                         scatterMode: Boolean = false): BamstatsRoot = {
     val samRecordIterator: SAMRecordIterator =
       samReader.query(region.chr, region.start, region.end, false)
-    samRecordIterator.foreach { samRecord =>
-      // Read based stats
-      // If scatterMode is false, continue.
-      // If scatterMode is true, determine whether the alignment start is within the region.
-      if (!scatterMode || samRecord.getAlignmentStart > region.start && samRecord.getAlignmentStart <= region.end) {
-        stats.loadRecord(samRecord)
-      }
+    def recordInInterval(samRecord: SAMRecord): Boolean = {
+      !scatterMode || samRecord.getAlignmentStart > region.start && samRecord.getAlignmentStart <= region.end
     }
-    samRecordIterator.close()
-    stats
+    extractStats(samRecordIterator,
+                 readgroupsMap.getOrElse(getReadGroupsMap(samReader)),
+                 recordInInterval)
   }
 
   /**
@@ -226,42 +262,29 @@ object Generate extends ToolCommand[Args] {
     s"""
          |$toolName reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
          |a JSON file, but can optionally also output in TSV format.
+         |
+         |The output of the JSON file is organized in a sample - library - readgroup tree structure.
+         |If readgroups in the BAM file are not annotated with sample (`SM`) and library (`LB`) tags
+         |an error will be thrown.
+         |This can be fixed by using `samtools addreplacerg` or `picard AddOrReplaceReadGroups`.
      """.stripMargin
 
   def manualText: String =
     s"""
          |$toolName requires a BAM file and an output directory for its stats.
          |Optionally a reference fasta file can be added against which the BAM file will be validated.
-         |There are also fllags to set the binsize of stats, the size of the region per thread, and whether
-         |to also output in TSV format.
+         |There is a flag to also output in TSV format.
          |
-     """.stripMargin
+         |$toolName requires BAM files that have all the `@RG` groups annotated with `ID`, `SM` and `LB` otherwise
+         |an error is thrown.""".stripMargin
 
   def exampleText: String =
     s"""
          |To generate stats from `file.bam`:
-         |${example("-b",
-                    "file.bam",
-                    "-o",
-                    "output_dir",
-                    "--sample",
-                    "patient0",
-                    "--library",
-                    "libI",
-                    "--readgroup",
-                    "RG1")}
+         |${example("-b", "file.bam", "-o", "output_dir")}
          |
          |To generate stats from `file.bam`, and output the result also as TSV:
-         |${example("-o",
-                    "output_dir",
-                    "-b",
-                    "file.bam",
-                    "--sample",
-                    "patient0",
-                    "--library",
-                    "libI",
-                    "--readgroup",
-                    "RG1")}
+         |${example("-o", "output_dir", "-b", "file.bam", "--tsvOutputs")}
          |
          |To generate stats from certain regions in `file.bam`,
          |validate the regions and bam with `reference.fa` and also include unmapped reads:
@@ -272,12 +295,6 @@ object Generate extends ToolCommand[Args] {
                     "-b",
                     "file.bam",
                     "--bedFile",
-                    "regions.bed",
-                    "--sample",
-                    "patient0",
-                    "--library",
-                    "libI",
-                    "--readgroup",
-                    "RG1")}
+                    "regions.bed")}
      """.stripMargin
 }

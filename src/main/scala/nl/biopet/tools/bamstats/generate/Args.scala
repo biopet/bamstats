@@ -25,9 +25,6 @@ import java.io.File
 
 case class Args(outputDir: File = null,
                 bamFile: File = null,
-                sample: String = null,
-                library: String = null,
-                readgroup: String = null,
                 referenceFasta: Option[File] = None,
                 bedFile: Option[File] = None,
                 scatterMode: Boolean = false,
