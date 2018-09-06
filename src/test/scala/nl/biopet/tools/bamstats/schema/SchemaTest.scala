@@ -141,4 +141,15 @@ class SchemaTest extends BiopetTest {
       "bla",
       "bla")
   }
+
+  @Test
+  def testGroupId(): Unit = {
+    val samReadGroupRecord: SAMReadGroupRecord = new SAMReadGroupRecord(
+      "testrg")
+    samReadGroupRecord.setLibrary("testlib")
+    samReadGroupRecord.setSample("testsam")
+    GroupID.fromSamReadGroup(samReadGroupRecord) shouldBe GroupID("testsam",
+                                                                  "testlib",
+                                                                  "testrg")
+  }
 }
