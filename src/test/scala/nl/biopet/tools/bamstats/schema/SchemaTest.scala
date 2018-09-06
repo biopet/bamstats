@@ -131,4 +131,14 @@ class SchemaTest extends BiopetTest {
       GroupID.fromSamReadGroup(samReadGroupRecord)
     }.getMessage should include(message)
   }
+
+  @Test(dataProvider = "incompleteSamReadGroups")
+  def testGroupIdFromSamSucceedThroughDefaults(
+      samReadGroupRecord: SAMReadGroupRecord,
+      message: String): Unit = {
+    GroupID.fromSamReadGroup(samReadGroupRecord, Some("bla"), Some("bla")) shouldBe GroupID(
+      "bla",
+      "bla",
+      "bla")
+  }
 }
