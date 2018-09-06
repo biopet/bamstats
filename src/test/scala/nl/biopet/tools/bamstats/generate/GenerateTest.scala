@@ -36,8 +36,6 @@ class GenerateTest extends ToolTest[Args] {
   val pairedBam01: File = new File(resourcePath("/paired01.bam"))
   val testBam: File = resourceFile("/fake_chrQ1000simreads.bam")
   val referenceFile: File = resourceFile("/fake_chrQ.fa")
-  val groupIdArgs: Array[String] =
-    Array("--defaultLibrary", testGroupID.library)
   def toolCommand: Generate.type = Generate
   @Test
   def testNoArgs(): Unit = {
@@ -53,7 +51,7 @@ class GenerateTest extends ToolTest[Args] {
     Generate.main(Array("-b",
                         pairedBam01.getAbsolutePath,
                         "-o",
-                        outputDir.getAbsolutePath) ++ groupIdArgs)
+                        outputDir.getAbsolutePath))
 
     val bamstatsFile = new File(outputDir, "bamstats.json")
     bamstatsFile should exist
@@ -107,7 +105,7 @@ class GenerateTest extends ToolTest[Args] {
             pairedBam01.getAbsolutePath,
             "-o",
             outputDir.getAbsolutePath,
-            "--tsvOutputs") ++ groupIdArgs)
+            "--tsvOutputs"))
 
     new File(outputDir, "bamstats.json") should exist
     new File(outputDir, "bamstats.summary.json") should exist
@@ -145,7 +143,7 @@ class GenerateTest extends ToolTest[Args] {
             "-o",
             outputDir.getAbsolutePath,
             "--bedFile",
-            bedFile.getAbsolutePath) ++ groupIdArgs)
+            bedFile.getAbsolutePath))
     new File(outputDir, "flagstats.tsv") shouldNot exist
     new File(outputDir, "insertsize.stats.tsv") shouldNot exist
     new File(outputDir, "insertsize.histogram.tsv") shouldNot exist
@@ -180,7 +178,7 @@ class GenerateTest extends ToolTest[Args] {
               "-R",
               referenceFile.getAbsolutePath,
               "--bedFile",
-              bedFile.getAbsolutePath) ++ groupIdArgs)
+              bedFile.getAbsolutePath))
     }.getMessage shouldBe
       "requirement failed: Contigs found in bed records " +
         "but are not existing in reference: chrNoExists"
@@ -198,7 +196,7 @@ class GenerateTest extends ToolTest[Args] {
               referenceFile.getAbsolutePath,
               "-o",
               outputDir.getAbsolutePath,
-              "--tsvOutputs") ++ groupIdArgs)
+              "--tsvOutputs"))
     }.getMessage shouldBe "SAM dictionaries are not the same: " +
       "SAMSequenceRecord(name=chrQ,length=16571,dict_index=0,assembly=null) " +
       "was found when " +
