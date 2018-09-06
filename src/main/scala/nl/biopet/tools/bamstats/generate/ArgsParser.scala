@@ -53,16 +53,4 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   opt[Unit]("tsvOutputs") action { (_, c) =>
     c.copy(tsvOutputs = true)
   } text "Also output tsv files, default there is only a json"
-  opt[String]("defaultSample")
-    .valueName("<name>")
-    .action((x, c) => c.copy(defaultSample = Some(x)))
-    .text(
-      "Fallback value in case sample names are not defined for each readgoup in the SAM/BAM file." +
-        " If the fallback is not specified the program will throw an error when it finds a readgroup without a sample name.")
-  opt[String]("defaultLibrary")
-    .valueName("<name>")
-    .action((x, c) => c.copy(defaultLibrary = Some(x)))
-    .text(
-      "Fallback value in case library names are not defined for each readgoup in the SAM/BAM file." +
-        " If the fallback is not specified the program will throw an error when it finds a readgroup without a library name.")
 }
