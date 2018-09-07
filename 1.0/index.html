@@ -1,0 +1,271 @@
+<!--
+   Copyright (c) 2014 Biopet
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy of
+   this software and associated documentation files (the "Software"), to deal in
+   the Software without restriction, including without limitation the rights to
+   use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+   the Software, and to permit persons to whom the Software is furnished to do so,
+   subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+   FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>BamStats</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="css/docs.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="https://github.com/biopet">
+                <img alt="Biopet" src="images/biopet-logo.png">
+            </a>
+          <a class="navbar-brand" href="#">BamStats</a>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text" id="Version">
+              Version</li>
+          </ul>
+        </div>
+      </div>
+
+
+
+    </div>
+
+  </nav>
+  <div class="container">
+
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar" >
+
+        <ul class="nav nav-sidebar nav-list">
+          <li><b>Index</b></li>
+          
+          <li><a href="#description"><span>Description</span></a></li>
+          
+          <li><a href="#installation"><span>Installation</span></a></li>
+          
+          <li><a href="#manual"><span>Manual</span></a></li>
+          
+          <li><a href="#about"><span>About</span></a></li>
+          
+          <li><a href="#contributing"><span>Contributing</span></a></li>
+          
+          <li><a href="#contact"><span>Contact</span></a></li>
+          
+        </ul>
+        <ul class="nav nav-sidebar nav-list">
+          <li><b>Links</b></li>
+
+          <li><a href="https://github.com/biopet/bamstats">Source code</a></li>
+          <li><a href="https://github.com/biopet/bamstats/issues">Feedback, feature requests and bug reports</a></li>
+          <li><a href="api/index.html">API Documentation</a></li>
+        </ul>
+        <ul class="nav nav-sidebar nav-list">
+          <li><b>Documentation</b></li>
+          <li><a href="../index.html">Latest stable version</a></li>
+          <li><a href="../develop/index.html">Development version</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="top">
+
+        
+        <h1 id="description" class="section">Description</h1>
+        <p>BamStats is a package that contains tools
+        to generate stats from a BAM file,
+        merge those stats for multiple samples,
+        and validate the generated stats files.</p>
+        
+        <h4 id="mode---generate" class="section">Mode - Generate</h4>
+        <p>Generate reports clipping stats, flag stats, insert size and mapping quality on a BAM file. It outputs
+        a JSON file, but can optionally also output in TSV format.</p>
+        <p>The output of the JSON file is organized in a sample - library - readgroup tree structure.
+        If readgroups in the BAM file are not annotated with sample (<code>SM</code>) and library (<code>LB</code>) tags
+        an error will be thrown.
+        This can be fixed by using <code>samtools addreplacerg</code> or <code>picard AddOrReplaceReadGroups</code>.</p>
+        
+        <h4 id="mode---merge" class="section">Mode - Merge</h4>
+        <p>This module will merge bamstats files together and keep the sample/library/readgroup structure.
+        Values for the same readgroups will be added.
+        It will also validate the resulting file.</p>
+        
+        <h4 id="mode---validate" class="section">Mode - Validate</h4>
+        <p>Validates a BamStats file.
+        If aggregation values can not be regenerated the file is considered corrupt.
+        This should only happen when the file has been manually edited.</p>
+        
+        <h1 id="installation" class="section">Installation</h1>
+        <p>BamStats requires Java 8 to be installed on your device. Download Java 8
+        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html">here</a>
+        or install via your distribution&#39;s package manager.</p>
+        <p>Download the latest version of BamStats <a href="https://github.com/biopet/bamstats/releases/">here</a>.
+        To generate the usage run:</p>
+        <pre><code>java -jar &lt;BamStats_jar&gt; --help</code></pre>
+        
+        <h1 id="manual" class="section">Manual</h1>
+        
+        <h4 id="mode---generate-1" class="section">Mode - Generate</h4>
+        <p>Generate requires a BAM file and an output directory for its stats.
+        Optionally a reference fasta file can be added against which the BAM file will be validated.
+        There is a flag to also output in TSV format.</p>
+        <p>Generate requires BAM files that have all the <code>@RG</code> groups annotated with <code>ID</code>, <code>SM</code> and <code>LB</code> otherwise
+        an error is thrown.</p>
+        
+        <h4 id="mode---merge-1" class="section">Mode - Merge</h4>
+        <p>When merging the files BamStats will validate the input files and the output files.
+        If aggregation values can not be regenerated the file is considered corrupt.</p>
+        
+        <h4 id="mode---validate-1" class="section">Mode - Validate</h4>
+        <p>See example.</p>
+        
+        <h2 id="example" class="section">Example</h2>
+        
+        <h4 id="mode---generate-2" class="section">Mode - Generate</h4>
+        <p>To generate stats from <code>file.bam</code>:</p>
+        <pre><code>java -jar &lt;Generate_jar&gt; \
+-b file.bam \
+-o output_dir</code></pre>
+        <p>To generate stats from <code>file.bam</code>, and output the result also as TSV:</p>
+        <pre><code>java -jar &lt;Generate_jar&gt; \
+-o output_dir \
+-b file.bam \
+--tsvOutputs</code></pre>
+        <p>To generate stats from certain regions in <code>file.bam</code>,
+        validate the regions and bam with <code>reference.fa</code> and also include unmapped reads:</p>
+        <pre><code>java -jar &lt;Generate_jar&gt; \
+-R reference.fa \
+-o output_dir \
+-b file.bam \
+--bedFile regions.bed</code></pre>
+        
+        <h4 id="mode---merge-2" class="section">Mode - Merge</h4>
+        <p>Merging multiple files and writing the results to an output file.</p>
+        <pre><code>java -jar &lt;BamStats_jar&gt; merge \
+-i &lt;bamstats file&gt; \
+-i &lt;bamstats file&gt; \
+-o &lt;output file&gt;</code></pre>
+        
+        <h4 id="mode---validate-2" class="section">Mode - Validate</h4>
+        <p>To validate a <code>bamstats.json</code> file:</p>
+        <pre><code>java -jar &lt;BamStats_jar&gt; validate \
+-i &lt;input file&gt;</code></pre>
+        
+        <h2 id="usage" class="section">Usage</h2>
+        <p>Usage for BamStats:</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Required</th>
+              <th>Can occur multiple times</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>--log_level, -l</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Level of log information printed. Possible levels: &#39;debug&#39;, &#39;info&#39;, &#39;warn&#39;, &#39;error&#39;</td>
+            </tr>
+            <tr>
+              <td>--help, -h</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Print usage</td>
+            </tr>
+            <tr>
+              <td>--version, -v</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Print version</td>
+            </tr>
+            <tr>
+              <td>toolName</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Name of the tool to execute</td>
+            </tr>
+            <tr>
+              <td>tool args</td>
+              <td>no</td>
+              <td>yes (unlimited)</td>
+              <td>Arguments for the tool</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h1 id="about" class="section">About</h1>
+        <p>BamStats is part of BIOPET tool suite that is developed at LUMC by <a href="http://sasc.lumc.nl/">the SASC team</a>.
+        Each tool in the <a href="https://github.com/biopet/">BIOPET tool suite</a> is meant to offer a standalone function that can be used to perform a
+        dedicate data analysis task or added as part of a pipeline, for example the SASC team&#39;s <a href="https://github.com/biowdl">biowdl pipelines</a>.</p>
+        <p>All tools in the BIOPET tool suite are <a href="https://www.gnu.org/philosophy/free-sw.html">Free/Libre</a> and
+        <a href="https://opensource.org/osd">Open Source</a> Software.</p>
+        
+        <h1 id="contributing" class="section">Contributing</h1>
+        <p>The source code of BamStats can be found <a href="https://github.com/biopet/bamstats">here</a>.
+        We welcome any contributions. Bug reports, feature requests and feedback can be submitted at our
+        <a href="https://github.com/biopet/bamstats/issues">issue tracker</a>.</p>
+        <p>BamStats is build using sbt. Before submitting a pull request, make sure all tests can be passed by
+        running <code>sbt test</code> from the project&#39;s root. We recommend using an IDE to work on BamStats. We have had
+        good results with <a href="https://www.jetbrains.com/idea/">this IDE</a>.</p>
+        
+        <h1 id="contact" class="section">Contact</h1>
+        <p>
+          <!-- Obscure e-mail address for spammers -->
+        For any question related to BamStats, please use the
+        <a href='https://github.com/biopet/bamstats/issues'>github issue tracker</a>
+        or contact
+         <a href='http://sasc.lumc.nl/'>the SASC team</a> directly at: <a href='&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;'>
+        &#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;</a>.
+        </p>      
+
+      </div>
+    </div>
+
+  </div>
+  <script>
+    var loc = window.location.pathname;
+    var thisDir = loc.substring(0, loc.lastIndexOf('/'));
+    var splitLocation = window.location.pathname.split('/');
+    var version = splitLocation[splitLocation.length - 2]
+    document.getElementById("Version").innerHTML = "Version " + version;
+  </script>
+</body>
+
+</html>
