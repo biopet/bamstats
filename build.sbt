@@ -22,12 +22,12 @@ developers := List(
 )
 
 biocondaTestCommands := Seq(
-  s"$biocondaCommand merge --help",
-  s"$biocondaCommand merge --version",
-  s"$biocondaCommand validate --help",
-  s"$biocondaCommand validate --version",
-  s"$biocondaCommand generate --help",
-  s"$biocondaCommand generate --version"
+  s"${biocondaCommand.value} merge --help",
+  s"${biocondaCommand.value} merge --version",
+  s"${biocondaCommand.value} validate --help",
+  s"${biocondaCommand.value} validate --version",
+  s"${biocondaCommand.value} generate --help",
+  s"${biocondaCommand.value} generate --version"
 )
 scalaVersion := "2.11.12"
 
