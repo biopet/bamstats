@@ -45,6 +45,20 @@ class GenerateTest extends ToolTest[Args] {
   }
 
   @Test
+  def testDirCreation: Unit = {
+    val outputDir = Files.createTempDir()
+    outputDir.delete()
+    outputDir.exists() shouldBe false
+    Generate.main(
+      Array("-b", pairedBam01.getAbsolutePath, "-o", outputDir.getAbsolutePath))
+
+    val bamstatsFile = new File(outputDir, "bamstats.json")
+    bamstatsFile should exist
+    val bamstatsSummaryFile = new File(outputDir, "bamstats.summary.json")
+    bamstatsSummaryFile should exist
+  }
+
+  @Test
   def testMain(): Unit = {
     val outputDir = Files.createTempDir()
     outputDir.deleteOnExit()
