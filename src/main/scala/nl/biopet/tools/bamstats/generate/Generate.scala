@@ -45,11 +45,8 @@ object Generate extends ToolCommand[Args] {
 
     logger.info("Start")
 
-    if (!cmdArgs.outputDir.exists()) {
-      cmdArgs.outputDir.mkdirs()
-      logger.warn(s"Output directory does not exist.")
-      logger.warn(s"Creating output directory: ${cmdArgs.outputDir.getAbsolutePath}")
-    }
+    require(cmdArgs.outputDir.exists(), s"Output directory does not exist: ${cmdArgs.outputDir.getPath}")
+    require(cmdArgs.outputDir.isDirectory, s"'${cmdArgs.outputDir.getPath}' is not a directory!")
 
     val sequenceDict: SAMSequenceDictionary =
       cmdArgs.referenceFasta match {
