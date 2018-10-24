@@ -45,17 +45,27 @@ class GenerateTest extends ToolTest[Args] {
   }
 
   @Test
-  def testDirCreation: Unit = {
+  def testDirError(): Unit = {
     val outputDir = Files.createTempDir()
     outputDir.delete()
     outputDir.exists() shouldBe false
-    Generate.main(
-      Array("-b", pairedBam01.getAbsolutePath, "-o", outputDir.getAbsolutePath))
-
-    val bamstatsFile = new File(outputDir, "bamstats.json")
-    bamstatsFile should exist
-    val bamstatsSummaryFile = new File(outputDir, "bamstats.summary.json")
-    bamstatsSummaryFile should exist
+    intercept[IllegalArgumentException] {
+      Generate.main(
+        Array("-b",
+              pairedBam01.getAbsolutePath,
+              "-o",
+              outputDir.getAbsolutePath))
+    }.getMessage shouldBe s"Output dir does not exist: ${outputDir.getAbsolutePath}"
+    outputDir.createNewFile()
+    outputDir.exists() shouldBe true
+    outputDir.isFile shouldBe true
+    intercept[IllegalArgumentException] {
+      Generate.main(
+        Array("-b",
+              pairedBam01.getAbsolutePath,
+              "-o",
+              outputDir.getAbsolutePath))
+    }.getMessage shouldBe s"'${outputDir.getAbsolutePath}' is not a directory!"
   }
 
   @Test
