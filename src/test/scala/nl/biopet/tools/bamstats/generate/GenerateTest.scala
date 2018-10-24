@@ -55,7 +55,8 @@ class GenerateTest extends ToolTest[Args] {
               pairedBam01.getAbsolutePath,
               "-o",
               outputDir.getAbsolutePath))
-    }.getMessage shouldBe s"Output dir does not exist: ${outputDir.getAbsolutePath}"
+    }.getMessage should include(
+      s"Output directory does not exist: ${outputDir.getAbsolutePath}")
     outputDir.createNewFile()
     outputDir.exists() shouldBe true
     outputDir.isFile shouldBe true
@@ -65,7 +66,8 @@ class GenerateTest extends ToolTest[Args] {
               pairedBam01.getAbsolutePath,
               "-o",
               outputDir.getAbsolutePath))
-    }.getMessage shouldBe s"'${outputDir.getAbsolutePath}' is not a directory!"
+    }.getMessage should include(
+      s"'${outputDir.getAbsolutePath}' is not a directory!")
   }
 
   @Test
