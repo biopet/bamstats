@@ -32,6 +32,6 @@ biocondaTestCommands := Seq(
 scalaVersion := "2.11.12"
 
 libraryDependencies += "com.github.biopet" %% "tool-utils" % "0.6"
-libraryDependencies += "com.github.biopet" %% "ngs-utils" % "0.6"
+libraryDependencies += "com.github.biopet" %% "ngs-utils" % "0.7"
 libraryDependencies += "com.github.biopet" %% "tool-test-utils" % "0.3"
 libraryDependencies += "com.google.guava" % "guava" % "18.0" % Test
